@@ -1,7 +1,7 @@
-package com.senla.srs.security.security;
+package com.senla.srs.security;
 
-import com.senla.srs.security.model.User;
-import com.senla.srs.security.repository.UserRepository;
+import com.senla.srs.model.User;
+import com.senla.srs.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

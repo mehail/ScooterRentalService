@@ -1,4 +1,4 @@
-package com.senla.srs.controllers;
+package com.senla.srs.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

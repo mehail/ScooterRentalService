@@ -1,4 +1,4 @@
-package com.senla.srs.security.model;
+package com.senla.srs.model;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 

@@ -1,6 +1,6 @@
-package com.senla.srs.security.rest;
+package com.senla.srs.rest;
 
-import com.senla.srs.security.model.Developer;
+import com.senla.srs.model.Developer;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 

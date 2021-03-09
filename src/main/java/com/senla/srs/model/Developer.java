@@ -1,4 +1,4 @@
-package com.senla.srs.security.model;
+package com.senla.srs.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,6 +1,6 @@
-package com.senla.srs.security.repository;
+package com.senla.srs.repository;
 
-import com.senla.srs.security.model.User;
+import com.senla.srs.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
