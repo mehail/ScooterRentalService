@@ -1,6 +1,6 @@
 package com.senla.srs.model.entity.test;
 
-import com.senla.srs.model.entity.User;
+import com.senla.srs.model.entity.MyUser;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -14,7 +14,7 @@ public class RentalSession {
     private Long id;
     @ManyToOne(optional=false, cascade=CascadeType.ALL)
     @JoinColumn(name = "user_id")
-    private User user;
+    private MyUser myUser;
     @ManyToOne(optional=false, cascade=CascadeType.ALL)
     @JoinColumn(name = "scooter_serial_number")
     private Scooter scooter;

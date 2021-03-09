@@ -8,7 +8,7 @@ import java.time.LocalDate;
 @Data
 @Entity
 @Table(name = "users")
-public class User {
+public class MyUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -36,11 +36,11 @@ public class User {
 
     private int balance;
 
-    public User() {
+    public MyUser() {
     }
 
-    public User(String login, String password, String firstName, String lastName, LocalDate birthday,
-                String email, int balance) {
+    public MyUser(String login, String password, String firstName, String lastName, LocalDate birthday,
+                  String email, int balance) {
 
 //    public User(Role role, String login, String password, String firstName, String lastName, LocalDate birthday,
 //                String email, int balance) {

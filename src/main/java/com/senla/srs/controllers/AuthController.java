@@ -1,4 +1,4 @@
-package com.senla.srs.security.controller;
+package com.senla.srs.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
