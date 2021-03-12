@@ -1,5 +1,6 @@
-package com.senla.srs.model;
+package com.senla.srs.model.security;
 
+import com.senla.srs.model.security.Permission;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Set;

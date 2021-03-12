@@ -1,0 +1,634 @@
+databaseChangeLog:
+- changeSet:
+    id: SRS-1
+    author: Mihail Artugin
+    changes:
+    - createTable:
+        tableName: cities
+        columns:
+        - column:
+            name: id
+            type: BIGINT
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: cities_pk
+        - column:
+            name: city
+            type: VARCHAR(64)
+            constraints:
+              nullable: false
+        - column:
+            name: country_id
+            type: BIGINT
+            constraints:
+              nullable: false
+
+- changeSet:
+    id: SRS-21
+    author: Mihail Artugin
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: countries_pk
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: country
+            type: VARCHAR(64)
+        tableName: countries
+- changeSet:
+    id: SRS-31
+    author: Mihail Artugin
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: makers_pk
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: maker
+            type: VARCHAR(64)
+        tableName: makers
+- changeSet:
+    id: SRS-41
+    author: Mihail Artugin
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: paint_of_rentals_pk
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: name
+            type: VARCHAR(64)
+        - column:
+            constraints:
+              nullable: false
+            name: address
+            type: VARCHAR(64)
+        - column:
+            constraints:
+              nullable: false
+            name: cities_id
+            type: BIGINT
+        tableName: point_of_rentals
+- changeSet:
+    id: SRS-51
+    author: Mihail Artugin
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: sessions_pk
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: user_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: begin
+            type: TIMESTAMP WITHOUT TIME ZONE
+        - column:
+            name: end
+            type: TIMESTAMP WITHOUT TIME ZONE
+        - column:
+            constraints:
+              nullable: false
+            name: scooter_serial_number
+            type: VARCHAR(64)
+        - column:
+            constraints:
+              nullable: false
+            name: rate
+            type: INTEGER
+        - column:
+            name: season_ticket_id
+            type: BIGINT
+        tableName: rental_sessions
+- changeSet:
+    id: SRS-61
+    author: Mihail Artugin
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: roles_pk
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: name
+            type: VARCHAR(64)
+        tableName: roles
+- changeSet:
+    id: SRS-71
+    author: Mihail Artugin
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: scooter_types_pk
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: model
+            type: VARCHAR(64)
+        - column:
+            constraints:
+              nullable: false
+            name: maker_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: max_speed
+            type: FLOAT8
+        - column:
+            constraints:
+              nullable: false
+            name: price_per_minute
+            type: INTEGER
+        tableName: scooter_types
+- changeSet:
+    id: SRS-81
+    author: Mihail Artugin
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: season_tickets_pk
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: user_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: scooter_type_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: price
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            name: remaining_time
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            name: start_date
+            type: TIMESTAMP WITHOUT TIME ZONE
+        - column:
+            name: expired_date
+            type: TIMESTAMP WITHOUT TIME ZONE
+        - column:
+            constraints:
+              nullable: false
+            name: available_for_use
+            type: BOOLEAN
+        tableName: season_tickets
+- changeSet:
+    id: SRS-91
+    author: Mihail Artugin
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: users_pk
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: role_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: login
+            type: VARCHAR(64)
+        - column:
+            constraints:
+              nullable: false
+            name: password
+            type: VARCHAR(64)
+        - column:
+            constraints:
+              nullable: false
+            name: first_name
+            type: VARCHAR(64)
+        - column:
+            constraints:
+              nullable: false
+            name: last_name
+            type: VARCHAR(64)
+        - column:
+            constraints:
+              nullable: false
+            name: birthday
+            type: date
+        - column:
+            constraints:
+              nullable: false
+            name: email
+            type: VARCHAR(64)
+        - column:
+            constraints:
+              nullable: false
+            name: balance
+            type: INTEGER
+        tableName: users
+- changeSet:
+    id: SRS-101
+    author: Mihail Artugin
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: promo_cods_pk
+            name: name
+            type: VARCHAR(64)
+        - column:
+            name: start_date
+            type: TIMESTAMP WITHOUT TIME ZONE
+        - column:
+            name: expired_date
+            type: TIMESTAMP WITHOUT TIME ZONE
+        - column:
+            name: discount_percentage
+            type: INTEGER
+        - column:
+            name: bonus_point
+            type: INTEGER
+        - column:
+            name: rental_session_id
+            type: BIGINT
+        tableName: promo_cods
+- changeSet:
+    id: SRS-111
+    author: Mihail Artugin
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: scooters_pk
+            name: serial_number
+            type: VARCHAR(64)
+        - column:
+            constraints:
+              nullable: false
+            name: point_of_rental_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: scooter_type_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: time_of_use
+            type: INTEGER
+        tableName: scooters
+- changeSet:
+    id: SRS-121
+    author: Mihail Artugin
+    changes:
+    - createIndex:
+        columns:
+        - column:
+            name: city
+        indexName: cities_city_uindex
+        tableName: cities
+        unique: true
+- changeSet:
+    id: SRS-131
+    author: Mihail Artugin
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: cities_id
+        baseTableName: point_of_rentals
+        constraintName: point_of_rentals_cities_id_fk
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: cities
+        validate: true
+- changeSet:
+    id: SRS-141
+    author: Mihail Artugin
+    changes:
+    - createIndex:
+        columns:
+        - column:
+            name: country
+        indexName: countries_country_uindex
+        tableName: countries
+        unique: true
+- changeSet:
+    id: SRS-151
+    author: Mihail Artugin
+    changes:
+    - createIndex:
+        columns:
+        - column:
+            name: maker
+        indexName: makers_maker_uindex
+        tableName: makers
+        unique: true
+- changeSet:
+    id: SRS-161
+    author: Mihail Artugin
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: maker_id
+        baseTableName: scooter_types
+        constraintName: scooter_types_makers_id_fk
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: makers
+        validate: true
+- changeSet:
+    id: SRS-171
+    author: Mihail Artugin
+    changes:
+    - createIndex:
+        columns:
+        - column:
+            name: name
+        indexName: paint_of_rentals_name_uindex
+        tableName: point_of_rentals
+        unique: true
+- changeSet:
+    id: SRS-181
+    author: Mihail Artugin
+    changes:
+    - createIndex:
+        columns:
+        - column:
+            name: address
+        indexName: point_of_rentals_address_uindex
+        tableName: point_of_rentals
+        unique: true
+- changeSet:
+    id: SRS-191
+    author: Mihail Artugin
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: point_of_rental_id
+        baseTableName: scooters
+        constraintName: scooters_point_of_rentals_id_fk
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: point_of_rentals
+        validate: true
+- changeSet:
+    id: SRS-201
+    author: Mihail Artugin
+    changes:
+    - createIndex:
+        columns:
+        - column:
+            name: name
+        indexName: roles_name_uindex
+        tableName: roles
+        unique: true
+- changeSet:
+    id: SRS-211
+    author: Mihail Artugin
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: role_id
+        baseTableName: users
+        constraintName: users_roles_id_fk
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: roles
+        validate: true
+- changeSet:
+    id: SRS-221
+    author: Mihail Artugin
+    changes:
+    - createIndex:
+        columns:
+        - column:
+            name: model
+        indexName: scooter_types_model_uindex
+        tableName: scooter_types
+        unique: true
+- changeSet:
+    id: SRS-231
+    author: Mihail Artugin
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: scooter_type_id
+        baseTableName: scooters
+        constraintName: scooters_scooter_types_id_fk
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: scooter_types
+        validate: true
+- changeSet:
+    id: SRS-241
+    author: Mihail Artugin
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: scooter_type_id
+        baseTableName: season_tickets
+        constraintName: season_tickets_scooter_types_id_fk
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: scooter_types
+        validate: true
+- changeSet:
+    id: SRS-251
+    author: Mihail Artugin
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: season_ticket_id
+        baseTableName: rental_sessions
+        constraintName: sessions_season_tickets_id_fk
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: season_tickets
+        validate: true
+- changeSet:
+    id: SRS-261
+    author: Mihail Artugin
+    changes:
+    - createIndex:
+        columns:
+        - column:
+            name: email
+        indexName: users_email_uindex
+        tableName: users
+        unique: true
+- changeSet:
+    id: SRS-271
+    author: Mihail Artugin
+    changes:
+    - createIndex:
+        columns:
+        - column:
+            name: login
+        indexName: users_login_uindex
+        tableName: users
+        unique: true
+- changeSet:
+    id: SRS-281
+    author: Mihail Artugin
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: rental_session_id
+        baseTableName: promo_cods
+        constraintName: promo_cods_sessions_id_fk
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: rental_sessions
+        validate: true
+- changeSet:
+    id: SRS-291
+    author: Mihail Artugin
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: country_id
+        baseTableName: cities
+        constraintName: cities_countries_id_fk
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: countries
+        validate: true
+- changeSet:
+    id: SRS-301
+    author: Mihail Artugin
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: scooter_serial_number
+        baseTableName: rental_sessions
+        constraintName: rental_sessions_scooters_serial_number_fk
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: serial_number
+        referencedTableName: scooters
+        validate: true
+- changeSet:
+    id: SRS-311
+    author: Mihail Artugin
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: user_id
+        baseTableName: rental_sessions
+        constraintName: sessions_users_id_fk
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+- changeSet:
+    id: SRS-321
+    author: Mihail Artugin
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: user_id
+        baseTableName: season_tickets
+        constraintName: season_tickets_users_id_fk
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+

@@ -1,6 +1,6 @@
 package com.senla.srs.security;
 
-import com.senla.srs.model.Status;
+import com.senla.srs.model.security.Status;
 import com.senla.srs.model.User;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;

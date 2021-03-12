@@ -1,4 +1,4 @@
-package com.senla.srs.model;
+package com.senla.srs.model.security;
 
 public enum Permission {
     DEVELOPERS_READ("developers:read"),
