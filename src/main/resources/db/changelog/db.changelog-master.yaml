@@ -26,276 +26,283 @@ databaseChangeLog:
               nullable: false
 
 - changeSet:
-    id: SRS-21
+    id: SRS-2
     author: Mihail Artugin
     changes:
     - createTable:
+        tableName: countries
         columns:
         - column:
+            name: id
+            type: BIGINT
             autoIncrement: true
             constraints:
               nullable: false
               primaryKey: true
               primaryKeyName: countries_pk
-            name: id
-            type: BIGINT
         - column:
-            constraints:
-              nullable: false
             name: country
             type: VARCHAR(64)
-        tableName: countries
+            constraints:
+              nullable: false
+
 - changeSet:
-    id: SRS-31
+    id: SRS-3
     author: Mihail Artugin
     changes:
     - createTable:
+        tableName: makers
         columns:
         - column:
+            name: id
+            type: BIGINT
             autoIncrement: true
             constraints:
               nullable: false
               primaryKey: true
               primaryKeyName: makers_pk
-            name: id
-            type: BIGINT
         - column:
-            constraints:
-              nullable: false
             name: maker
             type: VARCHAR(64)
-        tableName: makers
+            constraints:
+              nullable: false
+
 - changeSet:
-    id: SRS-41
+    id: SRS-4
     author: Mihail Artugin
     changes:
     - createTable:
+        tableName: point_of_rentals
         columns:
         - column:
+            name: id
+            type: BIGINT
             autoIncrement: true
             constraints:
               nullable: false
               primaryKey: true
               primaryKeyName: paint_of_rentals_pk
-            name: id
-            type: BIGINT
         - column:
-            constraints:
-              nullable: false
             name: name
             type: VARCHAR(64)
-        - column:
             constraints:
               nullable: false
+        - column:
             name: address
             type: VARCHAR(64)
-        - column:
             constraints:
               nullable: false
+        - column:
             name: cities_id
             type: BIGINT
-        tableName: point_of_rentals
+            constraints:
+              nullable: false
+
 - changeSet:
-    id: SRS-51
+    id: SRS-5
     author: Mihail Artugin
     changes:
     - createTable:
+        tableName: rental_sessions
         columns:
         - column:
+            name: id
+            type: BIGINT
             autoIncrement: true
             constraints:
               nullable: false
               primaryKey: true
               primaryKeyName: sessions_pk
-            name: id
-            type: BIGINT
         - column:
-            constraints:
-              nullable: false
             name: user_id
             type: BIGINT
-        - column:
             constraints:
               nullable: false
+        - column:
             name: begin
             type: TIMESTAMP WITHOUT TIME ZONE
+            constraints:
+              nullable: false
         - column:
             name: end
             type: TIMESTAMP WITHOUT TIME ZONE
         - column:
-            constraints:
-              nullable: false
             name: scooter_serial_number
             type: VARCHAR(64)
-        - column:
             constraints:
               nullable: false
+        - column:
             name: rate
             type: INTEGER
+            constraints:
+              nullable: false
         - column:
             name: season_ticket_id
             type: BIGINT
-        tableName: rental_sessions
+
 - changeSet:
-    id: SRS-61
+    id: SRS-6
     author: Mihail Artugin
     changes:
     - createTable:
+        tableName: roles
         columns:
         - column:
+            name: id
+            type: BIGINT
             autoIncrement: true
             constraints:
               nullable: false
               primaryKey: true
               primaryKeyName: roles_pk
-            name: id
-            type: BIGINT
         - column:
-            constraints:
-              nullable: false
             name: name
             type: VARCHAR(64)
-        tableName: roles
+            constraints:
+              nullable: false
+
 - changeSet:
-    id: SRS-71
+    id: SRS-7
     author: Mihail Artugin
     changes:
     - createTable:
+        tableName: scooter_types
         columns:
         - column:
+            name: id
+            type: BIGINT
             autoIncrement: true
             constraints:
               nullable: false
               primaryKey: true
               primaryKeyName: scooter_types_pk
-            name: id
-            type: BIGINT
         - column:
-            constraints:
-              nullable: false
             name: model
             type: VARCHAR(64)
-        - column:
             constraints:
               nullable: false
+        - column:
             name: maker_id
             type: BIGINT
-        - column:
             constraints:
               nullable: false
+        - column:
             name: max_speed
             type: FLOAT8
-        - column:
             constraints:
               nullable: false
+        - column:
             name: price_per_minute
             type: INTEGER
-        tableName: scooter_types
+            constraints:
+              nullable: false
+
 - changeSet:
-    id: SRS-81
+    id: SRS-8
     author: Mihail Artugin
     changes:
     - createTable:
+        tableName: season_tickets
         columns:
         - column:
+            name: id
+            type: BIGINT
             autoIncrement: true
             constraints:
               nullable: false
               primaryKey: true
               primaryKeyName: season_tickets_pk
-            name: id
-            type: BIGINT
         - column:
-            constraints:
-              nullable: false
             name: user_id
             type: BIGINT
-        - column:
             constraints:
               nullable: false
+        - column:
             name: scooter_type_id
             type: BIGINT
-        - column:
             constraints:
               nullable: false
+        - column:
             name: price
             type: INTEGER
-        - column:
             constraints:
               nullable: false
+        - column:
             name: remaining_time
             type: INTEGER
-        - column:
             constraints:
               nullable: false
+        - column:
             name: start_date
             type: TIMESTAMP WITHOUT TIME ZONE
+            constraints:
+              nullable: false
         - column:
             name: expired_date
             type: TIMESTAMP WITHOUT TIME ZONE
         - column:
-            constraints:
-              nullable: false
             name: available_for_use
             type: BOOLEAN
-        tableName: season_tickets
+            constraints:
+              nullable: false
+
 - changeSet:
-    id: SRS-91
+    id: SRS-9
     author: Mihail Artugin
     changes:
     - createTable:
         columns:
         - column:
+            name: id
+            type: BIGINT
             autoIncrement: true
             constraints:
               nullable: false
               primaryKey: true
               primaryKeyName: users_pk
-            name: id
-            type: BIGINT
         - column:
-            constraints:
-              nullable: false
             name: role_id
             type: BIGINT
-        - column:
             constraints:
               nullable: false
+        - column:
             name: login
             type: VARCHAR(64)
-        - column:
             constraints:
               nullable: false
+        - column:
             name: password
             type: VARCHAR(64)
-        - column:
             constraints:
               nullable: false
+        - column:
             name: first_name
             type: VARCHAR(64)
-        - column:
             constraints:
               nullable: false
+        - column:
             name: last_name
             type: VARCHAR(64)
-        - column:
             constraints:
               nullable: false
+        - column:
             name: birthday
             type: date
-        - column:
             constraints:
               nullable: false
+        - column:
             name: email
             type: VARCHAR(64)
-        - column:
             constraints:
               nullable: false
+        - column:
             name: balance
             type: INTEGER
+            constraints:
+              nullable: false
         tableName: users
 - changeSet:
-    id: SRS-101
+    id: SRS-10
     author: Mihail Artugin
     changes:
     - createTable:
@@ -324,7 +331,7 @@ databaseChangeLog:
             type: BIGINT
         tableName: promo_cods
 - changeSet:
-    id: SRS-111
+    id: SRS-11
     author: Mihail Artugin
     changes:
     - createTable:
@@ -353,7 +360,7 @@ databaseChangeLog:
             type: INTEGER
         tableName: scooters
 - changeSet:
-    id: SRS-121
+    id: SRS-12
     author: Mihail Artugin
     changes:
     - createIndex:
@@ -364,7 +371,7 @@ databaseChangeLog:
         tableName: cities
         unique: true
 - changeSet:
-    id: SRS-131
+    id: SRS-13
     author: Mihail Artugin
     changes:
     - addForeignKeyConstraint:
@@ -379,7 +386,7 @@ databaseChangeLog:
         referencedTableName: cities
         validate: true
 - changeSet:
-    id: SRS-141
+    id: SRS-14
     author: Mihail Artugin
     changes:
     - createIndex:
@@ -390,7 +397,7 @@ databaseChangeLog:
         tableName: countries
         unique: true
 - changeSet:
-    id: SRS-151
+    id: SRS-15
     author: Mihail Artugin
     changes:
     - createIndex:
@@ -401,7 +408,7 @@ databaseChangeLog:
         tableName: makers
         unique: true
 - changeSet:
-    id: SRS-161
+    id: SRS-16
     author: Mihail Artugin
     changes:
     - addForeignKeyConstraint:
@@ -416,7 +423,7 @@ databaseChangeLog:
         referencedTableName: makers
         validate: true
 - changeSet:
-    id: SRS-171
+    id: SRS-17
     author: Mihail Artugin
     changes:
     - createIndex:
@@ -427,7 +434,7 @@ databaseChangeLog:
         tableName: point_of_rentals
         unique: true
 - changeSet:
-    id: SRS-181
+    id: SRS-18
     author: Mihail Artugin
     changes:
     - createIndex:
@@ -438,7 +445,7 @@ databaseChangeLog:
         tableName: point_of_rentals
         unique: true
 - changeSet:
-    id: SRS-191
+    id: SRS-19
     author: Mihail Artugin
     changes:
     - addForeignKeyConstraint:
@@ -453,7 +460,7 @@ databaseChangeLog:
         referencedTableName: point_of_rentals
         validate: true
 - changeSet:
-    id: SRS-201
+    id: SRS-20
     author: Mihail Artugin
     changes:
     - createIndex:
@@ -464,7 +471,7 @@ databaseChangeLog:
         tableName: roles
         unique: true
 - changeSet:
-    id: SRS-211
+    id: SRS-21
     author: Mihail Artugin
     changes:
     - addForeignKeyConstraint:
@@ -479,7 +486,7 @@ databaseChangeLog:
         referencedTableName: roles
         validate: true
 - changeSet:
-    id: SRS-221
+    id: SRS-22
     author: Mihail Artugin
     changes:
     - createIndex:
@@ -490,7 +497,7 @@ databaseChangeLog:
         tableName: scooter_types
         unique: true
 - changeSet:
-    id: SRS-231
+    id: SRS-23
     author: Mihail Artugin
     changes:
     - addForeignKeyConstraint:
@@ -505,7 +512,7 @@ databaseChangeLog:
         referencedTableName: scooter_types
         validate: true
 - changeSet:
-    id: SRS-241
+    id: SRS-24
     author: Mihail Artugin
     changes:
     - addForeignKeyConstraint:
@@ -520,7 +527,7 @@ databaseChangeLog:
         referencedTableName: scooter_types
         validate: true
 - changeSet:
-    id: SRS-251
+    id: SRS-25
     author: Mihail Artugin
     changes:
     - addForeignKeyConstraint:
@@ -535,7 +542,7 @@ databaseChangeLog:
         referencedTableName: season_tickets
         validate: true
 - changeSet:
-    id: SRS-261
+    id: SRS-26
     author: Mihail Artugin
     changes:
     - createIndex:
@@ -546,7 +553,7 @@ databaseChangeLog:
         tableName: users
         unique: true
 - changeSet:
-    id: SRS-271
+    id: SRS-27
     author: Mihail Artugin
     changes:
     - createIndex:
@@ -557,7 +564,7 @@ databaseChangeLog:
         tableName: users
         unique: true
 - changeSet:
-    id: SRS-281
+    id: SRS-28
     author: Mihail Artugin
     changes:
     - addForeignKeyConstraint:
@@ -572,7 +579,7 @@ databaseChangeLog:
         referencedTableName: rental_sessions
         validate: true
 - changeSet:
-    id: SRS-291
+    id: SRS-29
     author: Mihail Artugin
     changes:
     - addForeignKeyConstraint:
@@ -587,7 +594,7 @@ databaseChangeLog:
         referencedTableName: countries
         validate: true
 - changeSet:
-    id: SRS-301
+    id: SRS-30
     author: Mihail Artugin
     changes:
     - addForeignKeyConstraint:
@@ -602,7 +609,7 @@ databaseChangeLog:
         referencedTableName: scooters
         validate: true
 - changeSet:
-    id: SRS-311
+    id: SRS-31
     author: Mihail Artugin
     changes:
     - addForeignKeyConstraint:
@@ -617,7 +624,7 @@ databaseChangeLog:
         referencedTableName: users
         validate: true
 - changeSet:
-    id: SRS-321
+    id: SRS-32
     author: Mihail Artugin
     changes:
     - addForeignKeyConstraint:
