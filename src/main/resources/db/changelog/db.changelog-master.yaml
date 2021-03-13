@@ -306,14 +306,15 @@ databaseChangeLog:
     author: Mihail Artugin
     changes:
     - createTable:
+        tableName: promo_cods
         columns:
         - column:
+            name: name
+            type: VARCHAR(64)
             constraints:
               nullable: false
               primaryKey: true
               primaryKeyName: promo_cods_pk
-            name: name
-            type: VARCHAR(64)
         - column:
             name: start_date
             type: TIMESTAMP WITHOUT TIME ZONE
@@ -329,36 +330,36 @@ databaseChangeLog:
         - column:
             name: rental_session_id
             type: BIGINT
-        tableName: promo_cods
+
 - changeSet:
     id: SRS-11
     author: Mihail Artugin
     changes:
     - createTable:
-        columns:
-        - column:
-            constraints:
-              nullable: false
-              primaryKey: true
-              primaryKeyName: scooters_pk
-            name: serial_number
-            type: VARCHAR(64)
-        - column:
-            constraints:
-              nullable: false
-            name: point_of_rental_id
-            type: BIGINT
-        - column:
-            constraints:
-              nullable: false
-            name: scooter_type_id
-            type: BIGINT
-        - column:
-            constraints:
-              nullable: false
-            name: time_of_use
-            type: INTEGER
         tableName: scooters
+        columns:
+          - column:
+              name: serial_number
+              type: VARCHAR(64)
+              constraints:
+                nullable: false
+                primaryKey: true
+                primaryKeyName: scooters_pk
+          - column:
+              name: point_of_rental_id
+              type: BIGINT
+              constraints:
+                nullable: false
+          - column:
+              name: scooter_type_id
+              type: BIGINT
+              constraints:
+                nullable: false
+          - column:
+              name: time_of_use
+              type: INTEGER
+              constraints:
+                nullable: false
 - changeSet:
     id: SRS-12
     author: Mihail Artugin
