@@ -170,7 +170,7 @@ databaseChangeLog:
                     uniqueConstraintName: roles_name_uq
 
   - changeSet:
-      id: SRS-61
+      id: SRS-7
       author: Mihail Artugin
       changes:
         - createTable:
@@ -193,7 +193,7 @@ databaseChangeLog:
                     uniqueConstraintName: statuses_name_uq
 
   - changeSet:
-      id: SRS-7
+      id: SRS-8
       author: Mihail Artugin
       changes:
         - createTable:
@@ -231,7 +231,7 @@ databaseChangeLog:
                     nullable: false
 
   - changeSet:
-      id: SRS-8
+      id: SRS-9
       author: Mihail Artugin
       changes:
         - createTable:
@@ -280,7 +280,7 @@ databaseChangeLog:
                     nullable: false
 
   - changeSet:
-      id: SRS-9
+      id: SRS-10
       author: Mihail Artugin
       changes:
         - createTable:
@@ -333,7 +333,7 @@ databaseChangeLog:
                     nullable: false
 
   - changeSet:
-      id: SRS-10
+      id: SRS-11
       author: Mihail Artugin
       changes:
         - createTable:
@@ -365,7 +365,7 @@ databaseChangeLog:
                   type: BIGINT
 
   - changeSet:
-      id: SRS-11
+      id: SRS-12
       author: Mihail Artugin
       changes:
         - createTable:
@@ -409,7 +409,7 @@ databaseChangeLog:
             validate: true
 
   - changeSet:
-      id: SRS-16
+      id: SRS-14
       author: Mihail Artugin
       changes:
         - addForeignKeyConstraint:
@@ -423,7 +423,7 @@ databaseChangeLog:
             validate: true
 
   - changeSet:
-      id: SRS-19
+      id: SRS-15
       author: Mihail Artugin
       changes:
         - addForeignKeyConstraint:
@@ -437,7 +437,7 @@ databaseChangeLog:
             validate: true
 
   - changeSet:
-      id: SRS-21
+      id: SRS-16
       author: Mihail Artugin
       changes:
         - addForeignKeyConstraint:
@@ -451,7 +451,7 @@ databaseChangeLog:
             validate: true
 
   - changeSet:
-      id: SRS-211
+      id: SRS-17
       author: Mihail Artugin
       changes:
         - addForeignKeyConstraint:
@@ -465,7 +465,7 @@ databaseChangeLog:
             validate: true
 
   - changeSet:
-      id: SRS-23
+      id: SRS-18
       author: Mihail Artugin
       changes:
         - addForeignKeyConstraint:
@@ -477,8 +477,9 @@ databaseChangeLog:
             referencedColumnNames: id
             referencedTableName: scooter_types
             validate: true
+
   - changeSet:
-      id: SRS-24
+      id: SRS-19
       author: Mihail Artugin
       changes:
         - addForeignKeyConstraint:
@@ -490,8 +491,9 @@ databaseChangeLog:
             referencedColumnNames: id
             referencedTableName: scooter_types
             validate: true
+
   - changeSet:
-      id: SRS-25
+      id: SRS-20
       author: Mihail Artugin
       changes:
         - addForeignKeyConstraint:
@@ -505,7 +507,7 @@ databaseChangeLog:
             validate: true
 
   - changeSet:
-      id: SRS-28
+      id: SRS-21
       author: Mihail Artugin
       changes:
         - addForeignKeyConstraint:
@@ -517,8 +519,9 @@ databaseChangeLog:
             referencedColumnNames: id
             referencedTableName: rental_sessions
             validate: true
+
   - changeSet:
-      id: SRS-29
+      id: SRS-22
       author: Mihail Artugin
       changes:
         - addForeignKeyConstraint:
@@ -530,8 +533,9 @@ databaseChangeLog:
             referencedColumnNames: id
             referencedTableName: countries
             validate: true
+
   - changeSet:
-      id: SRS-30
+      id: SRS-23
       author: Mihail Artugin
       changes:
         - addForeignKeyConstraint:
@@ -543,8 +547,9 @@ databaseChangeLog:
             referencedColumnNames: serial_number
             referencedTableName: scooters
             validate: true
+
   - changeSet:
-      id: SRS-31
+      id: SRS-24
       author: Mihail Artugin
       changes:
         - addForeignKeyConstraint:
@@ -556,8 +561,9 @@ databaseChangeLog:
             referencedColumnNames: id
             referencedTableName: users
             validate: true
+
   - changeSet:
-      id: SRS-32
+      id: SRS-25
       author: Mihail Artugin
       changes:
         - addForeignKeyConstraint:
