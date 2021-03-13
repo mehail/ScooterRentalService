@@ -519,8 +519,8 @@ databaseChangeLog:
         constraintName: season_tickets_scooter_types_id_fk
         deferrable: false
         initiallyDeferred: false
-        onDelete: NO ACTION
-        onUpdate: NO ACTION
+#        onDelete: NO ACTION
+#        onUpdate: NO ACTION
         referencedColumnNames: id
         referencedTableName: scooter_types
         validate: true
@@ -534,8 +534,8 @@ databaseChangeLog:
         constraintName: sessions_season_tickets_id_fk
         deferrable: false
         initiallyDeferred: false
-        onDelete: NO ACTION
-        onUpdate: NO ACTION
+#        onDelete: NO ACTION
+#        onUpdate: NO ACTION
         referencedColumnNames: id
         referencedTableName: season_tickets
         validate: true
@@ -550,17 +550,17 @@ databaseChangeLog:
         indexName: users_email_uindex
         tableName: users
         unique: true
-- changeSet:
-    id: SRS-27
-    author: Mihail Artugin
-    changes:
-    - createIndex:
-        columns:
-        - column:
-            name: login
-        indexName: users_login_uindex
-        tableName: users
-        unique: true
+#- changeSet:
+#    id: SRS-27
+#    author: Mihail Artugin
+#    changes:
+#    - createIndex:
+#        columns:
+#        - column:
+#            name: login
+#        indexName: users_login_uindex
+#        tableName: users
+#        unique: true
 - changeSet:
     id: SRS-28
     author: Mihail Artugin
@@ -571,8 +571,8 @@ databaseChangeLog:
         constraintName: promo_cods_sessions_id_fk
         deferrable: false
         initiallyDeferred: false
-        onDelete: NO ACTION
-        onUpdate: NO ACTION
+#        onDelete: NO ACTION
+#        onUpdate: NO ACTION
         referencedColumnNames: id
         referencedTableName: rental_sessions
         validate: true
@@ -586,8 +586,8 @@ databaseChangeLog:
         constraintName: cities_countries_id_fk
         deferrable: false
         initiallyDeferred: false
-        onDelete: NO ACTION
-        onUpdate: NO ACTION
+#        onDelete: NO ACTION
+#        onUpdate: NO ACTION
         referencedColumnNames: id
         referencedTableName: countries
         validate: true
@@ -601,8 +601,8 @@ databaseChangeLog:
         constraintName: rental_sessions_scooters_serial_number_fk
         deferrable: false
         initiallyDeferred: false
-        onDelete: NO ACTION
-        onUpdate: NO ACTION
+#        onDelete: NO ACTION
+#        onUpdate: NO ACTION
         referencedColumnNames: serial_number
         referencedTableName: scooters
         validate: true
@@ -616,8 +616,8 @@ databaseChangeLog:
         constraintName: sessions_users_id_fk
         deferrable: false
         initiallyDeferred: false
-        onDelete: NO ACTION
-        onUpdate: NO ACTION
+#        onDelete: NO ACTION
+#        onUpdate: NO ACTION
         referencedColumnNames: id
         referencedTableName: users
         validate: true
@@ -631,8 +631,8 @@ databaseChangeLog:
         constraintName: season_tickets_users_id_fk
         deferrable: false
         initiallyDeferred: false
-        onDelete: NO ACTION
-        onUpdate: NO ACTION
+#        onDelete: NO ACTION
+#        onUpdate: NO ACTION
         referencedColumnNames: id
         referencedTableName: users
         validate: true
