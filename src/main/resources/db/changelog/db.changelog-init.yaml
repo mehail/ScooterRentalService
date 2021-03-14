@@ -113,20 +113,6 @@ databaseChangeLog:
             separator: ','
             tableName: scooters
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         - loadData:
             columns:
               - column:
@@ -154,34 +140,6 @@ databaseChangeLog:
             schemaName: public
             separator: ','
             tableName: statuses
-
-        - loadData:
-            columns:
-              - column:
-                  name: name
-                  type: STRING
-              - column:
-                  name: start_date
-                  type: DATE
-              - column:
-                  name: expired_date
-                  type: DATE
-              - column:
-                  name: discount_percentage
-                  type: NUMERIC
-              - column:
-                  name: bonus_point
-                  type: NUMERIC
-              - column:
-                  name: rental_session_id
-                  type: NUMERIC
-            encoding: UTF-8
-            file: "db/changelog/testDataset/promocods.csv"
-            schemaName: public
-            separator: ','
-            tableName: promo_cods
-
-
 
         - loadData:
             columns:
@@ -214,3 +172,79 @@ databaseChangeLog:
             schemaName: public
             separator: ','
             tableName: users
+
+        - loadData:
+            columns:
+              - column:
+                  name: id
+                  type: NUMERIC
+              - column:
+                  name: user_id
+                  type: NUMERIC
+              - column:
+                  name: scooter_type_id
+                  type: NUMERIC
+              - column:
+                  name: price
+                  type: NUMERIC
+              - column:
+                  name: remaining_time
+                  type: NUMERIC
+              - column:
+                  name: start_date
+                  type: DATE
+              - column:
+                  name: expired_date
+                  type: DATE
+              - column:
+                  name: available_for_use
+                  type: BOOLEAN
+            encoding: UTF-8
+            file: "db/changelog/testDataset/seasonTickets.csv"
+            schemaName: public
+            separator: ','
+            tableName: season_tickets
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        - loadData:
+            columns:
+              - column:
+                  name: name
+                  type: STRING
+              - column:
+                  name: start_date
+                  type: DATE
+              - column:
+                  name: expired_date
+                  type: DATE
+              - column:
+                  name: discount_percentage
+                  type: NUMERIC
+              - column:
+                  name: bonus_point
+                  type: NUMERIC
+              - column:
+                  name: rental_session_id
+                  type: NUMERIC
+            encoding: UTF-8
+            file: "db/changelog/testDataset/promoCods.csv"
+            schemaName: public
+            separator: ','
+            tableName: promo_cods
+
+
+
+
