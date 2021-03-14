@@ -15,6 +15,6 @@ public class Scooter {
     @ManyToOne(optional=false, cascade=CascadeType.ALL)
     @JoinColumn(name = "scooter_type_id")
     private ScooterType type;
-    @Column(name = "time_of_use")
-    private Integer timeOfUse;
+    @Column(name = "time_millage")
+    private Integer timeMillage;
 }
