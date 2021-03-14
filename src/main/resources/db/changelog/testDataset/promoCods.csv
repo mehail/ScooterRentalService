@@ -1,0 +1,7 @@
+name,start_date,expired_date,discount_percentage,bonus_point,rental_session_id
+cash1,'2021-03-01',null,null,10,2
+cash2,'2021-03-01',null,null,20,3
+cash3,'2021-03-01',null,null,30,null
+percent1,'2021-03-01',null,5,null,5
+percent2,'2021-03-01',null,10,null,6
+percent3,'2021-03-01',null,15,null,null

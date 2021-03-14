@@ -1,0 +1,263 @@
+databaseChangeLog:
+  - changeSet:
+      id: SRS-init-testDataset
+      author: Mihail Artugin
+      changes:
+        - loadData:
+            columns:
+              - column:
+                  name: id
+                  type: NUMERIC
+              - column:
+                  name: country
+                  type: STRING
+            encoding: UTF-8
+            file: "db/changelog/testDataset/countries.csv"
+            schemaName: public
+            separator: ','
+            tableName: countries
+
+        - loadData:
+            columns:
+              - column:
+                  name: id
+                  type: NUMERIC
+              - column:
+                  name: city
+                  type: STRING
+              - column:
+                  name: country_id
+                  type: NUMERIC
+            encoding: UTF-8
+            file: "db/changelog/testDataset/cities.csv"
+            schemaName: public
+            separator: ','
+            tableName: cities
+
+        - loadData:
+            columns:
+              - column:
+                  name: id
+                  type: NUMERIC
+              - column:
+                  name: name
+                  type: STRING
+              - column:
+                  name: address
+                  type: STRING
+              - column:
+                  name: cities_id
+                  type: NUMERIC
+            encoding: UTF-8
+            file: "db/changelog/testDataset/pointOfRentals.csv"
+            schemaName: public
+            separator: ','
+            tableName: point_of_rentals
+
+        - loadData:
+            columns:
+              - column:
+                  name: id
+                  type: NUMERIC
+              - column:
+                  name: maker
+                  type: STRING
+            encoding: UTF-8
+            file: "db/changelog/testDataset/makers.csv"
+            schemaName: public
+            separator: ','
+            tableName: makers
+
+        - loadData:
+            columns:
+              - column:
+                  name: id
+                  type: NUMERIC
+              - column:
+                  name: model
+                  type: STRING
+              - column:
+                  name: maker_id
+                  type: NUMERIC
+              - column:
+                  name: max_speed
+                  type: NUMERIC
+              - column:
+                  name: price_per_minute
+                  type: NUMERIC
+            encoding: UTF-8
+            file: "db/changelog/testDataset/scooterTypes.csv"
+            schemaName: public
+            separator: ','
+            tableName: scooter_types
+
+        - loadData:
+            columns:
+              - column:
+                  name: serial_number
+                  type: STRING
+              - column:
+                  name: point_of_rental_id
+                  type: NUMERIC
+              - column:
+                  name: scooter_type_id
+                  type: NUMERIC
+              - column:
+                  name: time_of_use
+                  type: NUMERIC
+            encoding: UTF-8
+            file: "db/changelog/testDataset/scooters.csv"
+            schemaName: public
+            separator: ','
+            tableName: scooters
+
+        - loadData:
+            columns:
+              - column:
+                  name: id
+                  type: NUMERIC
+              - column:
+                  name: name
+                  type: STRING
+            encoding: UTF-8
+            file: "db/changelog/testDataset/roles.csv"
+            schemaName: public
+            separator: ','
+            tableName: roles
+
+        - loadData:
+            columns:
+              - column:
+                  name: id
+                  type: NUMERIC
+              - column:
+                  name: name
+                  type: STRING
+            encoding: UTF-8
+            file: "db/changelog/testDataset/statuses.csv"
+            schemaName: public
+            separator: ','
+            tableName: statuses
+
+        - loadData:
+            columns:
+              - column:
+                  name: id
+                  type: NUMERIC
+              - column:
+                  name: email
+                  type: STRING
+              - column:
+                  name: password
+                  type: STRING
+              - column:
+                  name: first_name
+                  type: STRING
+              - column:
+                  name: last_name
+                  type: STRING
+              - column:
+                  name: role_id
+                  type: NUMERIC
+              - column:
+                  name: status_id
+                  type: NUMERIC
+              - column:
+                  name: balance
+                  type: NUMERIC
+            encoding: UTF-8
+            file: "db/changelog/testDataset/users.csv"
+            schemaName: public
+            separator: ','
+            tableName: users
+
+        - loadData:
+            columns:
+              - column:
+                  name: id
+                  type: NUMERIC
+              - column:
+                  name: user_id
+                  type: NUMERIC
+              - column:
+                  name: scooter_type_id
+                  type: NUMERIC
+              - column:
+                  name: price
+                  type: NUMERIC
+              - column:
+                  name: remaining_time
+                  type: NUMERIC
+              - column:
+                  name: start_date
+                  type: DATE
+              - column:
+                  name: expired_date
+                  type: DATE
+              - column:
+                  name: available_for_use
+                  type: BOOLEAN
+            encoding: UTF-8
+            file: "db/changelog/testDataset/seasonTickets.csv"
+            schemaName: public
+            separator: ','
+            tableName: season_tickets
+
+        - loadData:
+            columns:
+              - column:
+                  name: id
+                  type: NUMERIC
+              - column:
+                  name: user_id
+                  type: NUMERIC
+              - column:
+                  name: begin
+                  type: DATE
+              - column:
+                  name: end
+                  type: DATE
+              - column:
+                  name: scooter_serial_number
+                  type: STRING
+              - column:
+                  name: rate
+                  type: NUMERIC
+              - column:
+                  name: season_ticket_id
+                  type: NUMERIC
+            encoding: UTF-8
+            file: "db/changelog/testDataset/rentalSessions.csv"
+            schemaName: public
+            separator: ','
+            tableName: rental_sessions
+
+        - loadData:
+            columns:
+              - column:
+                  name: name
+                  type: STRING
+              - column:
+                  name: start_date
+                  type: DATE
+              - column:
+                  name: expired_date
+                  type: DATE
+              - column:
+                  name: discount_percentage
+                  type: NUMERIC
+              - column:
+                  name: bonus_point
+                  type: NUMERIC
+              - column:
+                  name: rental_session_id
+                  type: NUMERIC
+            encoding: UTF-8
+            file: "db/changelog/testDataset/promoCods.csv"
+            schemaName: public
+            separator: ','
+            tableName: promo_cods
+
+
+
+

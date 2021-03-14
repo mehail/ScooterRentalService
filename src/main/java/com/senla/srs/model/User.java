@@ -26,7 +26,7 @@ public class User {
     private Role role;
     @Enumerated(value = EnumType.STRING)
     private Status status;
-    private int balance;
+    private Integer balance;
 
     public User() {
 
