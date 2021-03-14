@@ -1,8 +1,6 @@
-#  BOOLEAN, NUMERIC, DATE, STRING, COMPUTED, SEQUENCE, UUID or SKIP
-
 databaseChangeLog:
   - changeSet:
-      id: testDataset
+      id: SRS-init-testDataset
       author: Mihail Artugin
       changes:
         - loadData:
@@ -205,19 +203,34 @@ databaseChangeLog:
             separator: ','
             tableName: season_tickets
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+        - loadData:
+            columns:
+              - column:
+                  name: id
+                  type: NUMERIC
+              - column:
+                  name: user_id
+                  type: NUMERIC
+              - column:
+                  name: begin
+                  type: DATE
+              - column:
+                  name: end
+                  type: DATE
+              - column:
+                  name: scooter_serial_number
+                  type: STRING
+              - column:
+                  name: rate
+                  type: NUMERIC
+              - column:
+                  name: season_ticket_id
+                  type: NUMERIC
+            encoding: UTF-8
+            file: "db/changelog/testDataset/rentalSessions.csv"
+            schemaName: public
+            separator: ','
+            tableName: rental_sessions
 
         - loadData:
             columns:
