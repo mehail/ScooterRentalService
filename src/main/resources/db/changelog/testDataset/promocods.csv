@@ -1,0 +1,5 @@
+name, start_date, expired_date, discount_percentage, bonus_point, rental_session_id
+cash1, '2021-06-01', null, null, 10, null
+cash2, '2021-06-02', null, null, 20, null
+percent1, '2021-06-01', null, 5, null, null
+percent2, '2021-06-02', null, 10, null, null
