@@ -1,7 +1,5 @@
 package com.senla.srs.model;
 
-import com.senla.srs.model.security.Role;
-import com.senla.srs.model.security.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -22,13 +20,12 @@ public class User {
     private String firstName;
     @Column(name = "last_name")
     private String lastName;
-    @Enumerated(value = EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     private Role role;
-    @Enumerated(value = EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     private Status status;
     private Integer balance;
 
     public User() {
-
     }
 }

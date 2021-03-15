@@ -175,52 +175,6 @@ databaseChangeLog:
       author: Mihail Artugin
       changes:
         - createTable:
-            tableName: roles
-            columns:
-              - column:
-                  name: id
-                  type: BIGINT
-                  autoIncrement: true
-                  constraints:
-                    nullable: false
-                    primaryKey: true
-                    primaryKeyName: roles_pk
-              - column:
-                  name: name
-                  type: VARCHAR(64)
-                  constraints:
-                    nullable: false
-                    unique: true
-                    uniqueConstraintName: roles_name_uq                    
-                    
-  - changeSet:
-      id: SRS-create-8
-      author: Mihail Artugin
-      changes:
-        - createTable:
-            tableName: statuses
-            columns:
-              - column:
-                  name: id
-                  type: BIGINT
-                  autoIncrement: true
-                  constraints:
-                    nullable: false
-                    primaryKey: true
-                    primaryKeyName: statuses_pk
-              - column:
-                  name: name
-                  type: VARCHAR(64)
-                  constraints:
-                    nullable: false
-                    unique: true
-                    uniqueConstraintName: statuses_name_uq                    
-                    
-  - changeSet:
-      id: SRS-create-9
-      author: Mihail Artugin
-      changes:
-        - createTable:
             tableName: users
             columns:
               - column:
@@ -254,13 +208,13 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: role_id
-                  type: BIGINT
+                  name: role
+                  type: INTEGER
                   constraints:
                     nullable: false
               - column:
-                  name: status_id
-                  type: BIGINT
+                  name: status
+                  type: INTEGER
                   constraints:
                     nullable: false
               - column:
@@ -270,7 +224,7 @@ databaseChangeLog:
                     nullable: false
 
   - changeSet:
-      id: SRS-create-10
+      id: SRS-create-8
       author: Mihail Artugin
       changes:
         - createTable:
@@ -319,7 +273,7 @@ databaseChangeLog:
                     nullable: false
 
   - changeSet:
-      id: SRS-create-11
+      id: SRS-create-9
       author: Mihail Artugin
       changes:
         - createTable:
@@ -361,7 +315,7 @@ databaseChangeLog:
                   type: BIGINT
 
   - changeSet:
-      id: SRS-create-12
+      id: SRS-create-10
       author: Mihail Artugin
       changes:
         - createTable:
@@ -393,7 +347,7 @@ databaseChangeLog:
                   type: BIGINT
 
   - changeSet:
-      id: SRS-create-13
+      id: SRS-create-11
       author: Mihail Artugin
       changes:
         - addForeignKeyConstraint:
@@ -407,7 +361,7 @@ databaseChangeLog:
             validate: true
 
   - changeSet:
-      id: SRS-create-14
+      id: SRS-create-12
       author: Mihail Artugin
       changes:
         - addForeignKeyConstraint:
@@ -421,7 +375,7 @@ databaseChangeLog:
             validate: true
 
   - changeSet:
-      id: SRS-create-15
+      id: SRS-create-13
       author: Mihail Artugin
       changes:
         - addForeignKeyConstraint:
@@ -435,35 +389,7 @@ databaseChangeLog:
             validate: true
 
   - changeSet:
-      id: SRS-create-16
-      author: Mihail Artugin
-      changes:
-        - addForeignKeyConstraint:
-            baseColumnNames: role_id
-            baseTableName: users
-            constraintName: users_roles_id_fk
-            deferrable: false
-            initiallyDeferred: false
-            referencedColumnNames: id
-            referencedTableName: roles
-            validate: true
-
-  - changeSet:
-      id: SRS-create-17
-      author: Mihail Artugin
-      changes:
-        - addForeignKeyConstraint:
-            baseColumnNames: status_id
-            baseTableName: users
-            constraintName: users_statuses_id_fk
-            deferrable: false
-            initiallyDeferred: false
-            referencedColumnNames: id
-            referencedTableName: statuses
-            validate: true
-
-  - changeSet:
-      id: SRS-create-18
+      id: SRS-create-14
       author: Mihail Artugin
       changes:
         - addForeignKeyConstraint:
@@ -477,7 +403,7 @@ databaseChangeLog:
             validate: true
 
   - changeSet:
-      id: SRS-create-19
+      id: SRS-create-15
       author: Mihail Artugin
       changes:
         - addForeignKeyConstraint:
@@ -491,7 +417,7 @@ databaseChangeLog:
             validate: true
 
   - changeSet:
-      id: SRS-create-20
+      id: SRS-create-16
       author: Mihail Artugin
       changes:
         - addForeignKeyConstraint:
@@ -505,7 +431,7 @@ databaseChangeLog:
             validate: true
 
   - changeSet:
-      id: SRS-create-21
+      id: SRS-create-17
       author: Mihail Artugin
       changes:
         - addForeignKeyConstraint:
@@ -519,7 +445,7 @@ databaseChangeLog:
             validate: true
 
   - changeSet:
-      id: SRS-create-22
+      id: SRS-create-18
       author: Mihail Artugin
       changes:
         - addForeignKeyConstraint:
@@ -533,7 +459,7 @@ databaseChangeLog:
             validate: true
 
   - changeSet:
-      id: SRS-create-23
+      id: SRS-create-19
       author: Mihail Artugin
       changes:
         - addForeignKeyConstraint:
@@ -547,7 +473,7 @@ databaseChangeLog:
             validate: true
 
   - changeSet:
-      id: SRS-create-24
+      id: SRS-create-20
       author: Mihail Artugin
       changes:
         - addForeignKeyConstraint:
@@ -561,7 +487,7 @@ databaseChangeLog:
             validate: true
 
   - changeSet:
-      id: SRS-create-25
+      id: SRS-create-21
       author: Mihail Artugin
       changes:
         - addForeignKeyConstraint:
@@ -573,4 +499,3 @@ databaseChangeLog:
             referencedColumnNames: id
             referencedTableName: users
             validate: true
-

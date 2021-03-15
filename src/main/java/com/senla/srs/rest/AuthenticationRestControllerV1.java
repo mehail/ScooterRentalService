@@ -1,5 +1,6 @@
 package com.senla.srs.rest;
 
+import com.senla.srs.dto.AuthenticationRequestDTO;
 import com.senla.srs.model.User;
 import com.senla.srs.repository.UserRepository;
 import com.senla.srs.security.JwtTokenProvider;

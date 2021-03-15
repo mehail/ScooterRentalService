@@ -1,4 +1,4 @@
-package com.senla.srs.rest;
+package com.senla.srs.dto;
 
 import lombok.Data;
 
