@@ -1,4 +1,4 @@
-<img src="https://github.com/mehail/ScooterRentalService/blob/MD/other/Logo/logo.png" width="400"/>
+<img src="https://github.com/mehail/ScooterRentalService/blob/MD/other/Logo/logo.png"/>
 
 # 1. General description
 
