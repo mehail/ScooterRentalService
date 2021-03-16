@@ -1,5 +1,4 @@
-<img src="file:///D:\Java\Учебные проекты\ScooterRentalService\other\Logo\logo.jpg" />
-[comment]: <> (<img src="https://github.com/kubabar1/CarRental/blob/master/CarRental/src/main/webapp/static/img/car_rental_logo_name.png" width="400"/>)
+<img src="https://github.com/mehail/ScooterRentalService/blob/MD/other/Logo/logo.png" width="400"/>
 
 # 1. General description
 
