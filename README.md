@@ -102,7 +102,7 @@ mvn spring-boot:run
 * View detailed information about the rental point
 * Charging for the use of scooters (hourly, subscription, the ability to set a price, discount)
 
-## Contacts
+# Contacts
 
 * **Author:** Mihail Artugin
 * **E-mail:** mehailpost@gmail.com
