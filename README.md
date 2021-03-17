@@ -1,49 +1,50 @@
-<img src="https://github.com/mehail/ScooterRentalService/blob/MD/other/Logo/logo.png"/>
+<img src="https://github.com/mehail/ScooterRentalService/blob/master/other/Logo/logo.png"/>
 
+____
 # General description
-
 *Electric scooter rental management system*
 
 ## Program name
-
 *Scooter Rental Service*
 
 ## The purpose of the application
-
 This software was written as part of the final assignment for Java development courses from SENLA. 
 The main goal of creating this application was the practical application of the knowledge I have accumulated about 
 creating applications using the Spring framework, Hibernate and relational databases.
 
-# Description of functionality
-
 ## Implementation information
-
 * **Programming language:** Java
 * **Java version:** "11"
 
 RESTful application is written using technologies:
-
-<ul>
-  <li>Spring Boot</li>
-  <li>Spring Web</li>
-  <li>Spring Security</li>
-  <li>Spring Data JPA</li>
-  <li>Hibernate</li>
-</ul>
+* Spring Boot 
+* Spring Web
+* Spring Security
+* Spring Data JPA
+* Hibernate
 
 Object-relational database management system
 * PostgreSQL
+___
+# Description of functionality
+* User registration in the system (administrators and clients)
+* Editing the user's personal information
+* Hierarchical list of rental points with geographical reference
+* Ability to add / remove / edit scooters and rental points
+* View detailed information about the rental point
+* Charging for the use of scooters (hourly, subscription, the ability to set a price, discount)
 
-## Starting
+___
 
-### To run you need install:
+# Launching the app
 
+## 1. Install:
 <table>
     <thead>
         <tr>
             <th>Software</th>
             <th>Version min.</th>
-            <th>deb based linux</th>
+            <th>Deb based linux</th>
             <th>Windows</th>
         </tr>
     </thead>
@@ -74,38 +75,29 @@ Object-relational database management system
     </tbody>
 </table>
 
-### Clone repository:
+## 2. Clone repository or download [archive](https://github.com/mehail/ScooterRentalService/archive/master.zip):
 
 ```
   git clone https://github.com/mehail/ScooterRentalService.git
 ```
-### Or download archive:
-<a href="https://github.com/mehail/ScooterRentalService/archive/master.zip">ScooterRentalService</a>
 
-### Edit the <i>application.properties</i> file according to your privacy settings
-[application.properties](src/main/resources/application.properties)
+## 3. Edit the [application.properties](src/main/resources/application.properties) file according to your privacy settings
 
-## Application launch options
-* Run the runner.bat file  
+## 4. Launch the application
+* Run the [runner.bat](runner.bat) file for Windows 
 
 
-* From the command line / terminal
+* From the command line / terminal:
+
 ```
 mvn clean
 mvn install
 mvn spring-boot:run
 ```
 
-## The main functionality of the program
-
-* User registration in the system (administrators and clients)
-* Editing the user's personal information
-* Hierarchical list of rental points with geographical reference
-* Ability to add / remove / edit scooters and rental points
-* View detailed information about the rental point
-* Charging for the use of scooters (hourly, subscription, the ability to set a price, discount)
+____
 
 # Contacts
 
-* **Author:** Mihail Artugin
+* **Author:** Mihail Artyugin
 * **E-mail:** mehailpost@gmail.com
