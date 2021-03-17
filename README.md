@@ -82,9 +82,12 @@ Object-relational database management system
 ### Or download archive:
 <a href="https://github.com/mehail/ScooterRentalService/archive/master.zip">ScooterRentalService</a>
 
+### Edit the <i>application.properties</i> file according to your privacy settings
+[application.properties](src/main/resources/application.properties)
+
 ## Application launch options
 * Run the runner.bat file  
-  
+
 
 * From the command line / terminal
 ```
