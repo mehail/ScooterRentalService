@@ -1,11 +1,13 @@
-package com.senla.srs.model.old;
+package com.senla.srs.model;
+
+import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
-//@Data
-//@Entity
-//@Table(name = "promo_cods")
+@Data
+@Entity
+@Table(name = "promo_cods")
 public class PromoCod {
     @Id
     private String name;
