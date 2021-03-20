@@ -1,20 +1,20 @@
-package com.senla.srs.model.old;
+package com.senla.srs.model.entity;
 
-import com.senla.srs.model.User;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
-//@Entity
-//@Data
-//@Table(name = "season_tickets")
+@Entity
+@Data
+@Table(name = "season_tickets")
 public class SeasonTicket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne(optional=false, cascade=CascadeType.ALL)
     @JoinColumn(name = "user_id")
-    private User myUser;
+    private User user;
     @ManyToOne(optional=false, cascade=CascadeType.ALL)
     @JoinColumn(name = "scooter_type_id")
     private ScooterType scooterType;

@@ -1,6 +1,6 @@
-package com.senla.srs.repository;
+package com.senla.srs.model.repository;
 
-import com.senla.srs.model.User;
+import com.senla.srs.model.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

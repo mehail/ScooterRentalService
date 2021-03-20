@@ -1,13 +1,12 @@
-package com.senla.srs.model.old;
+package com.senla.srs.model.entity;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import lombok.Data;
 
-//@Data
-//@Entity
-//@Table(name = "scooter_types")
+import javax.persistence.*;
+
+@Data
+@Entity
+@Table(name = "scooter_types")
 public class ScooterType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

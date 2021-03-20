@@ -1,10 +1,12 @@
-package com.senla.srs.model.old;
+package com.senla.srs.model.entity;
+
+import lombok.Data;
 
 import javax.persistence.*;
 
-//@Data
-//@Entity
-//@Table(name = "scooters")
+@Data
+@Entity
+@Table(name = "scooters")
 public class Scooter {
     @Id
     @Column(name = "serial_number")

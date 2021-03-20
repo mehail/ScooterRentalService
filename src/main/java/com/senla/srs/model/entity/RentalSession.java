@@ -1,13 +1,13 @@
-package com.senla.srs.model.old;
+package com.senla.srs.model.entity;
 
-import com.senla.srs.model.User;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
-//@Data
-//@Entity
-//@Table(name = "rental_sessions")
+@Data
+@Entity
+@Table(name = "rental_sessions")
 public class RentalSession {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
