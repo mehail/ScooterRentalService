@@ -1,4 +1,4 @@
-package com.senla.srs.config;
+package com.senla.srs.security.config;
 
 import com.senla.srs.security.JwtConfigurer;
 import org.springframework.context.annotation.Bean;

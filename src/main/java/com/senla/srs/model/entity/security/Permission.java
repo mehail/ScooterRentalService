@@ -1,6 +1,7 @@
-package com.senla.srs.model.security;
+package com.senla.srs.model.entity.security;
 
 public enum Permission {
+    //ToDo Remake to fit the model
     DEVELOPERS_READ("developers:read"),
     DEVELOPERS_WRITE("developers:write");
 

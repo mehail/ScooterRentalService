@@ -1,14 +1,13 @@
-package com.senla.srs.model;
+package com.senla.srs.model.entity;
 
-import com.senla.srs.model.security.Role;
-import com.senla.srs.model.security.Status;
+import com.senla.srs.model.entity.security.Role;
+import com.senla.srs.model.entity.security.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
 
 import javax.persistence.*;
 
-//@Component
 @Entity
 @Table(name = "users")
 @Data
