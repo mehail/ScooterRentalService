@@ -1,7 +1,8 @@
-package com.senla.srs.model.service;
+package com.senla.srs.service.impl;
 
-import com.senla.srs.model.entity.User;
-import com.senla.srs.model.repository.UserRepository;
+import com.senla.srs.model.User;
+import com.senla.srs.repository.UserRepository;
+import com.senla.srs.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Autowired
@@ -28,7 +29,12 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public Optional<User> findByFirstName(String firstName) {
-        return userRepository.findByFirstName(firstName);
+    public Optional<User> retrieveUserById(Long id) {
+        return userRepository.findById(id);
+    }
+
+    @Override
+    public void delete(User user) {
+        userRepository.delete(user);
     }
 }

@@ -1,10 +1,10 @@
 package com.senla.srs.controller;
 
-import com.senla.srs.model.entity.User;
-import com.senla.srs.model.service.UserService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.senla.srs.model.User;
+import com.senla.srs.service.UserService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,5 +20,24 @@ public class UserRestControllerV1 {
     @GetMapping
     public List<User> getAll() {
         return userService.retrieveAllUsers();
+    }
+
+    @GetMapping("/{id}")
+    public User getById(@PathVariable Long id) {
+        return userService.retrieveUserById(id).get();
+    }
+
+    @PostMapping
+    public User create(@RequestBody User user) {
+        userService.save(user);
+        return user;
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable String id) {
+        User user = userService.retrieveUserById(Long.valueOf(id)).get();
+        userService.delete(user);
+
+        return new ResponseEntity<>("Grohnuli", HttpStatus.ACCEPTED);
     }
 }

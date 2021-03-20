@@ -1,8 +1,8 @@
 package com.senla.srs.controller;
 
 import com.senla.srs.dto.AuthenticationRequestDTO;
-import com.senla.srs.model.entity.User;
-import com.senla.srs.model.repository.UserRepository;
+import com.senla.srs.model.User;
+import com.senla.srs.repository.UserRepository;
 import com.senla.srs.security.JwtTokenProvider;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

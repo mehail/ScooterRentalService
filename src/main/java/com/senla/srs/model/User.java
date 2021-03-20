@@ -1,7 +1,7 @@
-package com.senla.srs.model.entity;
+package com.senla.srs.model;
 
-import com.senla.srs.model.entity.security.Role;
-import com.senla.srs.model.entity.security.Status;
+import com.senla.srs.model.security.Role;
+import com.senla.srs.model.security.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
