@@ -1,4 +1,4 @@
-package com.senla.srs.rest;
+package com.senla.srs.controller;
 
 import com.senla.srs.dto.AuthenticationRequestDTO;
 import com.senla.srs.model.entity.User;
