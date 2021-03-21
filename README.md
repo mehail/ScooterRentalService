@@ -67,11 +67,6 @@ ___
             <td><i>sudo apt-get install maven</i></td>
             <td><a href="https://maven.apache.org/download.cgi">maven.apache.org</a></td>
         </tr>
-        <tr>
-            <td>Tomcat</td>
-            <td align="center">10</td>
-            <td colspan="2"><a href="https://tomcat.apache.org/download-10.cgi">tomcat.apache.org</a></td>
-        </tr>
     </tbody>
 </table>
 
