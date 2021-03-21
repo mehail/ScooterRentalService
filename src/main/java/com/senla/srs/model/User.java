@@ -1,7 +1,7 @@
 package com.senla.srs.model;
 
 import com.senla.srs.model.security.Role;
-import com.senla.srs.model.security.Status;
+import com.senla.srs.model.security.UserStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
@@ -31,7 +31,7 @@ public class User {
     private Role role;
     @NonNull
     @Enumerated(EnumType.ORDINAL)
-    private Status status;
+    private UserStatus status;
     @NonNull
     private Integer balance;
 

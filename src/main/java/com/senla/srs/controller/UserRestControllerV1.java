@@ -34,10 +34,9 @@ public class UserRestControllerV1 {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable String id) {
-        User user = userService.retrieveUserById(Long.valueOf(id)).get();
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        User user = userService.retrieveUserById(id).get();
         userService.delete(user);
-
         return new ResponseEntity<>("Grohnuli", HttpStatus.ACCEPTED);
     }
 }
