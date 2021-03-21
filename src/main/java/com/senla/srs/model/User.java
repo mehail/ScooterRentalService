@@ -1,7 +1,6 @@
 package com.senla.srs.model;
 
 import com.senla.srs.model.security.Role;
-import com.senla.srs.model.security.UserStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;

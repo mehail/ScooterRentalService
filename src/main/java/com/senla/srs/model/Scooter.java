@@ -1,6 +1,7 @@
 package com.senla.srs.model;
 
 import lombok.Data;
+import lombok.NonNull;
 
 import javax.persistence.*;
 
@@ -19,4 +20,7 @@ public class Scooter {
     private ScooterType type;
     @Column(name = "time_millage")
     private Integer timeMillage;
+    @NonNull
+    @Enumerated(EnumType.ORDINAL)
+    private ScooterStatus status;
 }

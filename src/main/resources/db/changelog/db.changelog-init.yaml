@@ -105,6 +105,9 @@ databaseChangeLog:
               - column:
                   name: time_of_use
                   type: NUMERIC
+              - column:
+                  name: status_id
+                  type: NUMERIC
             encoding: UTF-8
             file: "db/changelog/testDataset/scooters.csv"
             schemaName: public

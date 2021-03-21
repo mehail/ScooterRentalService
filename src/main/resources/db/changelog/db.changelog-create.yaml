@@ -169,6 +169,11 @@ databaseChangeLog:
                   type: INTEGER
                   constraints:
                     nullable: false
+              - column:
+                  name: status
+                  type: INTEGER
+                  constraints:
+                    nullable: false
                     
   - changeSet:
       id: SRS-create-7
