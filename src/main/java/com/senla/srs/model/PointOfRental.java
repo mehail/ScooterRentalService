@@ -10,6 +10,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "point_of_rentals")
+@SecondaryTable(name = "cities", pkJoinColumns = {@PrimaryKeyJoinColumn(name = "id")})
 public class PointOfRental {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,7 +18,7 @@ public class PointOfRental {
     @NonNull
     private String name;
     @NonNull
-    @Column(name = "cities_id")
+    @Column(table = "cities")
     private String city;
     @NonNull
     private String address;
