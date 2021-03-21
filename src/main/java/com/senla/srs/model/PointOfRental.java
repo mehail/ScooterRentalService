@@ -15,4 +15,5 @@ public class PointOfRental {
     @Column(name = "cities_id")
     private String city;
     private String address;
+    private Boolean available;
 }
