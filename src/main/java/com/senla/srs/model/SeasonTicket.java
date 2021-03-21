@@ -1,5 +1,6 @@
 package com.senla.srs.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
 
@@ -7,6 +8,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+@AllArgsConstructor
 @Data
 @Table(name = "season_tickets")
 public class SeasonTicket {
@@ -35,5 +37,20 @@ public class SeasonTicket {
     private Boolean availableForUse;
 
     public SeasonTicket() {
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SeasonTicket)) return false;
+
+        SeasonTicket that = (SeasonTicket) o;
+
+        return getId().equals(that.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getId().hashCode();
     }
 }

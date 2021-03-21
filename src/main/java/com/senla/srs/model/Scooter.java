@@ -1,11 +1,13 @@
 package com.senla.srs.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
 
 import javax.persistence.*;
 
 @Data
+@AllArgsConstructor
 @Entity
 @Table(name = "scooters")
 public class Scooter {
@@ -28,5 +30,20 @@ public class Scooter {
     private ScooterStatus status;
 
     public Scooter() {
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Scooter)) return false;
+
+        Scooter scooter = (Scooter) o;
+
+        return getSerialNumber().equals(scooter.getSerialNumber());
+    }
+
+    @Override
+    public int hashCode() {
+        return getSerialNumber().hashCode();
     }
 }
