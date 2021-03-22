@@ -80,6 +80,11 @@ databaseChangeLog:
                   type: BIGINT
                   constraints:
                     nullable: false
+              - column:
+                  name: available
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
 
   - changeSet:
       id: SRS-create-4
@@ -166,6 +171,11 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: time_millage
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
                   type: INTEGER
                   constraints:
                     nullable: false

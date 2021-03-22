@@ -1,8 +1,8 @@
 package com.senla.srs.security;
 
 import lombok.Data;
-import com.senla.srs.model.entity.security.Status;
-import com.senla.srs.model.entity.User;
+import com.senla.srs.model.UserStatus;
+import com.senla.srs.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -64,10 +64,10 @@ public class SecurityUser implements UserDetails {
         System.out.println(user);
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(), user.getPassword(),
-                user.getStatus().equals(Status.ACTIVE),
-                user.getStatus().equals(Status.ACTIVE),
-                user.getStatus().equals(Status.ACTIVE),
-                user.getStatus().equals(Status.ACTIVE),
+                user.getStatus().equals(UserStatus.ACTIVE),
+                user.getStatus().equals(UserStatus.ACTIVE),
+                user.getStatus().equals(UserStatus.ACTIVE),
+                user.getStatus().equals(UserStatus.ACTIVE),
                 user.getRole().getAuthorities()
         );
     }

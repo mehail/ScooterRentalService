@@ -1,17 +1,16 @@
-package com.senla.srs.model.entity;
+package com.senla.srs.model;
 
-import com.senla.srs.model.entity.security.Role;
-import com.senla.srs.model.entity.security.Status;
+import com.senla.srs.model.security.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
 
 import javax.persistence.*;
 
-@Entity
-@Table(name = "users")
 @Data
 @AllArgsConstructor
+@Entity
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,10 +30,25 @@ public class User {
     private Role role;
     @NonNull
     @Enumerated(EnumType.ORDINAL)
-    private Status status;
+    private UserStatus status;
     @NonNull
     private Integer balance;
 
     public User() {
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+
+        User user = (User) o;
+
+        return getId().equals(user.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getId().hashCode();
     }
 }

@@ -48,6 +48,9 @@ databaseChangeLog:
               - column:
                   name: cities_id
                   type: NUMERIC
+              - column:
+                  name: available
+                  type: BOOLEAN
             encoding: UTF-8
             file: "db/changelog/testDataset/pointOfRentals.csv"
             schemaName: public
@@ -104,6 +107,9 @@ databaseChangeLog:
                   type: NUMERIC
               - column:
                   name: time_of_use
+                  type: NUMERIC
+              - column:
+                  name: status_id
                   type: NUMERIC
             encoding: UTF-8
             file: "db/changelog/testDataset/scooters.csv"
