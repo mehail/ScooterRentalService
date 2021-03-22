@@ -1,9 +1,11 @@
 package com.senla.srs.model.security;
 
 public enum Permission {
+    USERS_READ("users:read"),
+    USERS_WRITE("users:write");
     //ToDo Remake to fit the model
-    DEVELOPERS_READ("developers:read"),
-    DEVELOPERS_WRITE("developers:write");
+//    DEVELOPERS_READ("developers:read"),
+//    DEVELOPERS_WRITE("developers:write");
 
     private final String permission;
 
