@@ -1,9 +1,9 @@
 package com.senla.srs.controller;
 
+import com.senla.srs.dto.UserDto;
+import com.senla.srs.mapper.UserMapper;
 import com.senla.srs.model.User;
 import com.senla.srs.service.UserService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,9 +13,11 @@ import java.util.List;
 @RequestMapping("/api/v1/users")
 public class UserRestControllerV1 {
     private UserService userService;
+    private UserMapper userMapper;
 
-    public UserRestControllerV1(UserService userService) {
+    public UserRestControllerV1(UserService userService, UserMapper userMapper) {
         this.userService = userService;
+        this.userMapper = userMapper;
     }
 
     @GetMapping
@@ -24,8 +26,9 @@ public class UserRestControllerV1 {
     }
 
     @GetMapping("/{id}")
-    public User getById(@PathVariable Long id) {
-        return userService.retrieveUserById(id).get();
+    public UserDto getById(@PathVariable Long id) {
+        User user = userService.retrieveUserById(id).get();
+        return userMapper.toDto(user);
     }
 
     @PostMapping
@@ -35,10 +38,10 @@ public class UserRestControllerV1 {
         return user;
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
-        User user = userService.retrieveUserById(id).get();
-        userService.delete(user);
-        return new ResponseEntity<>("Grohnuli", HttpStatus.ACCEPTED);
-    }
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<?> delete(@PathVariable Long id) {
+//        User user = userService.retrieveUserById(id).get();
+//        userService.delete(user);
+//        return new ResponseEntity<>("Grohnuli", HttpStatus.ACCEPTED);
+//    }
 }

@@ -1,4 +1,4 @@
-package com.senla.srs.dto;
+package com.senla.srs.dto.test;
 
 import com.senla.srs.model.PointOfRental;
 import com.senla.srs.model.ScooterType;

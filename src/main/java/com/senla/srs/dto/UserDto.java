@@ -6,7 +6,7 @@ import lombok.NonNull;
 
 @Data
 @AllArgsConstructor
-public class UserDTO {
+public class UserDto extends AbstractDto {
     private Long id;
     @NonNull
     private String email;
@@ -20,9 +20,9 @@ public class UserDTO {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof UserDTO)) return false;
+        if (!(o instanceof UserDto)) return false;
 
-        UserDTO userDTO = (UserDTO) o;
+        UserDto userDTO = (UserDto) o;
 
         if (getId() != null ? !getId().equals(userDTO.getId()) : userDTO.getId() != null) return false;
         return getEmail().equals(userDTO.getEmail());

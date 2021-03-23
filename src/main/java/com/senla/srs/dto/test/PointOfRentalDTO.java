@@ -1,4 +1,4 @@
-package com.senla.srs.dto;
+package com.senla.srs.dto.test;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
