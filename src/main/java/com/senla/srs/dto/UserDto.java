@@ -2,16 +2,16 @@ package com.senla.srs.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class UserDto extends AbstractDto {
     private Long id;
     @NonNull
     private String email;
-    @NonNull
-    private String password;
     @NonNull
     private String firstName;
     @NonNull
