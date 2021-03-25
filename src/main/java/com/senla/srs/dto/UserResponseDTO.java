@@ -1,12 +1,8 @@
 package com.senla.srs.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
 
-@Data
-@AllArgsConstructor
+@Getter
 @NoArgsConstructor
 public class UserResponseDTO extends UserDTO{
     @NonNull
