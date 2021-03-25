@@ -1,0 +1,15 @@
+package com.senla.srs.service;
+
+import com.senla.srs.model.PointOfRental;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public interface PointOfRentalService {
+    void save(PointOfRental pointOfRental);
+    List<PointOfRental> retrieveAllPointOfRentals();
+    Optional<PointOfRental> retrievePointOfRentalById(Long id);
+    void delete(PointOfRental pointOfRental);
+}
