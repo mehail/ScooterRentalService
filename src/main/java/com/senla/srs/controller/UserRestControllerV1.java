@@ -1,6 +1,6 @@
 package com.senla.srs.controller;
 
-import com.senla.srs.dto.UserDto;
+import com.senla.srs.dto.UserResponseDTO;
 import com.senla.srs.mapper.UserMapper;
 import com.senla.srs.model.User;
 import com.senla.srs.service.UserService;
@@ -26,7 +26,7 @@ public class UserRestControllerV1 {
     }
 
     @GetMapping("/{id}")
-    public UserDto getById(@PathVariable Long id) {
+    public UserResponseDTO getById(@PathVariable Long id) {
         User user = userService.retrieveUserById(id).get();
         System.out.println(user);
         return userMapper.toDto(user);

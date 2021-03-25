@@ -8,10 +8,10 @@ import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
-public class PromoCodDTO extends AbstractDto{
+public class PromoCodResponseDTO extends AbstractDto{
     @NonNull
     private String name;
-    private RentalSessionDTO rentalSession;
+    private RentalSessionResponseDTO rentalSession;
     @NonNull
     private LocalDate startDate;
     private LocalDate expiredDate;
@@ -21,9 +21,9 @@ public class PromoCodDTO extends AbstractDto{
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof PromoCodDTO)) return false;
+        if (!(o instanceof PromoCodResponseDTO)) return false;
 
-        PromoCodDTO that = (PromoCodDTO) o;
+        PromoCodResponseDTO that = (PromoCodResponseDTO) o;
 
         return getName().equals(that.getName());
     }

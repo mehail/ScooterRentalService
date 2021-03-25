@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Data
 @Table(name = "season_tickets")
-public class SeasonTicket {
+public class SeasonTicket extends AbstractEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

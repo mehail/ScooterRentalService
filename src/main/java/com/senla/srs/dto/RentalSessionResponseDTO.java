@@ -10,7 +10,7 @@ import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
-public class RentalSessionDTO extends AbstractDto {
+public class RentalSessionResponseDTO extends AbstractDto {
     @NonNull
     private Long id;
     @NonNull
@@ -22,15 +22,15 @@ public class RentalSessionDTO extends AbstractDto {
     @NonNull
     private LocalDate begin;
     private LocalDate end;
-    private SeasonTicketDTO seasonTicket;
+    private SeasonTicketResponseDTO seasonTicket;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof RentalSessionDTO)) return false;
+        if (!(o instanceof RentalSessionResponseDTO)) return false;
         if (!super.equals(o)) return false;
 
-        RentalSessionDTO that = (RentalSessionDTO) o;
+        RentalSessionResponseDTO that = (RentalSessionResponseDTO) o;
 
         return getId().equals(that.getId());
     }

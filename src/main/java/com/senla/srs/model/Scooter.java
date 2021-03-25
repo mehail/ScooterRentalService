@@ -12,7 +12,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "scooters")
-public class Scooter {
+public class Scooter extends AbstractEntity{
     @Id
     @Column(name = "serial_number")
     private String serialNumber;

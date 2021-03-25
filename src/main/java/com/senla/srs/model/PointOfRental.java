@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "point_of_rentals")
 @SecondaryTable(name = "cities", pkJoinColumns = {@PrimaryKeyJoinColumn(name = "id")})
-public class PointOfRental {
+public class PointOfRental extends AbstractEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

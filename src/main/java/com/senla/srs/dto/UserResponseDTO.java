@@ -8,7 +8,7 @@ import lombok.NonNull;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDto extends AbstractDto {
+public class UserResponseDTO extends AbstractDto {
     @NonNull
     private Long id;
     @NonNull
@@ -21,12 +21,12 @@ public class UserDto extends AbstractDto {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof UserDto)) return false;
+        if (!(o instanceof UserResponseDTO)) return false;
         if (!super.equals(o)) return false;
 
-        UserDto userDto = (UserDto) o;
+        UserResponseDTO userResponseDto = (UserResponseDTO) o;
 
-        return getId().equals(userDto.getId());
+        return getId().equals(userResponseDto.getId());
     }
 
     @Override

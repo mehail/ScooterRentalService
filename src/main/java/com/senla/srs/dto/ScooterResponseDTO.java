@@ -7,22 +7,22 @@ import lombok.NonNull;
 
 @Data
 @AllArgsConstructor
-public class ScooterDTO extends AbstractDto{
+public class ScooterResponseDTO extends AbstractDto{
     @NonNull
     private String serialNumber;
     @NonNull
-    private PointOfRentalDTO pointOfRental;
+    private PointOfRentalResponseDTO pointOfRental;
     @NonNull
-    private ScooterTypeDTO type;
+    private ScooterTypeResponseDTO type;
     @NonNull
     private ScooterStatus status;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof ScooterDTO)) return false;
+        if (!(o instanceof ScooterResponseDTO)) return false;
 
-        ScooterDTO that = (ScooterDTO) o;
+        ScooterResponseDTO that = (ScooterResponseDTO) o;
 
         return getSerialNumber().equals(that.getSerialNumber());
     }

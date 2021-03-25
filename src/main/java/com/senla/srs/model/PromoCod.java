@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Entity
 @Table(name = "promo_cods")
-public class PromoCod {
+public class PromoCod extends AbstractEntity{
     @Id
     private String name;
     @ManyToOne(optional=false, cascade=CascadeType.ALL)
