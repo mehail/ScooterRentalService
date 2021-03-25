@@ -1,32 +1,38 @@
 package com.senla.srs.dto;
 
+import com.senla.srs.model.Scooter;
+import com.senla.srs.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.NonNull;
+
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
-public class UserDto extends AbstractDto {
+public class RentalSessionDTO extends AbstractDto {
     @NonNull
     private Long id;
     @NonNull
-    private String email;
+    private User user;
     @NonNull
-    private String firstName;
+    private Scooter scooter;
     @NonNull
-    private String lastName;
+    private Integer rate;
+    @NonNull
+    private LocalDate begin;
+    private LocalDate end;
+    private SeasonTicketDTO seasonTicket;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof UserDto)) return false;
+        if (!(o instanceof RentalSessionDTO)) return false;
         if (!super.equals(o)) return false;
 
-        UserDto userDto = (UserDto) o;
+        RentalSessionDTO that = (RentalSessionDTO) o;
 
-        return getId().equals(userDto.getId());
+        return getId().equals(that.getId());
     }
 
     @Override

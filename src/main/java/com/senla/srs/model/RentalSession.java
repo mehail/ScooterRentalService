@@ -2,6 +2,7 @@ package com.senla.srs.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import javax.persistence.*;
@@ -9,6 +10,7 @@ import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "rental_sessions")
 public class RentalSession {
@@ -31,9 +33,6 @@ public class RentalSession {
     @ManyToOne(optional=false, cascade=CascadeType.ALL)
     @JoinColumn(name = "season_ticket_id")
     private SeasonTicket seasonTicket;
-
-    public RentalSession() {
-    }
 
     @Override
     public boolean equals(Object o) {

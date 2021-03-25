@@ -1,6 +1,6 @@
 package com.senla.srs.controller;
 
-import com.senla.srs.dto.test.AuthenticationRequestDTO;
+import com.senla.srs.dto.AuthenticationRequestDTO;
 import com.senla.srs.model.User;
 import com.senla.srs.repository.UserRepository;
 import com.senla.srs.security.JwtTokenProvider;

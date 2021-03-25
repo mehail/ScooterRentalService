@@ -34,7 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //Указывает к каким эндпоинтам будет применяться
                 //.permitAll - все имеют доступ к этой странице
                 //ToDo надо ли давать доступ всем к корню?
-                .antMatchers("/").permitAll()
+//                .antMatchers("/").permitAll()
                 .antMatchers("/api/v1/auth/login").permitAll()
                 .anyRequest()
                 .authenticated()

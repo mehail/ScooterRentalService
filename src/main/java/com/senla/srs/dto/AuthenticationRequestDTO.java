@@ -1,12 +1,15 @@
-package com.senla.srs.dto.test;
+package com.senla.srs.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NonNull;
 
 @Data
 @AllArgsConstructor
-public class AuthenticationRequestDTO {
+public class AuthenticationRequestDTO extends AbstractDto{
+    @NonNull
     private String email;
+    @NonNull
     private String password;
 
     @Override
@@ -16,14 +19,11 @@ public class AuthenticationRequestDTO {
 
         AuthenticationRequestDTO that = (AuthenticationRequestDTO) o;
 
-        if (!getEmail().equals(that.getEmail())) return false;
-        return getPassword().equals(that.getPassword());
+        return getEmail().equals(that.getEmail());
     }
 
     @Override
     public int hashCode() {
-        int result = getEmail().hashCode();
-        result = 31 * result + getPassword().hashCode();
-        return result;
+        return getEmail().hashCode();
     }
 }

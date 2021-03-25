@@ -3,12 +3,14 @@ package com.senla.srs.model;
 import com.senla.srs.model.security.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import javax.persistence.*;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "users")
 public class User extends AbstractEntity{
@@ -33,9 +35,6 @@ public class User extends AbstractEntity{
     private UserStatus status;
     @NonNull
     private Integer balance;
-
-    public User() {
-    }
 
     @Override
     public boolean equals(Object o) {

@@ -2,12 +2,14 @@ package com.senla.srs.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import javax.persistence.*;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "scooters")
 public class Scooter {
@@ -28,9 +30,6 @@ public class Scooter {
     @NonNull
     @Enumerated(EnumType.ORDINAL)
     private ScooterStatus status;
-
-    public Scooter() {
-    }
 
     @Override
     public boolean equals(Object o) {

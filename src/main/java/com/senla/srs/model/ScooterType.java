@@ -2,12 +2,14 @@ package com.senla.srs.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import javax.persistence.*;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "scooter_types")
 public class ScooterType {
@@ -24,9 +26,6 @@ public class ScooterType {
     @NonNull
     @Column(name = "price_per_minute")
     private Integer pricePerMinute;
-
-    public ScooterType() {
-    }
 
     @Override
     public boolean equals(Object o) {

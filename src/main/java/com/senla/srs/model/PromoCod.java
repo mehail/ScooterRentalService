@@ -2,6 +2,7 @@ package com.senla.srs.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import javax.persistence.*;
@@ -9,6 +10,7 @@ import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "promo_cods")
 public class PromoCod {
@@ -26,9 +28,6 @@ public class PromoCod {
     private Integer discountPercentage;
     @Column(name = "bonus_point")
     private Integer bonusPoint;
-
-    public PromoCod() {
-    }
 
     @Override
     public boolean equals(Object o) {

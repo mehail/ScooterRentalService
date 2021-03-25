@@ -1,20 +1,21 @@
-package com.senla.srs.dto.test;
+package com.senla.srs.dto;
 
-import com.senla.srs.model.PointOfRental;
-import com.senla.srs.model.ScooterType;
+import com.senla.srs.model.ScooterStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
 
 @Data
 @AllArgsConstructor
-public class ScooterDTO {
+public class ScooterDTO extends AbstractDto{
     @NonNull
     private String serialNumber;
     @NonNull
-    private PointOfRental pointOfRental;
+    private PointOfRentalDTO pointOfRental;
     @NonNull
-    private ScooterType type;
+    private ScooterTypeDTO type;
+    @NonNull
+    private ScooterStatus status;
 
     @Override
     public boolean equals(Object o) {

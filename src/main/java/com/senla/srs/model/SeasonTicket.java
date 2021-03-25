@@ -2,6 +2,7 @@ package com.senla.srs.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import javax.persistence.*;
@@ -9,6 +10,7 @@ import java.time.LocalDate;
 
 @Entity
 @AllArgsConstructor
+@NoArgsConstructor
 @Data
 @Table(name = "season_tickets")
 public class SeasonTicket {
@@ -35,9 +37,6 @@ public class SeasonTicket {
     @Column(name = "available_for_use")
     @NonNull
     private Boolean availableForUse;
-
-    public SeasonTicket() {
-    }
 
     @Override
     public boolean equals(Object o) {

@@ -2,12 +2,14 @@ package com.senla.srs.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import javax.persistence.*;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "point_of_rentals")
 @SecondaryTable(name = "cities", pkJoinColumns = {@PrimaryKeyJoinColumn(name = "id")})
@@ -24,9 +26,6 @@ public class PointOfRental {
     private String address;
     @NonNull
     private Boolean available;
-
-    public PointOfRental() {
-    }
 
     @Override
     public boolean equals(Object o) {

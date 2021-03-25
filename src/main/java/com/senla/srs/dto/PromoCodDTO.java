@@ -1,6 +1,5 @@
-package com.senla.srs.dto.test;
+package com.senla.srs.dto;
 
-import com.senla.srs.model.RentalSession;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
@@ -9,10 +8,10 @@ import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
-public class PromoCodDTO {
+public class PromoCodDTO extends AbstractDto{
     @NonNull
     private String name;
-    private RentalSession rentalSession;
+    private RentalSessionDTO rentalSession;
     @NonNull
     private LocalDate startDate;
     private LocalDate expiredDate;

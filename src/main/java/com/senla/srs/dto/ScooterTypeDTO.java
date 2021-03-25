@@ -2,31 +2,31 @@ package com.senla.srs.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
-public class UserDto extends AbstractDto {
+public class ScooterTypeDTO extends AbstractDto {
     @NonNull
     private Long id;
     @NonNull
-    private String email;
+    private String model;
     @NonNull
-    private String firstName;
+    private String maker;
     @NonNull
-    private String lastName;
+    private Double maxSpeed;
+    @NonNull
+    private Integer pricePerMinute;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof UserDto)) return false;
+        if (!(o instanceof ScooterTypeDTO)) return false;
         if (!super.equals(o)) return false;
 
-        UserDto userDto = (UserDto) o;
+        ScooterTypeDTO that = (ScooterTypeDTO) o;
 
-        return getId().equals(userDto.getId());
+        return getId().equals(that.getId());
     }
 
     @Override
