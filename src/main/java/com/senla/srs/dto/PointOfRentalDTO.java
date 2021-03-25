@@ -6,7 +6,7 @@ import lombok.NonNull;
 
 @Data
 @AllArgsConstructor
-public class PointOfRentalResponseDTO extends AbstractDto{
+public class PointOfRentalDTO extends AbstractDto{
     @NonNull
     private Long id;
     @NonNull
@@ -19,9 +19,9 @@ public class PointOfRentalResponseDTO extends AbstractDto{
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof PointOfRentalResponseDTO)) return false;
+        if (!(o instanceof PointOfRentalDTO)) return false;
 
-        PointOfRentalResponseDTO that = (PointOfRentalResponseDTO) o;
+        PointOfRentalDTO that = (PointOfRentalDTO) o;
 
         return getId().equals(that.getId());
     }

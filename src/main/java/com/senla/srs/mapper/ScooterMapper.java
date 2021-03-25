@@ -1,12 +1,12 @@
 package com.senla.srs.mapper;
 
-import com.senla.srs.dto.ScooterResponseDTO;
+import com.senla.srs.dto.ScooterDTO;
 import com.senla.srs.model.Scooter;
 
-public class ScooterMapper extends AbstractMapper<Scooter, ScooterResponseDTO> {
+public class ScooterMapper extends AbstractMapper<Scooter, ScooterDTO> {
 
     public ScooterMapper() {
-        super(Scooter.class, ScooterResponseDTO.class);
+        super(Scooter.class, ScooterDTO.class);
     }
 
 }

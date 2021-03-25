@@ -6,7 +6,7 @@ import lombok.NonNull;
 
 @Data
 @AllArgsConstructor
-public class AuthenticationRequestResponseDTO extends AbstractDto{
+public class AuthenticationRequestDTO extends AbstractDto{
     @NonNull
     private String email;
     @NonNull
@@ -15,9 +15,9 @@ public class AuthenticationRequestResponseDTO extends AbstractDto{
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof AuthenticationRequestResponseDTO)) return false;
+        if (!(o instanceof AuthenticationRequestDTO)) return false;
 
-        AuthenticationRequestResponseDTO that = (AuthenticationRequestResponseDTO) o;
+        AuthenticationRequestDTO that = (AuthenticationRequestDTO) o;
 
         return getEmail().equals(that.getEmail());
     }

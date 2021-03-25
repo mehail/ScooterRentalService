@@ -9,13 +9,13 @@ import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
-public class SeasonTicketResponseDTO extends AbstractDto{
+public class SeasonTicketDTO extends AbstractDto{
     @NonNull
     private Long id;
     @NonNull
     private User user;
     @NonNull
-    private ScooterTypeResponseDTO scooterType;
+    private ScooterTypeDTO scooterType;
     @NonNull
     private Integer price;
     @NonNull
@@ -28,9 +28,9 @@ public class SeasonTicketResponseDTO extends AbstractDto{
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof SeasonTicketResponseDTO)) return false;
+        if (!(o instanceof SeasonTicketDTO)) return false;
 
-        SeasonTicketResponseDTO that = (SeasonTicketResponseDTO) o;
+        SeasonTicketDTO that = (SeasonTicketDTO) o;
 
         return getId().equals(that.getId());
     }

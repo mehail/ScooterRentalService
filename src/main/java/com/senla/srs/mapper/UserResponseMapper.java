@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserMapper extends AbstractMapper<User, UserResponseDTO> {
+public class UserResponseMapper extends AbstractMapper<User, UserResponseDTO> {
 
     @Autowired
-    public UserMapper() {
+    public UserResponseMapper() {
         super(User.class, UserResponseDTO.class);
     }
 

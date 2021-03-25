@@ -6,7 +6,7 @@ import lombok.NonNull;
 
 @Data
 @AllArgsConstructor
-public class ScooterTypeResponseDTO extends AbstractDto {
+public class ScooterTypeDTO extends AbstractDto {
     @NonNull
     private Long id;
     @NonNull
@@ -21,10 +21,10 @@ public class ScooterTypeResponseDTO extends AbstractDto {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof ScooterTypeResponseDTO)) return false;
+        if (!(o instanceof ScooterTypeDTO)) return false;
         if (!super.equals(o)) return false;
 
-        ScooterTypeResponseDTO that = (ScooterTypeResponseDTO) o;
+        ScooterTypeDTO that = (ScooterTypeDTO) o;
 
         return getId().equals(that.getId());
     }

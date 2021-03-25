@@ -9,7 +9,7 @@ import java.util.Optional;
 @Service
 public interface SeasonTicketService {
     void save(SeasonTicket seasonTicket);
-    List<SeasonTicket> retrieveAllSeasonTicketServices();
-    Optional<SeasonTicket> retrieveSeasonTicketServiceById(Long id);
-    void delete(SeasonTicketService seasonTicketService);
+    List<SeasonTicket> retrieveAllSeasonTickets();
+    Optional<SeasonTicket> retrieveSeasonTicketsById(Long id);
+    void delete(SeasonTicket seasonTicket);
 }
