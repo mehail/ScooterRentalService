@@ -19,6 +19,7 @@ public class PointOfRental extends AbstractEntity{
     private Long id;
     @NonNull
     private String name;
+    //ToDo подтягивать страну и город
     @NonNull
     @Column(table = "cities")
     private String city;
