@@ -4,6 +4,8 @@ import com.senla.srs.dto.AuthenticationRequestDTO;
 import com.senla.srs.model.User;
 import com.senla.srs.repository.UserRepository;
 import com.senla.srs.security.JwtTokenProvider;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,19 +23,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
+@Data
+@AllArgsConstructor
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthenticationRestControllerV1 {
-
     private final AuthenticationManager authenticationManager;
     private UserRepository userRepository;
     private JwtTokenProvider jwtTokenProvider;
-
-    public AuthenticationRestControllerV1(AuthenticationManager authenticationManager, UserRepository userRepository, JwtTokenProvider jwtTokenProvider) {
-        this.authenticationManager = authenticationManager;
-        this.userRepository = userRepository;
-        this.jwtTokenProvider = jwtTokenProvider;
-    }
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticate(@RequestBody AuthenticationRequestDTO request) {

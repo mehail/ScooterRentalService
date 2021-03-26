@@ -7,6 +7,8 @@ import com.senla.srs.mapper.UserRequestMapper;
 import com.senla.srs.mapper.UserResponseMapper;
 import com.senla.srs.model.User;
 import com.senla.srs.service.UserService;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,18 +18,14 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
+@Data
+@AllArgsConstructor
 @RestController
 @RequestMapping("/api/v1/users")
 public class UserRestControllerV1 {
     private UserService userService;
     private UserResponseMapper userResponseMapper;
     private UserRequestMapper userRequestMapper;
-
-    public UserRestControllerV1(UserService userService, UserResponseMapper userResponseMapper, UserRequestMapper userRequestMapper) {
-        this.userService = userService;
-        this.userResponseMapper = userResponseMapper;
-        this.userRequestMapper = userRequestMapper;
-    }
 
     @GetMapping
     public List<UserDTO> getAll() {
