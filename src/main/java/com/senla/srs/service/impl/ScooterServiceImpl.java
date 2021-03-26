@@ -3,20 +3,16 @@ package com.senla.srs.service.impl;
 import com.senla.srs.model.Scooter;
 import com.senla.srs.repository.ScooterRepository;
 import com.senla.srs.service.ScooterService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class ScooterServiceImpl implements ScooterService {
     private final ScooterRepository scooterRepository;
-
-    @Autowired
-    public ScooterServiceImpl(ScooterRepository scooterRepository) {
-        this.scooterRepository = scooterRepository;
-    }
 
     @Override
     public void save(Scooter scooter) {

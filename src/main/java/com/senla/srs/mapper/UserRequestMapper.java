@@ -4,7 +4,6 @@ import com.senla.srs.dto.UserRequestDTO;
 import com.senla.srs.model.User;
 import com.senla.srs.model.UserStatus;
 import com.senla.srs.model.security.Role;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -13,7 +12,7 @@ import org.springframework.stereotype.Component;
 public class UserRequestMapper extends AbstractMapper<User, UserRequestDTO> {
     @Value("${jwt.encryption.strength}")
     private int encryptionStrength;
-    @Autowired
+
     UserRequestMapper() {
         super(User.class, UserRequestDTO.class);
     }

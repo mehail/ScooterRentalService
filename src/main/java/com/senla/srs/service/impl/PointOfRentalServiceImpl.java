@@ -3,20 +3,16 @@ package com.senla.srs.service.impl;
 import com.senla.srs.model.PointOfRental;
 import com.senla.srs.repository.PointOfRentalRepository;
 import com.senla.srs.service.PointOfRentalService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class PointOfRentalServiceImpl implements PointOfRentalService {
     private final PointOfRentalRepository pointOfRentalRepository;
-
-    @Autowired
-    public PointOfRentalServiceImpl(PointOfRentalRepository pointOfRentalRepository) {
-        this.pointOfRentalRepository = pointOfRentalRepository;
-    }
 
     @Override
     public void save(PointOfRental pointOfRental) {

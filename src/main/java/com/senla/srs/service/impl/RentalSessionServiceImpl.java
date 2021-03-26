@@ -3,20 +3,16 @@ package com.senla.srs.service.impl;
 import com.senla.srs.model.RentalSession;
 import com.senla.srs.repository.RentalSessionRepository;
 import com.senla.srs.service.RentalSessionService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class RentalSessionServiceImpl implements RentalSessionService {
     private final RentalSessionRepository rentalSessionRepository;
-
-    @Autowired
-    public RentalSessionServiceImpl(RentalSessionRepository rentalSessionRepository) {
-        this.rentalSessionRepository = rentalSessionRepository;
-    }
 
     @Override
     public void save(RentalSession rentalSession) {

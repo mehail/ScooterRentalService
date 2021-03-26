@@ -19,7 +19,6 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider {
     private final UserDetailsService userDetailsService;
-
     @Value("${jwt.secret}")
     private String secretKey;
     @Value("${jwt.header}")

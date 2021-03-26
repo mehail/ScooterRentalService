@@ -3,20 +3,16 @@ package com.senla.srs.service.impl;
 import com.senla.srs.model.SeasonTicket;
 import com.senla.srs.repository.SeasonTicketRepository;
 import com.senla.srs.service.SeasonTicketService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class SeasonTicketServiceImpl implements SeasonTicketService {
     private final SeasonTicketRepository seasonTicketRepository;
-
-    @Autowired
-    public SeasonTicketServiceImpl(SeasonTicketRepository seasonTicketRepository) {
-        this.seasonTicketRepository = seasonTicketRepository;
-    }
 
     @Override
     public void save(SeasonTicket seasonTicket) {
