@@ -1,4 +1,4 @@
-package com.senla.srs.controller;
+package com.senla.srs.controller.v1;
 
 import com.senla.srs.dto.UserDTO;
 import com.senla.srs.dto.UserRequestDTO;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/v1/users")
-public class UserRestControllerV1 {
+public class UserRestController {
     private UserService userService;
     private UserResponseMapper userResponseMapper;
     private UserRequestMapper userRequestMapper;

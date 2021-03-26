@@ -1,4 +1,4 @@
-package com.senla.srs.controller;
+package com.senla.srs.controller.v1;
 
 import com.senla.srs.model.PointOfRental;
 import com.senla.srs.repository.PointOfRentalRepository;
@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/v1/point_of_rentals")
-public class PointOfRentalControllerV1 {
+public class PointOfRentalController {
     private PointOfRentalRepository pointOfRentalRepository;
 
     @GetMapping

@@ -1,4 +1,4 @@
-package com.senla.srs.controller;
+package com.senla.srs.controller.v1;
 
 import com.senla.srs.dto.AuthenticationRequestDTO;
 import com.senla.srs.model.User;
@@ -27,7 +27,7 @@ import java.util.Map;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/v1/auth")
-public class AuthenticationRestControllerV1 {
+public class AuthenticationController {
     private final AuthenticationManager authenticationManager;
     private UserRepository userRepository;
     private JwtTokenProvider jwtTokenProvider;
