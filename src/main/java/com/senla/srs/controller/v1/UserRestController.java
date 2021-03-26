@@ -58,6 +58,6 @@ public class UserRestController {
     public ResponseEntity<?> delete(@PathVariable Long id) {
         User user = userService.retrieveUserById(id).get();
         userService.delete(user);
-        return new ResponseEntity<>("Grohnuli", HttpStatus.ACCEPTED);
+        return new ResponseEntity<>("User with this id was deleted", HttpStatus.ACCEPTED);
     }
 }
