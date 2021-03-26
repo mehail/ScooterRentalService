@@ -15,12 +15,12 @@ databaseChangeLog:
                     primaryKey: true
                     primaryKeyName: countries_pk
               - column:
-                  name: country
+                  name: name
                   type: VARCHAR(64)
                   constraints:
                     nullable: false
                     unique: true
-                    uniqueConstraintName: countries_country_uq
+                    uniqueConstraintName: countries_name_uq
 
   - changeSet:
       id: SRS-create-2
@@ -38,12 +38,12 @@ databaseChangeLog:
                     primaryKey: true
                     primaryKeyName: cities_pk
               - column:
-                  name: city
+                  name: name
                   type: VARCHAR(64)
                   constraints:
                     nullable: false
                     unique: true
-                    uniqueConstraintName: cities_city_uq
+                    uniqueConstraintName: cities_name_uq
               - column:
                   name: country_id
                   type: BIGINT
@@ -51,7 +51,35 @@ databaseChangeLog:
                     nullable: false
 
   - changeSet:
-      id: SRS-create-3
+      id: SRS-create-21111
+      author: Mihail Artugin
+      changes:
+        - createTable:
+            tableName: addresses
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: addresses_pk
+              - column:
+                  name: name
+                  type: VARCHAR(64)
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: addresses_name_uq
+              - column:
+                  name: city_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: SRS-create-31
       author: Mihail Artugin
       changes:
         - createTable:
@@ -71,12 +99,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: address
-                  type: VARCHAR(64)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: city_id
+                  name: address_id
                   type: BIGINT
                   constraints:
                     nullable: false
@@ -361,13 +384,13 @@ databaseChangeLog:
       author: Mihail Artugin
       changes:
         - addForeignKeyConstraint:
-            baseColumnNames: city_id
+            baseColumnNames: address_id
             baseTableName: point_of_rentals
-            constraintName: point_of_rentals_city_id_fk
+            constraintName: point_of_rentals_addres_id_fk
             deferrable: false
             initiallyDeferred: false
             referencedColumnNames: id
-            referencedTableName: cities
+            referencedTableName: addresses
             validate: true
 
   - changeSet:
@@ -466,6 +489,20 @@ databaseChangeLog:
             initiallyDeferred: false
             referencedColumnNames: id
             referencedTableName: countries
+            validate: true
+
+  - changeSet:
+      id: SRS-create-181
+      author: Mihail Artugin
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: city_id
+            baseTableName: addresses
+            constraintName: addresses_countries_id_fk
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: cities
             validate: true
 
   - changeSet:

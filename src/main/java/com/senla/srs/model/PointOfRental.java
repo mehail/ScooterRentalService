@@ -1,6 +1,6 @@
 package com.senla.srs.model;
 
-import com.senla.srs.dto.test.CityDTO;
+import com.senla.srs.dto.test.AddressDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,12 +20,9 @@ public class PointOfRental extends AbstractEntity{
     @NonNull
     private String name;
     @NonNull
-    @ManyToOne
-    @JoinColumn(name = "city_id")
-    private CityDTO city;
-    @NonNull
-    //ToDo Добавить сущность Address
-    private String address;
+    @OneToOne
+    @JoinColumn(name = "address_id")
+    private AddressDTO address;
     @NonNull
     private Boolean available;
 
