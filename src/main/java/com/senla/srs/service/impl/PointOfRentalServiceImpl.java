@@ -11,7 +11,6 @@ import java.util.Optional;
 
 @Service
 public class PointOfRentalServiceImpl implements PointOfRentalService {
-
     private final PointOfRentalRepository pointOfRentalRepository;
 
     @Autowired
@@ -38,5 +37,4 @@ public class PointOfRentalServiceImpl implements PointOfRentalService {
     public void delete(PointOfRental pointOfRental) {
         pointOfRentalRepository.delete(pointOfRental);
     }
-
 }

@@ -7,10 +7,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class UserResponseMapper extends AbstractMapper<User, UserResponseDTO> {
-
     @Autowired
     public UserResponseMapper() {
         super(User.class, UserResponseDTO.class);
     }
-
 }

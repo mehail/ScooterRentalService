@@ -1,7 +1,6 @@
 package com.senla.srs.model.security;
 
 public enum Permission {
-    //ToDo Вносить измения по ходу дополнения бизнеслогики
     POINT_OF_RENTALS_READ("pointOfRentals:read"),
     POINT_OF_RENTALS_WRITE("pointOfRentals:write"),
 
@@ -33,5 +32,4 @@ public enum Permission {
     public String getPermission() {
         return permission;
     }
-
 }

@@ -7,10 +7,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ScooterTypeMapper extends AbstractMapper<ScooterType, ScooterTypeDTO> {
-
     @Autowired
     public ScooterTypeMapper() {
         super(ScooterType.class, ScooterTypeDTO.class);
     }
-
 }

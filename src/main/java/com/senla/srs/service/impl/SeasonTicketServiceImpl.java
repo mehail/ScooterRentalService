@@ -37,5 +37,4 @@ public class SeasonTicketServiceImpl implements SeasonTicketService {
     public void delete(SeasonTicket seasonTicket) {
         seasonTicketRepository.delete(seasonTicket);
     }
-
 }

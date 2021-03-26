@@ -11,7 +11,6 @@ import java.util.Optional;
 
 @Service
 public class RentalSessionServiceImpl implements RentalSessionService {
-
     private final RentalSessionRepository rentalSessionRepository;
 
     @Autowired
@@ -38,5 +37,4 @@ public class RentalSessionServiceImpl implements RentalSessionService {
     public void delete(RentalSession rentalSession) {
         rentalSessionRepository.delete(rentalSession);
     }
-
 }

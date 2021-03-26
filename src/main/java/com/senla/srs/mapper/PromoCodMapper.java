@@ -7,10 +7,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PromoCodMapper extends AbstractMapper<PromoCod, PromoCodDTO> {
-
     @Autowired
     public PromoCodMapper() {
         super(PromoCod.class, PromoCodDTO.class);
     }
-
 }

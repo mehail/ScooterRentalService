@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Objects;
 
 public abstract class AbstractMapper<E extends AbstractEntity, D extends AbstractDto> implements Mapper<E, D> {
-
     @Autowired
     ModelMapper mapper;
 

@@ -7,10 +7,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class SeasonTicketMapper extends AbstractMapper<SeasonTicket, SeasonTicketDTO> {
-
     @Autowired
     public SeasonTicketMapper() {
         super(SeasonTicket.class, SeasonTicketDTO.class);
     }
-
 }

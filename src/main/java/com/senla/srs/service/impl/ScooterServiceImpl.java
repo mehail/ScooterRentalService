@@ -11,7 +11,6 @@ import java.util.Optional;
 
 @Service
 public class ScooterServiceImpl implements ScooterService {
-
     private final ScooterRepository scooterRepository;
 
     @Autowired
@@ -38,5 +37,4 @@ public class ScooterServiceImpl implements ScooterService {
     public void delete(Scooter scooter) {
         scooterRepository.delete(scooter);
     }
-
 }

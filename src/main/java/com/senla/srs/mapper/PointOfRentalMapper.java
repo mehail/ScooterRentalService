@@ -7,10 +7,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PointOfRentalMapper extends AbstractMapper<PointOfRental, PointOfRentalDTO> {
-
     @Autowired
     public PointOfRentalMapper() {
         super(PointOfRental.class, PointOfRentalDTO.class);
     }
-
 }

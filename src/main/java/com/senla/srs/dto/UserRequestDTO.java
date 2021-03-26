@@ -30,5 +30,4 @@ public class UserRequestDTO extends UserDTO{
         result = 31 * result + getPassword().hashCode();
         return result;
     }
-
 }

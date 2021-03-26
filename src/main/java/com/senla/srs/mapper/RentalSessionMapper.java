@@ -7,10 +7,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class RentalSessionMapper extends AbstractMapper<RentalSession, RentalSessionDTO> {
-
     @Autowired
     public RentalSessionMapper() {
         super(RentalSession.class, RentalSessionDTO.class);
     }
-
 }

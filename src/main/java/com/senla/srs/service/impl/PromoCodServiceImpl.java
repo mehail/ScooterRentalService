@@ -37,5 +37,4 @@ public class PromoCodServiceImpl implements PromoCodService {
     public void delete(PromoCod promoCod) {
         promoCodRepository.delete(promoCod);
     }
-
 }
