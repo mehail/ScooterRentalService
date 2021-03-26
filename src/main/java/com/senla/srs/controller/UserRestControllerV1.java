@@ -55,26 +55,6 @@ public class UserRestControllerV1 {
         return ResponseEntity.ok(userResponseDTO);
     }
 
-//    @PostMapping
-//    public ResponseEntity<?> create(@RequestBody User user) {
-//        userService.save(user);
-//        return ResponseEntity.ok(user);
-//    }
-
-//    @PostMapping
-//    public ResponseEntity<?> create(@RequestBody UserDTO userDTO) {
-//        User user = userMapper.toEntity(userDTO);
-//        userService.save(user);
-//        return ResponseEntity.ok(userDTO);
-//    }
-
-//    @PostMapping
-//    public ResponseEntity<?> create(@RequestBody User user) {
-//        userService.save(user);
-//        return user;
-//    }
-
-
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('users:write')")
     public ResponseEntity<?> delete(@PathVariable Long id) {
