@@ -1,6 +1,6 @@
 package com.senla.srs.model;
 
-import com.senla.srs.dto.test.AddressDTO;
+import com.senla.srs.dto.db.AddressDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
