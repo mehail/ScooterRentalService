@@ -6,7 +6,7 @@ import lombok.NonNull;
 
 @Data
 @AllArgsConstructor
-public class PointOfRentalDTO extends AbstractDto{
+public class PointOfRentalDTO extends AbstractDTO {
     @NonNull
     private Long id;
     @NonNull

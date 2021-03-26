@@ -6,7 +6,7 @@ import lombok.NonNull;
 
 @Data
 @AllArgsConstructor
-public class AuthenticationRequestDTO extends AbstractDto{
+public class AuthenticationRequestDTO extends AbstractDTO {
     @NonNull
     private String email;
     @NonNull

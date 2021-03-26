@@ -5,5 +5,5 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public abstract class AbstractDto implements Serializable {
+public abstract class AbstractDTO implements Serializable {
 }

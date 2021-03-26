@@ -6,7 +6,7 @@ import lombok.NonNull;
 
 @Data
 @AllArgsConstructor
-public class ScooterTypeDTO extends AbstractDto {
+public class ScooterTypeDTO extends AbstractDTO {
     @NonNull
     private Long id;
     @NonNull

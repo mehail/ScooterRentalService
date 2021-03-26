@@ -7,7 +7,7 @@ import lombok.NonNull;
 
 @Data
 @AllArgsConstructor
-public class ScooterDTO extends AbstractDto{
+public class ScooterDTO extends AbstractDTO {
     @NonNull
     private String serialNumber;
     @NonNull

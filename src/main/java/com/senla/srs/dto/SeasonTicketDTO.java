@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
-public class SeasonTicketDTO extends AbstractDto{
+public class SeasonTicketDTO extends AbstractDTO {
     @NonNull
     private Long id;
     @NonNull

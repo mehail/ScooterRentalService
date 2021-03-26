@@ -1,6 +1,6 @@
 package com.senla.srs.mapper;
 
-import com.senla.srs.dto.AbstractDto;
+import com.senla.srs.dto.AbstractDTO;
 import com.senla.srs.model.AbstractEntity;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Objects;
 
-public abstract class AbstractMapper<E extends AbstractEntity, D extends AbstractDto> implements Mapper<E, D> {
+public abstract class AbstractMapper<E extends AbstractEntity, D extends AbstractDTO> implements Mapper<E, D> {
     @Autowired
     ModelMapper mapper;
 

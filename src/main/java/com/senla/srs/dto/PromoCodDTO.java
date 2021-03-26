@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
-public class PromoCodDTO extends AbstractDto{
+public class PromoCodDTO extends AbstractDTO {
     @NonNull
     private String name;
     private RentalSessionDTO rentalSession;

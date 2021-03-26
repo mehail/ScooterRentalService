@@ -10,7 +10,7 @@ import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
-public class RentalSessionDTO extends AbstractDto {
+public class RentalSessionDTO extends AbstractDTO {
     @NonNull
     private Long id;
     @NonNull

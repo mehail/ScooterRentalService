@@ -8,7 +8,7 @@ import lombok.NonNull;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDTO extends AbstractDto {
+public class UserDTO extends AbstractDTO {
     @NonNull
     private String email;
     @NonNull
