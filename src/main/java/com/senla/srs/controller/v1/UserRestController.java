@@ -56,8 +56,12 @@ public class UserRestController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('users:write')")
     public ResponseEntity<?> delete(@PathVariable Long id) {
-        User user = userService.retrieveUserById(id).get();
-        userService.delete(user);
-        return new ResponseEntity<>("User with this id was deleted", HttpStatus.ACCEPTED);
+        try {
+            User user = userService.retrieveUserById(id).get();
+            userService.delete(user);
+            return new ResponseEntity<>("User with this id was deleted", HttpStatus.ACCEPTED);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>("A user with this id was not detected", HttpStatus.FORBIDDEN);
+        }
     }
 }

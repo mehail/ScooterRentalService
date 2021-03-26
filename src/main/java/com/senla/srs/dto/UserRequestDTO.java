@@ -1,9 +1,9 @@
 package com.senla.srs.dto;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.NonNull;
 
-@Getter
+@Data
 public class UserRequestDTO extends UserDTO{
     @NonNull
     private String password;

@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NonNull;
 
 @Data
-//ToDo какой тип конструктора выбрать? или просто @Getter
 @AllArgsConstructor
 public class AuthenticationRequestDTO extends AbstractDTO {
     @NonNull

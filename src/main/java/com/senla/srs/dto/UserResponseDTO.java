@@ -2,7 +2,7 @@ package com.senla.srs.dto;
 
 import lombok.*;
 
-@Getter
+@Data
 @NoArgsConstructor
 public class UserResponseDTO extends UserDTO{
     @NonNull
