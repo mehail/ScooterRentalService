@@ -46,7 +46,7 @@ databaseChangeLog:
                   name: address
                   type: STRING
               - column:
-                  name: cities_id
+                  name: city_id
                   type: NUMERIC
               - column:
                   name: available

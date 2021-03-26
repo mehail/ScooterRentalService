@@ -1,4 +1,4 @@
-id,name,address,cities_id,available
+id,name,address,city_id,available
 1,EcoTrans,ave. Lenina 2,1,true
 2,2Kolesa,st. Karla Marksa 38,2,true
 3,K-Scooter,st. Bankovaya 11,3,true

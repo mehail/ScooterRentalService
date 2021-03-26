@@ -1,5 +1,6 @@
 package com.senla.srs.model;
 
+import com.senla.srs.dto.test.CityDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,18 +13,18 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "point_of_rentals")
-@SecondaryTable(name = "cities", pkJoinColumns = {@PrimaryKeyJoinColumn(name = "id")})
 public class PointOfRental extends AbstractEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NonNull
     private String name;
-    //ToDo подтягивать страну и город
     @NonNull
-    @Column(table = "cities")
-    private String city;
+    @ManyToOne
+    @JoinColumn(name = "city_id")
+    private CityDTO city;
     @NonNull
+    //ToDo Добавить сущность Address
     private String address;
     @NonNull
     private Boolean available;

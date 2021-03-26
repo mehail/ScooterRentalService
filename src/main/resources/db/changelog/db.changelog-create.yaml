@@ -76,7 +76,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: cities_id
+                  name: city_id
                   type: BIGINT
                   constraints:
                     nullable: false
@@ -361,9 +361,9 @@ databaseChangeLog:
       author: Mihail Artugin
       changes:
         - addForeignKeyConstraint:
-            baseColumnNames: cities_id
+            baseColumnNames: city_id
             baseTableName: point_of_rentals
-            constraintName: point_of_rentals_cities_id_fk
+            constraintName: point_of_rentals_city_id_fk
             deferrable: false
             initiallyDeferred: false
             referencedColumnNames: id
