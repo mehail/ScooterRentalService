@@ -29,6 +29,7 @@ public enum Role {
             Permission.SEASON_TICKETS_READ,
             Permission.SEASON_TICKETS_WRITE,
             Permission.USERS_READ,
+            Permission.USERS_READ_ALL,
             Permission.USERS_WRITE));
 
     private final Set<Permission> permissions;

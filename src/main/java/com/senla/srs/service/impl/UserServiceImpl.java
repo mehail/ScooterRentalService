@@ -30,6 +30,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<User> retrieveUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    @Override
     public void deleteById(Long id) {
         userRepository.deleteById(id);
     }

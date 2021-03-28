@@ -11,5 +11,6 @@ public interface UserService {
     void save(User user);
     List<User> retrieveAllUsers();
     Optional<User> retrieveUserById(Long id);
+    Optional<User> retrieveUserByEmail(String email);
     void deleteById(Long id);
 }
