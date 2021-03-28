@@ -11,5 +11,5 @@ public interface PromoCodService {
     void save(PromoCod promoCod);
     List<PromoCod> retrieveAllPromoCods();
     Optional<PromoCod> retrievePromoCodById(Long id);
-    void delete(PromoCod promoCod);
+    void deleteById(Long id);
 }

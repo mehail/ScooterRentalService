@@ -11,5 +11,5 @@ public interface RentalSessionService {
     void save(RentalSession rentalSession);
     List<RentalSession> retrieveAllRentalSessions();
     Optional<RentalSession> retrieveRentalSessionById(Long id);
-    void delete(RentalSession rentalSession);
+    void deleteById(Long id);
 }

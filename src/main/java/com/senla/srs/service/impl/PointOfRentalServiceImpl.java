@@ -30,7 +30,7 @@ public class PointOfRentalServiceImpl implements PointOfRentalService {
     }
 
     @Override
-    public void delete(PointOfRental pointOfRental) {
-        pointOfRentalRepository.delete(pointOfRental);
+    public void deleteById(Long id) {
+        pointOfRentalRepository.deleteById(id);
     }
 }

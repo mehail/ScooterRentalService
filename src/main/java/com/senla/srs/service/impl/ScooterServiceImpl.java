@@ -25,7 +25,7 @@ public class ScooterServiceImpl implements ScooterService {
     }
 
     @Override
-    public Optional<Scooter> retrieveScooterById(Long id) {
+    public Optional<Scooter> retrieveScooterById(String id) {
         return scooterRepository.findById(id);
     }
 

@@ -30,7 +30,7 @@ public class PromoCodServiceImpl implements PromoCodService {
     }
 
     @Override
-    public void delete(PromoCod promoCod) {
-        promoCodRepository.delete(promoCod);
+    public void deleteById(Long id) {
+        promoCodRepository.deleteById(id);
     }
 }

@@ -30,7 +30,7 @@ public class RentalSessionServiceImpl implements RentalSessionService {
     }
 
     @Override
-    public void delete(RentalSession rentalSession) {
-        rentalSessionRepository.delete(rentalSession);
+    public void deleteById(Long id) {
+        rentalSessionRepository.deleteById(id);
     }
 }

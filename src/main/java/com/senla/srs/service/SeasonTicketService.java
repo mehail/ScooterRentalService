@@ -11,5 +11,5 @@ public interface SeasonTicketService {
     void save(SeasonTicket seasonTicket);
     List<SeasonTicket> retrieveAllSeasonTickets();
     Optional<SeasonTicket> retrieveSeasonTicketsById(Long id);
-    void delete(SeasonTicket seasonTicket);
+    void delete(Long id);
 }

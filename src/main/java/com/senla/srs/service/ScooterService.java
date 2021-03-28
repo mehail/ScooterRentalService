@@ -10,6 +10,6 @@ import java.util.Optional;
 public interface ScooterService {
     void save(Scooter scooter);
     List<Scooter> retrieveAllScooters();
-    Optional<Scooter> retrieveScooterById(Long id);
+    Optional<Scooter> retrieveScooterById(String id);
     void delete(Scooter scooter);
 }
