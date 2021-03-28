@@ -25,12 +25,12 @@ public class ScooterServiceImpl implements ScooterService {
     }
 
     @Override
-    public Optional<Scooter> retrieveScooterById(String id) {
-        return scooterRepository.findById(id);
+    public Optional<Scooter> retrieveScooterById(String serialNumber) {
+        return scooterRepository.findById(serialNumber);
     }
 
     @Override
-    public void deleteById(Scooter scooter) {
-        scooterRepository.delete(scooter);
+    public void deleteById(String serialNumber) {
+        scooterRepository.deleteById(serialNumber);
     }
 }

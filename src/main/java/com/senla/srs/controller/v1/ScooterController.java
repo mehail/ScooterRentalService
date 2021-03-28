@@ -48,12 +48,12 @@ public class ScooterController {
         return ResponseEntity.ok(scooterDTO);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{serialNumber}")
     @PreAuthorize("hasAuthority('scooters:write')")
-    public ResponseEntity<?> delete(@PathVariable String id) {
+    public ResponseEntity<?> delete(@PathVariable String serialNumber) {
         try {
-            Scooter scooter = scooterService.retrieveScooterById(id).get();
-            scooterService.deleteById(scooter);
+            Scooter scooter = scooterService.retrieveScooterById(serialNumber).get();
+            scooterService.deleteById(serialNumber);
             return new ResponseEntity<>("Scooter with this id was deleted", HttpStatus.ACCEPTED);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>("A scooter with this id was not detected", HttpStatus.FORBIDDEN);
