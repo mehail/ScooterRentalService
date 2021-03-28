@@ -25,12 +25,12 @@ public class PromoCodServiceImpl implements PromoCodService {
     }
 
     @Override
-    public Optional<PromoCod> retrievePromoCodById(Long id) {
-        return promoCodRepository.findById(id);
+    public Optional<PromoCod> retrievePromoCodById(String name) {
+        return promoCodRepository.findById(name);
     }
 
     @Override
-    public void deleteById(Long id) {
-        promoCodRepository.deleteById(id);
+    public void deleteById(String name) {
+        promoCodRepository.deleteById(name);
     }
 }
