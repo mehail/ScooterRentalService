@@ -30,7 +30,7 @@ public class SeasonTicketServiceImpl implements SeasonTicketService {
     }
 
     @Override
-    public void delete(Long id) {
+    public void deleteById(Long id) {
         seasonTicketRepository.deleteById(id);
     }
 }

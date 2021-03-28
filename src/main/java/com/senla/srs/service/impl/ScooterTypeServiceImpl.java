@@ -30,7 +30,7 @@ public class ScooterTypeServiceImpl implements ScooterTypeService {
     }
 
     @Override
-    public void delete(Long id) {
+    public void deleteById(Long id) {
         scooterTypeRepository.deleteById(id);
     }
 }

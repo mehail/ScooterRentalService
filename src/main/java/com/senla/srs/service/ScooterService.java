@@ -11,5 +11,5 @@ public interface ScooterService {
     void save(Scooter scooter);
     List<Scooter> retrieveAllScooters();
     Optional<Scooter> retrieveScooterById(String id);
-    void delete(Scooter scooter);
+    void deleteById(Scooter scooter);
 }

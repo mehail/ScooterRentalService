@@ -45,6 +45,7 @@ public class UserRestController {
         }
     }
 
+    //ToDo проверка на ошибку создания
     @PostMapping
     public ResponseEntity<?> create(@RequestBody UserRequestDTO userRequestDTO) {
         User user = userRequestMapper.toEntity(userRequestDTO);
@@ -57,8 +58,7 @@ public class UserRestController {
     @PreAuthorize("hasAuthority('users:write')")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         try {
-            User user = userService.retrieveUserById(id).get();
-            userService.delete(user);
+            userService.deleteById(id);
             return new ResponseEntity<>("User with this id was deleted", HttpStatus.ACCEPTED);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>("A user with this id was not detected", HttpStatus.FORBIDDEN);
