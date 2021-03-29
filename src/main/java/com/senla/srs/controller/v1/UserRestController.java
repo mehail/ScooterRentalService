@@ -10,6 +10,7 @@ import com.senla.srs.model.security.Role;
 import com.senla.srs.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.hibernate.procedure.spi.ParameterRegistrationImplementor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,6 +30,7 @@ public class UserRestController {
     private UserService userService;
     private UserResponseMapper userResponseMapper;
     private UserRequestMapper userRequestMapper;
+    private final String USER_NOT_DETECTED = "A user with this id was not detected";
 
     @GetMapping
     @PreAuthorize("hasAuthority('users:readAll')")
@@ -45,50 +47,60 @@ public class UserRestController {
             User user = userService.retrieveUserById(id).get();
             return ResponseEntity.ok(userResponseMapper.toDto(user));
         } catch (NoSuchElementException e) {
-            return new ResponseEntity<>("A user with this id was not detected", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(USER_NOT_DETECTED, HttpStatus.FORBIDDEN);
         }
     }
 
     @GetMapping("/this/")
-    @PreAuthorize("hasAuthority('users:read')")
     public ResponseEntity<?> getCurrentUser(@AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
         try {
             User user = userService.retrieveUserByEmail(userSecurity.getUsername()).get();
             return ResponseEntity.ok(userResponseMapper.toDto(user));
         } catch (NoSuchElementException e) {
-            return new ResponseEntity<>("A user with this id was not detected", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(USER_NOT_DETECTED, HttpStatus.FORBIDDEN);
         }
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody UserRequestDTO userRequestDTO,
-                                    @AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
+    public ResponseEntity<?> createOrUpdateUsers(@RequestBody UserRequestDTO userRequestDTO,
+                                                 @AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
 
-
-        if (isAllowedEditUser(userRequestDTO, userSecurity)) {
-            return new ResponseEntity<>("You are not allowed to edit this user", HttpStatus.FORBIDDEN);
+        if (isExistUser(userRequestDTO)) {
+            if (isAdmin(userSecurity)) {
+                return create(userRequestDTO);
+            } else {
+                if (isThisUser(userRequestDTO, userSecurity)) {
+                    return create(userRequestDTO);
+                } else {
+                    return new ResponseEntity<>("Changing someone else's account is prohibited", HttpStatus.FORBIDDEN);
+                }
+            }
+        } else {
+            return create(userRequestDTO);
         }
+    }
 
+    private ResponseEntity<?> create(UserRequestDTO userRequestDTO) {
         User newUser = userRequestMapper.toEntity(userRequestDTO);
         userService.save(newUser);
         UserResponseDTO userResponseDTO = userResponseMapper.toDto(newUser);
         return ResponseEntity.ok(userResponseDTO);
     }
 
-    private boolean isAllowedEditUser(UserRequestDTO userRequestDTO, org.springframework.security.core.userdetails.User userSecurity) {
+    private boolean isExistUser(UserRequestDTO userRequestDTO) {
+        return userService.retrieveUserByEmail(userRequestDTO.getEmail()).isPresent();
+    }
+
+    private boolean isAdmin(org.springframework.security.core.userdetails.User userSecurity) {
         Optional<User> optionalAuthorizedUser = userService.retrieveUserByEmail(userSecurity.getUsername());
-        boolean isExist = userService.retrieveUserByEmail(userRequestDTO.getEmail()).isPresent();
-        boolean isAdmin = false;
-        boolean isThisUser = false;
+        User authorizedUser = optionalAuthorizedUser.get();
+        return authorizedUser.getRole() == Role.ADMIN;
+    }
 
-        if (optionalAuthorizedUser.isPresent()) {
-            User authorizedUser = optionalAuthorizedUser.get();
-            isAdmin = authorizedUser.getRole() == Role.ADMIN;
-            isThisUser = authorizedUser.getEmail().equals(userRequestDTO.getEmail());
-        }
-
-        //ToDO разобраться с булевой логикой
-        return isExist && (isAdmin || isThisUser);
+    private boolean isThisUser(UserRequestDTO userRequestDTO, org.springframework.security.core.userdetails.User userSecurity) {
+        Optional<User> optionalAuthorizedUser = userService.retrieveUserByEmail(userSecurity.getUsername());
+        User authorizedUser = optionalAuthorizedUser.get();
+        return authorizedUser.getEmail().equals(userRequestDTO.getEmail());
     }
 
     @DeleteMapping("/{id}")
@@ -98,7 +110,7 @@ public class UserRestController {
             userService.deleteById(id);
             return new ResponseEntity<>("User with this id was deleted", HttpStatus.ACCEPTED);
         } catch (NoSuchElementException e) {
-            return new ResponseEntity<>("A user with this id was not detected", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(USER_NOT_DETECTED, HttpStatus.FORBIDDEN);
         }
     }
 }
