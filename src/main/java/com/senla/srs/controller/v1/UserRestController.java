@@ -65,18 +65,10 @@ public class UserRestController {
     public ResponseEntity<?> createOrUpdateUsers(@RequestBody UserRequestDTO userRequestDTO,
                                                  @AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
 
-        if (isExistUser(userRequestDTO)) {
-            if (isAdmin(userSecurity)) {
-                return create(userRequestDTO);
-            } else {
-                if (isThisUser(userRequestDTO, userSecurity)) {
-                    return create(userRequestDTO);
-                } else {
-                    return new ResponseEntity<>("Changing someone else's account is prohibited", HttpStatus.FORBIDDEN);
-                }
-            }
-        } else {
+        if (!isExistUser(userRequestDTO) || isAdmin(userSecurity) || isThisUser(userRequestDTO, userSecurity)) {
             return create(userRequestDTO);
+        } else {
+            return new ResponseEntity<>("Changing someone else's account is prohibited", HttpStatus.FORBIDDEN);
         }
     }
 
@@ -91,16 +83,25 @@ public class UserRestController {
         return userService.retrieveUserByEmail(userRequestDTO.getEmail()).isPresent();
     }
 
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     private boolean isAdmin(org.springframework.security.core.userdetails.User userSecurity) {
-        Optional<User> optionalAuthorizedUser = userService.retrieveUserByEmail(userSecurity.getUsername());
-        User authorizedUser = optionalAuthorizedUser.get();
-        return authorizedUser.getRole() == Role.ADMIN;
+        try {
+            Optional<User> optionalAuthorizedUser = userService.retrieveUserByEmail(userSecurity.getUsername());
+            User authorizedUser = optionalAuthorizedUser.get();
+            return authorizedUser.getRole() == Role.ADMIN;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     private boolean isThisUser(UserRequestDTO userRequestDTO, org.springframework.security.core.userdetails.User userSecurity) {
-        Optional<User> optionalAuthorizedUser = userService.retrieveUserByEmail(userSecurity.getUsername());
-        User authorizedUser = optionalAuthorizedUser.get();
-        return authorizedUser.getEmail().equals(userRequestDTO.getEmail());
+        try {
+            Optional<User> optionalAuthorizedUser = userService.retrieveUserByEmail(userSecurity.getUsername());
+            User authorizedUser = optionalAuthorizedUser.get();
+            return authorizedUser.getEmail().equals(userRequestDTO.getEmail());
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @DeleteMapping("/{id}")
