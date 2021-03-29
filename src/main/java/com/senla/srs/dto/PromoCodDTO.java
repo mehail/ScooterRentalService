@@ -2,12 +2,14 @@ package com.senla.srs.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 
 import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
+@EqualsAndHashCode(of = {"name"}, callSuper = false)
 public class PromoCodDTO extends AbstractDTO {
     @NonNull
     private String name;
@@ -17,19 +19,4 @@ public class PromoCodDTO extends AbstractDTO {
     private LocalDate expiredDate;
     private Integer discountPercentage;
     private Integer bonusPoint;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof PromoCodDTO)) return false;
-
-        PromoCodDTO that = (PromoCodDTO) o;
-
-        return getName().equals(that.getName());
-    }
-
-    @Override
-    public int hashCode() {
-        return getName().hashCode();
-    }
 }

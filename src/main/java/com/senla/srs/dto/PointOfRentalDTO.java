@@ -2,10 +2,12 @@ package com.senla.srs.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 
 @Data
 @AllArgsConstructor
+@EqualsAndHashCode(of = {"id"}, callSuper = false)
 public class PointOfRentalDTO extends AbstractDTO {
     @NonNull
     private Long id;
@@ -15,19 +17,4 @@ public class PointOfRentalDTO extends AbstractDTO {
     private String city;
     @NonNull
     private String address;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof PointOfRentalDTO)) return false;
-
-        PointOfRentalDTO that = (PointOfRentalDTO) o;
-
-        return getId().equals(that.getId());
-    }
-
-    @Override
-    public int hashCode() {
-        return getId().hashCode();
-    }
 }

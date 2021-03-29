@@ -3,12 +3,14 @@ package com.senla.srs.dto;
 import com.senla.srs.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 
 import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
+@EqualsAndHashCode(of = {"id"}, callSuper = false)
 public class SeasonTicketDTO extends AbstractDTO {
     @NonNull
     private Long id;
@@ -24,19 +26,4 @@ public class SeasonTicketDTO extends AbstractDTO {
     private LocalDate expiredDate;
     @NonNull
     private Boolean availableForUse;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof SeasonTicketDTO)) return false;
-
-        SeasonTicketDTO that = (SeasonTicketDTO) o;
-
-        return getId().equals(that.getId());
-    }
-
-    @Override
-    public int hashCode() {
-        return getId().hashCode();
-    }
 }
