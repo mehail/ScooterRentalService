@@ -29,7 +29,7 @@ public class UserRestController {
     private UserService userService;
     private UserResponseMapper userResponseMapper;
     private UserRequestMapper userRequestMapper;
-    private final String USER_NOT_DETECTED = "A user with this id was not detected";
+    private static final String USER_NOT_DETECTED = "A user with this id was not detected";
 
     @GetMapping
     @PreAuthorize("hasAuthority('users:readAll')")
