@@ -15,7 +15,7 @@ public class SeasonTicketDTO extends AbstractDTO {
     @NonNull
     private Long id;
     @NonNull
-    private User user;
+    private UserDTO user;
     @NonNull
     private ScooterTypeDTO scooterType;
     @NonNull

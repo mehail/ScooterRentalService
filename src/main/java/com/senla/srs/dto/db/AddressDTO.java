@@ -2,6 +2,7 @@ package com.senla.srs.dto.db;
 
 import com.senla.srs.dto.AbstractDTO;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
@@ -9,6 +10,7 @@ import javax.persistence.*;
 
 @Data
 @NoArgsConstructor
+@EqualsAndHashCode(of = {"id"}, callSuper = false)
 @Entity
 @Table(name = "addresses")
 public class AddressDTO extends AbstractDTO {
@@ -20,22 +22,4 @@ public class AddressDTO extends AbstractDTO {
     @ManyToOne
     @JoinColumn(name = "city_id")
     private CityDTO city;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof AddressDTO)) return false;
-        if (!super.equals(o)) return false;
-
-        AddressDTO that = (AddressDTO) o;
-
-        return getId().equals(that.getId());
-    }
-
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + getId().hashCode();
-        return result;
-    }
 }

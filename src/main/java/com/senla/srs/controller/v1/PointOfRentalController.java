@@ -1,24 +1,46 @@
 package com.senla.srs.controller.v1;
 
+import com.senla.srs.dto.PointOfRentalDTO;
+import com.senla.srs.mapper.PointOfRentalMapper;
 import com.senla.srs.model.PointOfRental;
 import com.senla.srs.repository.PointOfRentalRepository;
+import com.senla.srs.service.PointOfRentalService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/v1/point_of_rentals")
 public class PointOfRentalController {
-    private PointOfRentalRepository pointOfRentalRepository;
+    private static final String POINT_OF_RENTAL_NOT_DETECTED = "A point of rental with this id was not detected";
+    private PointOfRentalService pointOfRentalService;
+    private PointOfRentalMapper pointOfRentalMapper;
 
     @GetMapping
-    public List<PointOfRental> getAll() {
-        return pointOfRentalRepository.findAll();
+    @PreAuthorize("hasAuthority('pointOfRentals:read')")
+    public List<PointOfRentalDTO> getAll() {
+        return pointOfRentalService.retrieveAllPointOfRentals().stream()
+                .map(pointOfRental -> pointOfRentalMapper.toDto(pointOfRental))
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('pointOfRentals:read')")
+    public ResponseEntity<?> getById(@PathVariable Long id) {
+        try {
+            PointOfRental pointOfRental = pointOfRentalService.retrievePointOfRentalById(id).get();
+            return ResponseEntity.ok(pointOfRentalMapper.toDto(pointOfRental));
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(POINT_OF_RENTAL_NOT_DETECTED, HttpStatus.FORBIDDEN);
+        }
     }
 }
