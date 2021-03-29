@@ -1,9 +1,6 @@
 package com.senla.srs.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -11,6 +8,7 @@ import java.time.LocalDate;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(of = {"id"}, callSuper = false)
 @Data
 @Table(name = "season_tickets")
 public class SeasonTicket extends AbstractEntity{
@@ -37,19 +35,4 @@ public class SeasonTicket extends AbstractEntity{
     @Column(name = "available_for_use")
     @NonNull
     private Boolean availableForUse;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof SeasonTicket)) return false;
-
-        SeasonTicket that = (SeasonTicket) o;
-
-        return getId().equals(that.getId());
-    }
-
-    @Override
-    public int hashCode() {
-        return getId().hashCode();
-    }
 }

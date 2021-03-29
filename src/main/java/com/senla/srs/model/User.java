@@ -1,16 +1,14 @@
 package com.senla.srs.model;
 
 import com.senla.srs.model.security.Role;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(of = {"id"}, callSuper = false)
 @Entity
 @Table(name = "users")
 public class User extends AbstractEntity{
@@ -35,19 +33,4 @@ public class User extends AbstractEntity{
     private UserStatus status;
     @NonNull
     private Integer balance;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof User)) return false;
-
-        User user = (User) o;
-
-        return getId().equals(user.getId());
-    }
-
-    @Override
-    public int hashCode() {
-        return getId().hashCode();
-    }
 }

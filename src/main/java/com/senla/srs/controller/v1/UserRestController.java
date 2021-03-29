@@ -10,7 +10,6 @@ import com.senla.srs.model.security.Role;
 import com.senla.srs.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.hibernate.procedure.spi.ParameterRegistrationImplementor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -83,7 +82,6 @@ public class UserRestController {
         return userService.retrieveUserByEmail(userRequestDTO.getEmail()).isPresent();
     }
 
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
     private boolean isAdmin(org.springframework.security.core.userdetails.User userSecurity) {
         try {
             Optional<User> optionalAuthorizedUser = userService.retrieveUserByEmail(userSecurity.getUsername());

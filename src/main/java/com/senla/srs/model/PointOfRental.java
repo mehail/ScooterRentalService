@@ -1,16 +1,14 @@
 package com.senla.srs.model;
 
 import com.senla.srs.dto.db.AddressDTO;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(of = {"id"}, callSuper = false)
 @Entity
 @Table(name = "point_of_rentals")
 public class PointOfRental extends AbstractEntity{
@@ -25,19 +23,4 @@ public class PointOfRental extends AbstractEntity{
     private AddressDTO address;
     @NonNull
     private Boolean available;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof PointOfRental)) return false;
-
-        PointOfRental that = (PointOfRental) o;
-
-        return getId().equals(that.getId());
-    }
-
-    @Override
-    public int hashCode() {
-        return getId().hashCode();
-    }
 }

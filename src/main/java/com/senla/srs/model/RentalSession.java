@@ -1,9 +1,6 @@
 package com.senla.srs.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -11,6 +8,7 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(of = {"id"}, callSuper = false)
 @Entity
 @Table(name = "rental_sessions")
 public class RentalSession extends AbstractEntity{
@@ -33,19 +31,4 @@ public class RentalSession extends AbstractEntity{
     @ManyToOne(optional=false, cascade=CascadeType.ALL)
     @JoinColumn(name = "season_ticket_id")
     private SeasonTicket seasonTicket;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof RentalSession)) return false;
-
-        RentalSession that = (RentalSession) o;
-
-        return getId().equals(that.getId());
-    }
-
-    @Override
-    public int hashCode() {
-        return getId().hashCode();
-    }
 }

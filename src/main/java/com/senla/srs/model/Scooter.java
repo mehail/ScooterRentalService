@@ -1,15 +1,13 @@
 package com.senla.srs.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(of = {"serialNumber"}, callSuper = false)
 @Entity
 @Table(name = "scooters")
 public class Scooter extends AbstractEntity{
@@ -30,19 +28,4 @@ public class Scooter extends AbstractEntity{
     @NonNull
     @Enumerated(EnumType.ORDINAL)
     private ScooterStatus status;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Scooter)) return false;
-
-        Scooter scooter = (Scooter) o;
-
-        return getSerialNumber().equals(scooter.getSerialNumber());
-    }
-
-    @Override
-    public int hashCode() {
-        return getSerialNumber().hashCode();
-    }
 }
