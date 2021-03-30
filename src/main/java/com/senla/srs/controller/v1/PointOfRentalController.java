@@ -3,7 +3,6 @@ package com.senla.srs.controller.v1;
 import com.senla.srs.dto.PointOfRentalDTO;
 import com.senla.srs.mapper.PointOfRentalMapper;
 import com.senla.srs.model.PointOfRental;
-import com.senla.srs.repository.PointOfRentalRepository;
 import com.senla.srs.service.PointOfRentalService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -39,6 +38,25 @@ public class PointOfRentalController {
         try {
             PointOfRental pointOfRental = pointOfRentalService.retrievePointOfRentalById(id).get();
             return ResponseEntity.ok(pointOfRentalMapper.toDto(pointOfRental));
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(POINT_OF_RENTAL_NOT_DETECTED, HttpStatus.FORBIDDEN);
+        }
+    }
+
+    @PostMapping
+    @PreAuthorize("hasAuthority('pointOfRentals:write')")
+    public ResponseEntity<?> createOrUpdate(@RequestBody PointOfRentalDTO pointOfRentalRequestDTO) {
+        PointOfRental pointOfRental = pointOfRentalMapper.toEntity(pointOfRentalRequestDTO);
+        pointOfRentalService.save(pointOfRental);
+        return ResponseEntity.ok(pointOfRentalMapper.toDto(pointOfRental));
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('pointOfRentals:write')")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        try {
+            pointOfRentalService.deleteById(id);
+            return new ResponseEntity<>("Point of rental with this id was deleted", HttpStatus.ACCEPTED);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(POINT_OF_RENTAL_NOT_DETECTED, HttpStatus.FORBIDDEN);
         }

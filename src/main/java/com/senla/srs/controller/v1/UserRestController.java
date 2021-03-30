@@ -2,7 +2,6 @@ package com.senla.srs.controller.v1;
 
 import com.senla.srs.dto.UserDTO;
 import com.senla.srs.dto.UserRequestDTO;
-import com.senla.srs.dto.UserResponseDTO;
 import com.senla.srs.mapper.UserRequestMapper;
 import com.senla.srs.mapper.UserResponseMapper;
 import com.senla.srs.model.User;
@@ -74,8 +73,7 @@ public class UserRestController {
     private ResponseEntity<?> create(UserRequestDTO userRequestDTO) {
         User newUser = userRequestMapper.toEntity(userRequestDTO);
         userService.save(newUser);
-        UserResponseDTO userResponseDTO = userResponseMapper.toDto(newUser);
-        return ResponseEntity.ok(userResponseDTO);
+        return ResponseEntity.ok(userResponseMapper.toDto(newUser));
     }
 
     private boolean isExistUser(UserRequestDTO userRequestDTO) {
