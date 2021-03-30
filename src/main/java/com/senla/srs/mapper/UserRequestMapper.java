@@ -32,10 +32,12 @@ public class UserRequestMapper extends AbstractMapper<User, UserRequestDTO> {
         String cryptPassword = crypt(dto.getPassword());
 
         if (!isExistUser(optionalUser)) {
+
             user.setPassword(cryptPassword);
             user.setBalance(0);
             user.setRole(Role.USER);
             user.setStatus(UserStatus.ACTIVE);
+
         } else if (isMatchPassword(optionalUser, cryptPassword)){
 
             User existUser = optionalUser.get();
