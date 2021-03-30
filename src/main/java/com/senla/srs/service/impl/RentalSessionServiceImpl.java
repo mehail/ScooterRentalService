@@ -25,6 +25,11 @@ public class RentalSessionServiceImpl implements RentalSessionService {
     }
 
     @Override
+    public List<RentalSession> retrieveAllRentalSessionsByUserId(Long id) {
+        return rentalSessionRepository.findAllByUserId(id);
+    }
+
+    @Override
     public Optional<RentalSession> retrieveRentalSessionById(Long id) {
         return rentalSessionRepository.findById(id);
     }

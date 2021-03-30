@@ -13,4 +13,6 @@ public interface UserService {
     Optional<User> retrieveUserById(Long id);
     Optional<User> retrieveUserByEmail(String email);
     void deleteById(Long id);
+    Optional<User> getUserByAuthenticationPrincipal(org.springframework.security.core.userdetails.User userSecurity);
+    boolean isAdmin(org.springframework.security.core.userdetails.User userSecurity);
 }

@@ -57,8 +57,6 @@ public class UserRequestMapper extends AbstractMapper<User, UserRequestDTO> {
             user.setBalance(existUser.getBalance());
         }
 
-        System.out.println(user);
-
         return user;
     }
 
