@@ -5,7 +5,6 @@ import com.senla.srs.dto.UserRequestDTO;
 import com.senla.srs.mapper.UserRequestMapper;
 import com.senla.srs.mapper.UserResponseMapper;
 import com.senla.srs.model.User;
-import com.senla.srs.model.security.Role;
 import com.senla.srs.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -67,7 +65,7 @@ public class UserRestController {
     public ResponseEntity<?> createOrUpdateUsers(@RequestBody UserRequestDTO userRequestDTO,
                                                  @AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
 
-        if (!isExistUser(userRequestDTO) || isAdmin(userSecurity) || isThisUser(userRequestDTO, userSecurity)) {
+        if (!isExistUser(userRequestDTO) || userService.isAdmin(userSecurity) || isThisUser(userRequestDTO, userSecurity)) {
             return create(userRequestDTO);
         } else {
             return new ResponseEntity<>("Changing someone else's account is prohibited", HttpStatus.FORBIDDEN);
@@ -76,6 +74,16 @@ public class UserRestController {
 
     private ResponseEntity<?> create(UserRequestDTO userRequestDTO) {
         User user = userRequestMapper.toEntity(userRequestDTO);
+        System.out.println("user = " + user);
+        ///ToDo
+//        System.out.println("user = " + user);
+//        User createdUser1 = userService.retrieveUserByEmail(userRequestDTO.getEmail()).get();
+//        System.out.println("createdUser = " + createdUser1);
+//        UserResponseDTO userResponseDTO = userResponseMapper.toDto(createdUser1);
+//        System.out.println("userResponseDTO = " + userResponseDTO);
+
+
+
         userService.save(user);
         try {
             User createdUser = userService.retrieveUserByEmail(userRequestDTO.getEmail()).get();
@@ -91,21 +99,9 @@ public class UserRestController {
         return userService.retrieveUserByEmail(userRequestDTO.getEmail()).isPresent();
     }
 
-    private boolean isAdmin(org.springframework.security.core.userdetails.User userSecurity) {
-        try {
-            Optional<User> optionalAuthorizedUser = userService.retrieveUserByEmail(userSecurity.getUsername());
-            User authorizedUser = optionalAuthorizedUser.get();
-            return authorizedUser.getRole() == Role.ADMIN;
-        } catch (NoSuchElementException e) {
-            log.error(e.getMessage(), USER_NOT_DETECTED);
-            return false;
-        }
-    }
-
     private boolean isThisUser(UserRequestDTO userRequestDTO, org.springframework.security.core.userdetails.User userSecurity) {
         try {
-            Optional<User> optionalAuthorizedUser = userService.retrieveUserByEmail(userSecurity.getUsername());
-            User authorizedUser = optionalAuthorizedUser.get();
+            User authorizedUser = userService.getUserByAuthenticationPrincipal(userSecurity).get();
             return authorizedUser.getEmail().equals(userRequestDTO.getEmail());
         } catch (NoSuchElementException e) {
             log.error(e.getMessage(), USER_NOT_DETECTED);

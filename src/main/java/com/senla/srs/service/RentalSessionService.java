@@ -10,6 +10,7 @@ import java.util.Optional;
 public interface RentalSessionService {
     void save(RentalSession rentalSession);
     List<RentalSession> retrieveAllRentalSessions();
+    List<RentalSession> retrieveAllRentalSessionsByUserId(Long id);
     Optional<RentalSession> retrieveRentalSessionById(Long id);
     void deleteById(Long id);
 }
