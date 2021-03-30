@@ -25,7 +25,7 @@ public class ScooterServiceImpl implements ScooterService {
     }
 
     @Override
-    public Optional<Scooter> retrieveScooterById(String serialNumber) {
+    public Optional<Scooter> retrieveScooterBySerialNumber(String serialNumber) {
         return scooterRepository.findById(serialNumber);
     }
 

@@ -65,7 +65,6 @@ public class ScooterTypeController {
     @PreAuthorize("hasAuthority('scooterTypes:write')")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         try {
-            ScooterType scooterType = scooterTypeService.retrieveScooterTypeById(id).get();
             scooterTypeService.deleteById(id);
             return new ResponseEntity<>("Scooter type with this id was deleted", HttpStatus.ACCEPTED);
         } catch (NoSuchElementException e) {

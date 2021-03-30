@@ -10,6 +10,6 @@ import java.util.Optional;
 public interface PromoCodService {
     void save(PromoCod promoCod);
     List<PromoCod> retrieveAllPromoCods();
-    Optional<PromoCod> retrievePromoCodById(String name);
+    Optional<PromoCod> retrievePromoCodByName(String name);
     void deleteById(String name);
 }

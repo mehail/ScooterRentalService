@@ -37,7 +37,7 @@ public class ScooterController {
     @PreAuthorize("hasAuthority('scooters:read')")
     public ResponseEntity<?> getById(@PathVariable String id) {
         try {
-            Scooter scooter = scooterService.retrieveScooterById(id).get();
+            Scooter scooter = scooterService.retrieveScooterBySerialNumber(id).get();
             return ResponseEntity.ok(scooterMapper.toDto(scooter));
         } catch (NoSuchElementException e) {
             String errorMessage = "No scooter with this serial number found";
@@ -52,7 +52,7 @@ public class ScooterController {
         Scooter scooter = scooterMapper.toEntity(scooterDTO);
         scooterService.save(scooter);
         try {
-            Scooter createdScooter = scooterService.retrieveScooterById(scooter.getSerialNumber()).get();
+            Scooter createdScooter = scooterService.retrieveScooterBySerialNumber(scooter.getSerialNumber()).get();
             return ResponseEntity.ok(scooterMapper.toDto(createdScooter));
         } catch (NoSuchElementException e) {
             String errorMessage = "The scooter is not created";
@@ -65,7 +65,6 @@ public class ScooterController {
     @PreAuthorize("hasAuthority('scooters:write')")
     public ResponseEntity<?> delete(@PathVariable String serialNumber) {
         try {
-            Scooter scooter = scooterService.retrieveScooterById(serialNumber).get();
             scooterService.deleteById(serialNumber);
             return new ResponseEntity<>("Scooter with this serial number was deleted", HttpStatus.ACCEPTED);
         } catch (NoSuchElementException e) {
