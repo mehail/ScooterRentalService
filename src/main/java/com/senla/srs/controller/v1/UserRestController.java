@@ -9,6 +9,7 @@ import com.senla.srs.model.security.Role;
 import com.senla.srs.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,6 +21,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Data
 @AllArgsConstructor
 @RestController
@@ -45,6 +47,7 @@ public class UserRestController {
             User user = userService.retrieveUserById(id).get();
             return ResponseEntity.ok(userResponseMapper.toDto(user));
         } catch (NoSuchElementException e) {
+            log.error(e.getMessage(), USER_NOT_DETECTED);
             return new ResponseEntity<>(USER_NOT_DETECTED, HttpStatus.FORBIDDEN);
         }
     }
@@ -55,6 +58,7 @@ public class UserRestController {
             User user = userService.retrieveUserByEmail(userSecurity.getUsername()).get();
             return ResponseEntity.ok(userResponseMapper.toDto(user));
         } catch (NoSuchElementException e) {
+            log.error(e.getMessage(), USER_NOT_DETECTED);
             return new ResponseEntity<>(USER_NOT_DETECTED, HttpStatus.FORBIDDEN);
         }
     }
@@ -71,9 +75,16 @@ public class UserRestController {
     }
 
     private ResponseEntity<?> create(UserRequestDTO userRequestDTO) {
-        User newUser = userRequestMapper.toEntity(userRequestDTO);
-        userService.save(newUser);
-        return ResponseEntity.ok(userResponseMapper.toDto(newUser));
+        User user = userRequestMapper.toEntity(userRequestDTO);
+        userService.save(user);
+        try {
+            User createdUser = userService.retrieveUserByEmail(userRequestDTO.getEmail()).get();
+            return ResponseEntity.ok(userResponseMapper.toDto(createdUser));
+        } catch (NoSuchElementException e) {
+            String errorMessage = "The user is not created";
+            log.error(e.getMessage(), errorMessage);
+            return new ResponseEntity<>(errorMessage, HttpStatus.FORBIDDEN);
+        }
     }
 
     private boolean isExistUser(UserRequestDTO userRequestDTO) {
@@ -85,7 +96,8 @@ public class UserRestController {
             Optional<User> optionalAuthorizedUser = userService.retrieveUserByEmail(userSecurity.getUsername());
             User authorizedUser = optionalAuthorizedUser.get();
             return authorizedUser.getRole() == Role.ADMIN;
-        } catch (Exception e) {
+        } catch (NoSuchElementException e) {
+            log.error(e.getMessage(), USER_NOT_DETECTED);
             return false;
         }
     }
@@ -95,7 +107,8 @@ public class UserRestController {
             Optional<User> optionalAuthorizedUser = userService.retrieveUserByEmail(userSecurity.getUsername());
             User authorizedUser = optionalAuthorizedUser.get();
             return authorizedUser.getEmail().equals(userRequestDTO.getEmail());
-        } catch (Exception e) {
+        } catch (NoSuchElementException e) {
+            log.error(e.getMessage(), USER_NOT_DETECTED);
             return false;
         }
     }
@@ -107,6 +120,7 @@ public class UserRestController {
             userService.deleteById(id);
             return new ResponseEntity<>("User with this id was deleted", HttpStatus.ACCEPTED);
         } catch (NoSuchElementException e) {
+            log.error(e.getMessage(), USER_NOT_DETECTED);
             return new ResponseEntity<>(USER_NOT_DETECTED, HttpStatus.FORBIDDEN);
         }
     }

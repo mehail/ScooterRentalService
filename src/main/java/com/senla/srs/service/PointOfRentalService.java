@@ -11,5 +11,6 @@ public interface PointOfRentalService {
     void save(PointOfRental pointOfRental);
     List<PointOfRental> retrieveAllPointOfRentals();
     Optional<PointOfRental> retrievePointOfRentalById(Long id);
+    Optional<PointOfRental> retrievePointOfRentalByName(String name);
     void deleteById(Long id);
 }

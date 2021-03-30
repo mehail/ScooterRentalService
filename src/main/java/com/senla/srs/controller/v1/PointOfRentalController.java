@@ -6,6 +6,7 @@ import com.senla.srs.model.PointOfRental;
 import com.senla.srs.service.PointOfRentalService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Data
 @AllArgsConstructor
 @RestController
@@ -39,6 +41,7 @@ public class PointOfRentalController {
             PointOfRental pointOfRental = pointOfRentalService.retrievePointOfRentalById(id).get();
             return ResponseEntity.ok(pointOfRentalMapper.toDto(pointOfRental));
         } catch (NoSuchElementException e) {
+            log.error(e.getMessage(), POINT_OF_RENTAL_NOT_DETECTED);
             return new ResponseEntity<>(POINT_OF_RENTAL_NOT_DETECTED, HttpStatus.FORBIDDEN);
         }
     }
@@ -48,7 +51,14 @@ public class PointOfRentalController {
     public ResponseEntity<?> createOrUpdate(@RequestBody PointOfRentalDTO pointOfRentalRequestDTO) {
         PointOfRental pointOfRental = pointOfRentalMapper.toEntity(pointOfRentalRequestDTO);
         pointOfRentalService.save(pointOfRental);
-        return ResponseEntity.ok(pointOfRentalMapper.toDto(pointOfRental));
+        try {
+            PointOfRental createdPointOfRental = pointOfRentalService.retrievePointOfRentalByName(pointOfRental.getName()).get();
+            return ResponseEntity.ok(pointOfRentalMapper.toDto(createdPointOfRental));
+        } catch (NoSuchElementException e) {
+            String errorMessage = "The point of rental is not created";
+            log.error(e.getMessage(), errorMessage);
+            return new ResponseEntity<>(errorMessage, HttpStatus.FORBIDDEN);
+        }
     }
 
     @DeleteMapping("/{id}")
@@ -58,6 +68,7 @@ public class PointOfRentalController {
             pointOfRentalService.deleteById(id);
             return new ResponseEntity<>("Point of rental with this id was deleted", HttpStatus.ACCEPTED);
         } catch (NoSuchElementException e) {
+            log.error(e.getMessage(), POINT_OF_RENTAL_NOT_DETECTED);
             return new ResponseEntity<>(POINT_OF_RENTAL_NOT_DETECTED, HttpStatus.FORBIDDEN);
         }
     }

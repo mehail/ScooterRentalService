@@ -30,6 +30,11 @@ public class PointOfRentalServiceImpl implements PointOfRentalService {
     }
 
     @Override
+    public Optional<PointOfRental> retrievePointOfRentalByName(String name) {
+        return pointOfRentalRepository.findByName(name);
+    }
+
+    @Override
     public void deleteById(Long id) {
         pointOfRentalRepository.deleteById(id);
     }

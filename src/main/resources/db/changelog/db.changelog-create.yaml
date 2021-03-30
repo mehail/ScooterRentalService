@@ -98,6 +98,8 @@ databaseChangeLog:
                   type: VARCHAR(64)
                   constraints:
                     nullable: false
+                    unique: true
+                    uniqueConstraintName: point_of_rentals_name_uq
               - column:
                   name: address_id
                   type: BIGINT
@@ -152,6 +154,8 @@ databaseChangeLog:
                   type: VARCHAR(64)
                   constraints:
                     nullable: false
+                    unique: true
+                    uniqueConstraintName: model_name_uq
               - column:
                   name: maker_id
                   type: BIGINT

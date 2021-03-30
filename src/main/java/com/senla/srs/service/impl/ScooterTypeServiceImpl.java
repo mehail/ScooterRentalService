@@ -30,6 +30,11 @@ public class ScooterTypeServiceImpl implements ScooterTypeService {
     }
 
     @Override
+    public Optional<ScooterType> retrieveScooterTypeByModel(String model) {
+        return scooterTypeRepository.findByModel(model);
+    }
+
+    @Override
     public void deleteById(Long id) {
         scooterTypeRepository.deleteById(id);
     }

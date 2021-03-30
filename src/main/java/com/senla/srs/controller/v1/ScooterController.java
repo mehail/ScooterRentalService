@@ -4,6 +4,9 @@ import com.senla.srs.dto.ScooterDTO;
 import com.senla.srs.mapper.ScooterMapper;
 import com.senla.srs.model.Scooter;
 import com.senla.srs.service.ScooterService;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,6 +16,9 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
+@Slf4j
+@Data
+@AllArgsConstructor
 @RestController
 @RequestMapping("/api/v1/scooters")
 public class ScooterController {
@@ -32,20 +38,27 @@ public class ScooterController {
     public ResponseEntity<?> getById(@PathVariable String id) {
         try {
             Scooter scooter = scooterService.retrieveScooterById(id).get();
-            ScooterDTO scooterDTO = scooterMapper.toDto(scooter);
-            return ResponseEntity.ok(scooterDTO);
+            return ResponseEntity.ok(scooterMapper.toDto(scooter));
         } catch (NoSuchElementException e) {
-            return new ResponseEntity<>("No scooter with this ID found", HttpStatus.FORBIDDEN);
+            String errorMessage = "No scooter with this serial number found";
+            log.error(e.getMessage(), errorMessage);
+            return new ResponseEntity<>(errorMessage, HttpStatus.FORBIDDEN);
         }
     }
 
-    //ToDo проверка на ошибку создания
     @PostMapping
     @PreAuthorize("hasAuthority('scooters:write')")
-    public ResponseEntity<?> create(@RequestBody ScooterDTO scooterDTO) {
+    public ResponseEntity<?> createOrUpdate(@RequestBody ScooterDTO scooterDTO) {
         Scooter scooter = scooterMapper.toEntity(scooterDTO);
         scooterService.save(scooter);
-        return ResponseEntity.ok(scooterDTO);
+        try {
+            Scooter createdScooter = scooterService.retrieveScooterById(scooter.getSerialNumber()).get();
+            return ResponseEntity.ok(scooterMapper.toDto(createdScooter));
+        } catch (NoSuchElementException e) {
+            String errorMessage = "The scooter is not created";
+            log.error(e.getMessage(), errorMessage);
+            return new ResponseEntity<>(errorMessage, HttpStatus.FORBIDDEN);
+        }
     }
 
     @DeleteMapping("/{serialNumber}")
@@ -54,9 +67,11 @@ public class ScooterController {
         try {
             Scooter scooter = scooterService.retrieveScooterById(serialNumber).get();
             scooterService.deleteById(serialNumber);
-            return new ResponseEntity<>("Scooter with this id was deleted", HttpStatus.ACCEPTED);
+            return new ResponseEntity<>("Scooter with this serial number was deleted", HttpStatus.ACCEPTED);
         } catch (NoSuchElementException e) {
-            return new ResponseEntity<>("A scooter with this id was not detected", HttpStatus.FORBIDDEN);
+            String errorMessage = "A scooter with this serial number was not detected";
+            log.error(e.getMessage(), errorMessage);
+            return new ResponseEntity<>(errorMessage, HttpStatus.FORBIDDEN);
         }
     }
 }

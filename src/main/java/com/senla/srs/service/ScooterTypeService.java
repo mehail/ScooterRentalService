@@ -11,5 +11,6 @@ public interface ScooterTypeService {
     void save(ScooterType scooterType);
     List<ScooterType> retrieveAllScooterTypes();
     Optional<ScooterType> retrieveScooterTypeById(Long id);
+    Optional<ScooterType> retrieveScooterTypeByModel(String model);
     void deleteById(Long id);
 }
