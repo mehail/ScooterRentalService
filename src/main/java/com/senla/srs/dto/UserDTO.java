@@ -1,5 +1,7 @@
 package com.senla.srs.dto;
 
+import com.senla.srs.model.UserStatus;
+import com.senla.srs.model.security.Role;
 import lombok.*;
 
 @Data
@@ -13,4 +15,10 @@ public class UserDTO extends AbstractDTO {
     private String firstName;
     @NonNull
     private String lastName;
+    @NonNull
+    private Role role;
+    @NonNull
+    private UserStatus status;
+    @NonNull
+    private Integer balance;
 }

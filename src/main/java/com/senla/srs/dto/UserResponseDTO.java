@@ -8,6 +8,4 @@ import lombok.*;
 public class UserResponseDTO extends UserDTO{
     @NonNull
     private Long id;
-    @NonNull
-    private Integer balance;
 }

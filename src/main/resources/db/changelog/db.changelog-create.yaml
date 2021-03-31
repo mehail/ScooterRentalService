@@ -51,7 +51,7 @@ databaseChangeLog:
                     nullable: false
 
   - changeSet:
-      id: SRS-create-21111
+      id: SRS-create-3
       author: Mihail Artugin
       changes:
         - createTable:
@@ -79,7 +79,7 @@ databaseChangeLog:
                     nullable: false
 
   - changeSet:
-      id: SRS-create-31
+      id: SRS-create-4
       author: Mihail Artugin
       changes:
         - createTable:
@@ -112,7 +112,7 @@ databaseChangeLog:
                     nullable: false
 
   - changeSet:
-      id: SRS-create-4
+      id: SRS-create-5
       author: Mihail Artugin
       changes:
         - createTable:
@@ -135,7 +135,7 @@ databaseChangeLog:
                     uniqueConstraintName: makers_maker_uq
 
   - changeSet:
-      id: SRS-create-5
+      id: SRS-create-6
       author: Mihail Artugin
       changes:
         - createTable:
@@ -173,7 +173,7 @@ databaseChangeLog:
                     nullable: false
 
   - changeSet:
-      id: SRS-create-6
+      id: SRS-create-7
       author: Mihail Artugin
       changes:
         - createTable:
@@ -208,7 +208,7 @@ databaseChangeLog:
                     nullable: false
                     
   - changeSet:
-      id: SRS-create-7
+      id: SRS-create-8
       author: Mihail Artugin
       changes:
         - createTable:
@@ -220,6 +220,7 @@ databaseChangeLog:
                   autoIncrement: true
                   constraints:
                     nullable: false
+                    autoIncrement: true
                     primaryKey: true
                     primaryKeyName: users_pk
               - column:
@@ -261,7 +262,7 @@ databaseChangeLog:
                     nullable: false
 
   - changeSet:
-      id: SRS-create-8
+      id: SRS-create-9
       author: Mihail Artugin
       changes:
         - createTable:
@@ -310,7 +311,7 @@ databaseChangeLog:
                     nullable: false
 
   - changeSet:
-      id: SRS-create-9
+      id: SRS-create-10
       author: Mihail Artugin
       changes:
         - createTable:
@@ -352,7 +353,7 @@ databaseChangeLog:
                   type: BIGINT
 
   - changeSet:
-      id: SRS-create-10
+      id: SRS-create-11
       author: Mihail Artugin
       changes:
         - createTable:
@@ -384,7 +385,7 @@ databaseChangeLog:
                   type: BIGINT
 
   - changeSet:
-      id: SRS-create-11
+      id: SRS-create-12
       author: Mihail Artugin
       changes:
         - addForeignKeyConstraint:
@@ -398,7 +399,7 @@ databaseChangeLog:
             validate: true
 
   - changeSet:
-      id: SRS-create-12
+      id: SRS-create-13
       author: Mihail Artugin
       changes:
         - addForeignKeyConstraint:
@@ -412,7 +413,7 @@ databaseChangeLog:
             validate: true
 
   - changeSet:
-      id: SRS-create-13
+      id: SRS-create-14
       author: Mihail Artugin
       changes:
         - addForeignKeyConstraint:
@@ -426,7 +427,7 @@ databaseChangeLog:
             validate: true
 
   - changeSet:
-      id: SRS-create-14
+      id: SRS-create-15
       author: Mihail Artugin
       changes:
         - addForeignKeyConstraint:
@@ -440,7 +441,7 @@ databaseChangeLog:
             validate: true
 
   - changeSet:
-      id: SRS-create-15
+      id: SRS-create-16
       author: Mihail Artugin
       changes:
         - addForeignKeyConstraint:
@@ -454,7 +455,7 @@ databaseChangeLog:
             validate: true
 
   - changeSet:
-      id: SRS-create-16
+      id: SRS-create-17
       author: Mihail Artugin
       changes:
         - addForeignKeyConstraint:
@@ -468,7 +469,7 @@ databaseChangeLog:
             validate: true
 
   - changeSet:
-      id: SRS-create-17
+      id: SRS-create-18
       author: Mihail Artugin
       changes:
         - addForeignKeyConstraint:
@@ -482,7 +483,7 @@ databaseChangeLog:
             validate: true
 
   - changeSet:
-      id: SRS-create-18
+      id: SRS-create-19
       author: Mihail Artugin
       changes:
         - addForeignKeyConstraint:
@@ -496,7 +497,7 @@ databaseChangeLog:
             validate: true
 
   - changeSet:
-      id: SRS-create-181
+      id: SRS-create-20
       author: Mihail Artugin
       changes:
         - addForeignKeyConstraint:
@@ -510,7 +511,7 @@ databaseChangeLog:
             validate: true
 
   - changeSet:
-      id: SRS-create-19
+      id: SRS-create-21
       author: Mihail Artugin
       changes:
         - addForeignKeyConstraint:
@@ -524,7 +525,7 @@ databaseChangeLog:
             validate: true
 
   - changeSet:
-      id: SRS-create-20
+      id: SRS-create-22
       author: Mihail Artugin
       changes:
         - addForeignKeyConstraint:
@@ -538,7 +539,7 @@ databaseChangeLog:
             validate: true
 
   - changeSet:
-      id: SRS-create-21
+      id: SRS-create-23
       author: Mihail Artugin
       changes:
         - addForeignKeyConstraint:
