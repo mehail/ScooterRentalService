@@ -2,8 +2,6 @@ package com.senla.srs.mapper;
 
 import com.senla.srs.dto.UserRequestDTO;
 import com.senla.srs.model.User;
-import com.senla.srs.model.UserStatus;
-import com.senla.srs.model.security.Role;
 import com.senla.srs.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,7 +14,7 @@ import java.util.Optional;
 public class UserRequestMapper extends AbstractMapper<User, UserRequestDTO> {
     @Value("${jwt.encryption.strength}")
     private int encryptionStrength;
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
     UserRequestMapper(UserService userService) {
@@ -29,29 +27,14 @@ public class UserRequestMapper extends AbstractMapper<User, UserRequestDTO> {
         User user = super.toEntity(dto);
 
         Optional<User> optionalUser = userService.retrieveUserByEmail(dto.getEmail());
-        String cryptPassword = crypt(dto.getPassword());
 
-        if (optionalUser.isPresent()) {
+        if (userService.retrieveUserByEmail(dto.getEmail()).isPresent()) {
             user.setId(optionalUser.get().getId());
-        } else {
-            user.setId(null);
         }
 
-        if (optionalUser.isEmpty()) {
-
-            user.setPassword(cryptPassword);
-            user.setBalance(0);
-            user.setRole(Role.USER);
-            user.setStatus(UserStatus.ACTIVE);
-
-            //ToDo Если пользователь есть, по email
-        }
+        user.setPassword(crypt(dto.getPassword()));
 
         return user;
-    }
-
-    private boolean isMatchPassword(Optional<User> optionalUser, String cryptPassword) {
-        return optionalUser.get().getPassword().equals(cryptPassword);
     }
 
     private String crypt(String rowPassword) {

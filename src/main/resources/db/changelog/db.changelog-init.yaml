@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: SRS-init-testDataset
+      id: SRS-init-testDataset-1
       author: Mihail Artugin
       changes:
         - loadData:
@@ -16,6 +16,9 @@ databaseChangeLog:
             schemaName: public
             separator: ','
             tableName: countries
+
+        - sql:
+            sql: SELECT setval('countries_id_seq', (SELECT max(id) FROM countries))
 
         - loadData:
             columns:
@@ -34,6 +37,9 @@ databaseChangeLog:
             separator: ','
             tableName: cities
 
+        - sql:
+            sql: SELECT setval('cities_id_seq', (SELECT max(id) FROM cities))
+
         - loadData:
             columns:
               - column:
@@ -50,6 +56,9 @@ databaseChangeLog:
             schemaName: public
             separator: ','
             tableName: addresses
+
+        - sql:
+            sql: SELECT setval('addresses_id_seq', (SELECT max(id) FROM addresses))
 
         - loadData:
             columns:
@@ -71,6 +80,9 @@ databaseChangeLog:
             separator: ','
             tableName: point_of_rentals
 
+        - sql:
+            sql: SELECT setval('point_of_rentals_id_seq', (SELECT max(id) FROM point_of_rentals))
+
         - loadData:
             columns:
               - column:
@@ -84,6 +96,9 @@ databaseChangeLog:
             schemaName: public
             separator: ','
             tableName: makers
+
+        - sql:
+            sql: SELECT setval('makers_id_seq', (SELECT max(id) FROM makers))
 
         - loadData:
             columns:
@@ -107,6 +122,9 @@ databaseChangeLog:
             schemaName: public
             separator: ','
             tableName: scooter_types
+
+        - sql:
+            sql: SELECT setval('scooter_types_id_seq', (SELECT max(id) FROM scooter_types))
 
         - loadData:
             columns:
@@ -163,6 +181,9 @@ databaseChangeLog:
             separator: ','
             tableName: users
 
+        - sql:
+            sql: SELECT setval('users_id_seq', (SELECT max(id) FROM users))
+
         - loadData:
             columns:
               - column:
@@ -195,6 +216,9 @@ databaseChangeLog:
             separator: ','
             tableName: season_tickets
 
+        - sql:
+            sql: SELECT setval('season_tickets_id_seq', (SELECT max(id) FROM season_tickets))
+
         - loadData:
             columns:
               - column:
@@ -224,6 +248,9 @@ databaseChangeLog:
             separator: ','
             tableName: rental_sessions
 
+        - sql:
+            sql: SELECT setval('rental_sessions_id_seq', (SELECT max(id) FROM rental_sessions))
+
         - loadData:
             columns:
               - column:
@@ -249,7 +276,3 @@ databaseChangeLog:
             schemaName: public
             separator: ','
             tableName: promo_cods
-
-
-
-
