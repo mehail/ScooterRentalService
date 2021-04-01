@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -63,29 +64,35 @@ public class UserRestController {
         }
     }
 
-    //ToDo разделить по правам изменение статуса, роли и баланса
     @PostMapping
     public ResponseEntity<?> createOrUpdateUsers(@RequestBody UserRequestDTO userRequestDTO,
                                                  @AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
 
-        if (userService.isAdmin(userSecurity)) {
-            return create(userRequestDTO);
-        } else if (!isExistUser(userRequestDTO)) {
+        Optional<User> optionalExistUser = userService.retrieveUserByAuthenticationPrincipal(userSecurity);
+
+        if (optionalExistUser.isEmpty()) {
             userRequestDTO.setRole(Role.USER);
             userRequestDTO.setStatus(UserStatus.ACTIVE);
             userRequestDTO.setBalance(0);
 
             return create(userRequestDTO);
-        } else if (isThisUser(userRequestDTO, userSecurity)) {
-            //ToDo взять из существующего
-            return null;
+        } else if (optionalExistUser.get().getRole() == Role.ADMIN) {
+            return create(userRequestDTO);
+        } else if (optionalExistUser.get().getEmail().equals(userRequestDTO.getEmail())) {
+            User existUser = optionalExistUser.get();
+
+            if (!userRequestDTO.getBalance().equals(existUser.getBalance()) ||
+                    userRequestDTO.getRole() != existUser.getRole() ||
+                    userRequestDTO.getStatus() != existUser.getStatus()) {
+                return new ResponseEntity<>("Administrator rights are required to change the role, status, balance",
+                        HttpStatus.FORBIDDEN);
+            } else {
+                return create(userRequestDTO);
+            }
+
+        } else {
+            return new ResponseEntity<>("Changing someone else's account is prohibited", HttpStatus.FORBIDDEN);
         }
-        return null;
-//        if (!isExistUser(userRequestDTO) || userService.isAdmin(userSecurity) || isThisUser(userRequestDTO, userSecurity)) {
-//            return create(userRequestDTO);
-//        } else {
-//            return new ResponseEntity<>("Changing someone else's account is prohibited", HttpStatus.FORBIDDEN);
-//        }
     }
 
     private ResponseEntity<?> create(UserRequestDTO userRequestDTO) {
@@ -99,20 +106,6 @@ public class UserRestController {
             String errorMessage = "The user is not created";
             log.error(e.getMessage(), errorMessage);
             return new ResponseEntity<>(errorMessage, HttpStatus.FORBIDDEN);
-        }
-    }
-
-    private boolean isExistUser(UserRequestDTO userRequestDTO) {
-        return userService.retrieveUserByEmail(userRequestDTO.getEmail()).isPresent();
-    }
-
-    private boolean isThisUser(UserRequestDTO userRequestDTO, org.springframework.security.core.userdetails.User userSecurity) {
-        try {
-            User authorizedUser = userService.retrieveUserByAuthenticationPrincipal(userSecurity).get();
-            return authorizedUser.getEmail().equals(userRequestDTO.getEmail());
-        } catch (NoSuchElementException e) {
-            log.error(e.getMessage(), USER_NOT_DETECTED);
-            return false;
         }
     }
 
