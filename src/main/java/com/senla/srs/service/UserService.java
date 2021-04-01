@@ -12,7 +12,8 @@ public interface UserService {
     List<User> retrieveAllUsers();
     Optional<User> retrieveUserById(Long id);
     Optional<User> retrieveUserByEmail(String email);
+    Optional<User> retrieveUserByAuthenticationPrincipal(org.springframework.security.core.userdetails.User userSecurity);
     void deleteById(Long id);
-    Optional<User> getUserByAuthenticationPrincipal(org.springframework.security.core.userdetails.User userSecurity);
     boolean isAdmin(org.springframework.security.core.userdetails.User userSecurity);
+    String cryptPassword(String rowPassword);
 }

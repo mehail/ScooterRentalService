@@ -41,7 +41,7 @@ public class RentalSessionController {
                     .collect(Collectors.toList());
         } else {
             try {
-                User authUser = userService.getUserByAuthenticationPrincipal(userSecurity).get();
+                User authUser = userService.retrieveUserByAuthenticationPrincipal(userSecurity).get();
                 return rentalSessionService.retrieveAllRentalSessionsByUserId(authUser.getId()).stream()
                         .map(rentalSession -> rentalSessionMapper.toDto(rentalSession))
                         .collect(Collectors.toList());
@@ -75,7 +75,7 @@ public class RentalSessionController {
     private boolean isThisUserRentalSession(RentalSession rentalSession,
                                             org.springframework.security.core.userdetails.User userSecurity) {
 
-        User authUser = userService.getUserByAuthenticationPrincipal(userSecurity).get();
+        User authUser = userService.retrieveUserByAuthenticationPrincipal(userSecurity).get();
         User sessionUser = rentalSession.getUser();
 
         return authUser.getId().equals(sessionUser.getId());
