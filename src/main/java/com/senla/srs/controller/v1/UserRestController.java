@@ -101,7 +101,7 @@ public class UserRestController {
 
     private boolean isThisUser(UserRequestDTO userRequestDTO, org.springframework.security.core.userdetails.User userSecurity) {
         try {
-            User authorizedUser = userService.getUserByAuthenticationPrincipal(userSecurity).get();
+            User authorizedUser = userService.retrieveUserByAuthenticationPrincipal(userSecurity).get();
             return authorizedUser.getEmail().equals(userRequestDTO.getEmail());
         } catch (NoSuchElementException e) {
             log.error(e.getMessage(), USER_NOT_DETECTED);

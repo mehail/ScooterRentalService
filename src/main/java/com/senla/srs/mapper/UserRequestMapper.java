@@ -12,8 +12,6 @@ import java.util.Optional;
 
 @Component
 public class UserRequestMapper extends AbstractMapper<User, UserRequestDTO> {
-    @Value("${jwt.encryption.strength}")
-    private int encryptionStrength;
     private final UserService userService;
 
     @Autowired
@@ -28,17 +26,10 @@ public class UserRequestMapper extends AbstractMapper<User, UserRequestDTO> {
 
         Optional<User> optionalUser = userService.retrieveUserByEmail(dto.getEmail());
 
-        if (userService.retrieveUserByEmail(dto.getEmail()).isPresent()) {
-            user.setId(optionalUser.get().getId());
-        }
+        optionalUser.ifPresent(existUser -> user.setId(existUser.getId()));
 
-        user.setPassword(crypt(dto.getPassword()));
+        user.setPassword(userService.cryptPassword(dto.getPassword()));
 
         return user;
-    }
-
-    private String crypt(String rowPassword) {
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(encryptionStrength);
-        return bCryptPasswordEncoder.encode(rowPassword);
     }
 }
