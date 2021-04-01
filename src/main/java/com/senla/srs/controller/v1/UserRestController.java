@@ -5,6 +5,8 @@ import com.senla.srs.dto.UserRequestDTO;
 import com.senla.srs.mapper.UserRequestMapper;
 import com.senla.srs.mapper.UserResponseMapper;
 import com.senla.srs.model.User;
+import com.senla.srs.model.UserStatus;
+import com.senla.srs.model.security.Role;
 import com.senla.srs.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -61,15 +63,29 @@ public class UserRestController {
         }
     }
 
+    //ToDo разделить по правам изменение статуса, роли и баланса
     @PostMapping
     public ResponseEntity<?> createOrUpdateUsers(@RequestBody UserRequestDTO userRequestDTO,
                                                  @AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
 
-        if (!isExistUser(userRequestDTO) || userService.isAdmin(userSecurity) || isThisUser(userRequestDTO, userSecurity)) {
+        if (userService.isAdmin(userSecurity)) {
             return create(userRequestDTO);
-        } else {
-            return new ResponseEntity<>("Changing someone else's account is prohibited", HttpStatus.FORBIDDEN);
+        } else if (!isExistUser(userRequestDTO)) {
+            userRequestDTO.setRole(Role.USER);
+            userRequestDTO.setStatus(UserStatus.ACTIVE);
+            userRequestDTO.setBalance(0);
+
+            return create(userRequestDTO);
+        } else if (isThisUser(userRequestDTO, userSecurity)) {
+            //ToDo взять из существующего
+            return null;
         }
+        return null;
+//        if (!isExistUser(userRequestDTO) || userService.isAdmin(userSecurity) || isThisUser(userRequestDTO, userSecurity)) {
+//            return create(userRequestDTO);
+//        } else {
+//            return new ResponseEntity<>("Changing someone else's account is prohibited", HttpStatus.FORBIDDEN);
+//        }
     }
 
     private ResponseEntity<?> create(UserRequestDTO userRequestDTO) {
