@@ -74,15 +74,6 @@ public class UserRestController {
 
     private ResponseEntity<?> create(UserRequestDTO userRequestDTO) {
         User user = userRequestMapper.toEntity(userRequestDTO);
-        System.out.println("user = " + user);
-        ///ToDo
-//        System.out.println("user = " + user);
-//        User createdUser1 = userService.retrieveUserByEmail(userRequestDTO.getEmail()).get();
-//        System.out.println("createdUser = " + createdUser1);
-//        UserResponseDTO userResponseDTO = userResponseMapper.toDto(createdUser1);
-//        System.out.println("userResponseDTO = " + userResponseDTO);
-
-
 
         userService.save(user);
         try {
