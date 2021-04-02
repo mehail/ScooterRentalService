@@ -48,8 +48,8 @@ public class PromoCodController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('promoCods:write')")
-    public ResponseEntity<?> createOrUpdate(@RequestBody PromoCodDTO PromoCodDTO) {
-        PromoCod promoCod = promoCodMapper.toEntity(PromoCodDTO);
+    public ResponseEntity<?> createOrUpdate(@RequestBody PromoCodDTO promoCodDTO) {
+        PromoCod promoCod = promoCodMapper.toEntity(promoCodDTO);
         promoCodService.save(promoCod);
         try {
             PromoCod createdPromoCode = promoCodService.retrievePromoCodByName(promoCod.getName()).get();
