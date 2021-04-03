@@ -1,15 +1,12 @@
 package com.senla.srs.dto;
 
-import com.senla.srs.model.User;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NonNull;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
 public class SeasonTicketDTO extends AbstractDTO {
     @NonNull

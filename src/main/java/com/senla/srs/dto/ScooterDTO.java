@@ -1,19 +1,17 @@
 package com.senla.srs.dto;
 
 import com.senla.srs.model.ScooterStatus;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NonNull;
+import lombok.*;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode(of = {"serialNumber"}, callSuper = false)
 public class ScooterDTO extends AbstractDTO {
     @NonNull
     private String serialNumber;
     @NonNull
-    private PointOfRentalDTO pointOfRental;
+    private Long pointOfRentalId;
     @NonNull
     private ScooterTypeDTO type;
     @NonNull

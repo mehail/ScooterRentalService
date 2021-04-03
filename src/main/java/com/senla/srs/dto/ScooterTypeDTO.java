@@ -1,12 +1,10 @@
 package com.senla.srs.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NonNull;
+import lombok.*;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
 public class ScooterTypeDTO extends AbstractDTO {
     @NonNull
