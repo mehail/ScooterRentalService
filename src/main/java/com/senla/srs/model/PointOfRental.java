@@ -4,6 +4,7 @@ import com.senla.srs.dto.db.AddressDTO;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -23,4 +24,7 @@ public class PointOfRental extends AbstractEntity{
     private AddressDTO address;
     @NonNull
     private Boolean available;
+    @OneToMany
+    @JoinColumn(name = "point_of_rental_id")
+    private List<Scooter> scooters;
 }

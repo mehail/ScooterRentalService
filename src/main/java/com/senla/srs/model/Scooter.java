@@ -14,10 +14,13 @@ public class Scooter extends AbstractEntity{
     @Id
     @Column(name = "serial_number")
     private String serialNumber;
+//    @NonNull
+//    @ManyToOne
+//    @JoinColumn(name = "point_of_rental_id")
+//    private PointOfRental pointOfRental;
     @NonNull
-    @ManyToOne(optional=false, cascade= CascadeType.ALL)
-    @JoinColumn(name = "point_of_rental_id")
-    private PointOfRental pointOfRental;
+    @Column(name = "point_of_rental_id")
+    private Long pointOfRentalId;
     @NonNull
     @ManyToOne(optional=false, cascade=CascadeType.ALL)
     @JoinColumn(name = "scooter_type_id")

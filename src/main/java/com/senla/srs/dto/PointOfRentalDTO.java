@@ -1,13 +1,13 @@
 package com.senla.srs.dto;
 
 import com.senla.srs.dto.db.AddressDTO;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NonNull;
+import lombok.*;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
 public class PointOfRentalDTO extends AbstractDTO {
     @NonNull
@@ -18,4 +18,5 @@ public class PointOfRentalDTO extends AbstractDTO {
     private AddressDTO address;
     @NonNull
     private Boolean available;
+    List<ScooterDTO> scooters;
 }
