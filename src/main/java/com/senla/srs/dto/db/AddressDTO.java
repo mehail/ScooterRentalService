@@ -19,7 +19,8 @@ public class AddressDTO extends AbstractDTO {
     private Long id;
     @NonNull
     private String name;
-    @ManyToOne
+    @NonNull
+    @ManyToOne(optional = false)
     @JoinColumn(name = "city_id")
     private CityDTO city;
 }

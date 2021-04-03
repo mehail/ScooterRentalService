@@ -19,12 +19,16 @@ public class PointOfRental extends AbstractEntity{
     @NonNull
     private String name;
     @NonNull
-    @OneToOne
+    @OneToOne(optional = false)
     @JoinColumn(name = "address_id")
     private AddressDTO address;
     @NonNull
     private Boolean available;
+<<<<<<< HEAD
     @OneToMany
+=======
+    @OneToMany(fetch = FetchType.LAZY)
+>>>>>>> 7cd0cba (Working variant)
     @JoinColumn(name = "point_of_rental_id")
     private List<Scooter> scooters;
 }
