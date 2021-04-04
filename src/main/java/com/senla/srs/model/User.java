@@ -4,6 +4,7 @@ import com.senla.srs.model.security.Role;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -33,4 +34,7 @@ public class User extends AbstractEntity{
     private UserStatus status;
     @NonNull
     private Integer balance;
+    @OneToMany
+    @JoinColumn(name = "user_id")
+    private List<SeasonTicket> seasonTickets;
 }
