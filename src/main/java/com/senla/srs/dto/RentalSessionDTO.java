@@ -15,7 +15,6 @@ public class RentalSessionDTO extends AbstractDTO {
     private UserResponseDTO user;
     @NonNull
     private ScooterDTO scooter;
-    @NonNull
     private Integer rate;
     @NonNull
     private LocalDate begin;
