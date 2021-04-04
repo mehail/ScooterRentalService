@@ -17,4 +17,5 @@ public class PromoCodDTO extends AbstractDTO {
     private LocalDate expiredDate;
     private Integer discountPercentage;
     private Integer bonusPoint;
+    private Boolean available;
 }

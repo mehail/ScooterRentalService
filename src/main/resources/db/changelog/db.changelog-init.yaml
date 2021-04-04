@@ -271,6 +271,9 @@ databaseChangeLog:
               - column:
                   name: rental_session_id
                   type: NUMERIC
+              - column:
+                  name: available
+                  type: BOOLEAN
             encoding: UTF-8
             file: "db/changelog/testDataset/promoCods.csv"
             schemaName: public

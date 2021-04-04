@@ -383,6 +383,11 @@ databaseChangeLog:
               - column:
                   name: rental_session_id
                   type: BIGINT
+              - column:
+                  name: available
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
 
   - changeSet:
       id: SRS-create-12
