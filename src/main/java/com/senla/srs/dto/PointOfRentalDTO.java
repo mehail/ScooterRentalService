@@ -18,5 +18,5 @@ public class PointOfRentalDTO extends AbstractDTO {
     private AddressDTO address;
     @NonNull
     private Boolean available;
-    List<ScooterDTO> scooters;
+    private List<ScooterDTO> scooters;
 }
