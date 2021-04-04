@@ -222,6 +222,32 @@ databaseChangeLog:
         - loadData:
             columns:
               - column:
+                  name: name
+                  type: STRING
+              - column:
+                  name: start_date
+                  type: DATE
+              - column:
+                  name: expired_date
+                  type: DATE
+              - column:
+                  name: discount_percentage
+                  type: NUMERIC
+              - column:
+                  name: bonus_point
+                  type: NUMERIC
+              - column:
+                  name: available
+                  type: BOOLEAN
+            encoding: UTF-8
+            file: "db/changelog/testDataset/promoCods.csv"
+            schemaName: public
+            separator: ','
+            tableName: promo_cods
+
+        - loadData:
+            columns:
+              - column:
                   name: id
                   type: NUMERIC
               - column:
@@ -242,6 +268,9 @@ databaseChangeLog:
               - column:
                   name: season_ticket_id
                   type: NUMERIC
+              - column:
+                  name: promo_cod_name
+                  type: STRING
             encoding: UTF-8
             file: "db/changelog/testDataset/rentalSessions.csv"
             schemaName: public
@@ -251,28 +280,3 @@ databaseChangeLog:
         - sql:
             sql: SELECT setval('rental_sessions_id_seq', (SELECT max(id) FROM rental_sessions))
 
-        - loadData:
-            columns:
-              - column:
-                  name: name
-                  type: STRING
-              - column:
-                  name: start_date
-                  type: DATE
-              - column:
-                  name: expired_date
-                  type: DATE
-              - column:
-                  name: discount_percentage
-                  type: NUMERIC
-              - column:
-                  name: bonus_point
-                  type: NUMERIC
-              - column:
-                  name: rental_session_id
-                  type: NUMERIC
-            encoding: UTF-8
-            file: "db/changelog/testDataset/promoCods.csv"
-            schemaName: public
-            separator: ','
-            tableName: promo_cods
