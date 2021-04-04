@@ -1,6 +1,31 @@
 databaseChangeLog:
 - changeSet:
-    id: 1615579885794-1
+    id: 1617569654816-1
+    author: mehail (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: addresses_pk
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: name
+            type: VARCHAR(64)
+        - column:
+            constraints:
+              nullable: false
+            name: city_id
+            type: BIGINT
+        tableName: addresses
+- changeSet:
+    id: 1617569654816-2
     author: mehail (generated)
     changes:
     - createTable:
@@ -16,7 +41,7 @@ databaseChangeLog:
         - column:
             constraints:
               nullable: false
-            name: city
+            name: name
             type: VARCHAR(64)
         - column:
             constraints:
@@ -25,7 +50,7 @@ databaseChangeLog:
             type: BIGINT
         tableName: cities
 - changeSet:
-    id: 1615579885794-2
+    id: 1617569654816-3
     author: mehail (generated)
     changes:
     - createTable:
@@ -41,11 +66,11 @@ databaseChangeLog:
         - column:
             constraints:
               nullable: false
-            name: country
+            name: name
             type: VARCHAR(64)
         tableName: countries
 - changeSet:
-    id: 1615579885794-3
+    id: 1617569654816-4
     author: mehail (generated)
     changes:
     - createTable:
@@ -65,7 +90,42 @@ databaseChangeLog:
             type: VARCHAR(64)
         tableName: makers
 - changeSet:
-    id: 1615579885794-4
+    id: 1617569654816-5
+    author: mehail (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: scooter_types_pk
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: model
+            type: VARCHAR(64)
+        - column:
+            constraints:
+              nullable: false
+            name: maker_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: max_speed
+            type: FLOAT8
+        - column:
+            constraints:
+              nullable: false
+            name: price_per_minute
+            type: INTEGER
+        tableName: scooter_types
+- changeSet:
+    id: 1617569654816-6
     author: mehail (generated)
     changes:
     - createTable:
@@ -86,16 +146,52 @@ databaseChangeLog:
         - column:
             constraints:
               nullable: false
-            name: address
+            name: address_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: available
+            type: BOOLEAN
+        tableName: point_of_rentals
+- changeSet:
+    id: 1617569654816-7
+    author: mehail (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: promo_cods_pk
+            name: name
             type: VARCHAR(64)
         - column:
             constraints:
               nullable: false
-            name: cities_id
+            name: start_date
+            type: TIMESTAMP WITHOUT TIME ZONE
+        - column:
+            name: expired_date
+            type: TIMESTAMP WITHOUT TIME ZONE
+        - column:
+            name: discount_percentage
+            type: INTEGER
+        - column:
+            name: bonus_point
+            type: INTEGER
+        - column:
+            name: rental_session_id
             type: BIGINT
-        tableName: point_of_rentals
+        - column:
+            constraints:
+              nullable: false
+            name: available
+            type: BOOLEAN
+        tableName: promo_cods
 - changeSet:
-    id: 1615579885794-5
+    id: 1617569654816-8
     author: mehail (generated)
     changes:
     - createTable:
@@ -134,64 +230,46 @@ databaseChangeLog:
         - column:
             name: season_ticket_id
             type: BIGINT
+        - column:
+            name: promo_cod_name
+            type: VARCHAR(64)
         tableName: rental_sessions
 - changeSet:
-    id: 1615579885794-6
+    id: 1617569654816-9
     author: mehail (generated)
     changes:
     - createTable:
         columns:
         - column:
-            autoIncrement: true
             constraints:
               nullable: false
               primaryKey: true
-              primaryKeyName: roles_pk
-            name: id
-            type: BIGINT
-        - column:
-            constraints:
-              nullable: false
-            name: name
-            type: VARCHAR(64)
-        tableName: roles
-- changeSet:
-    id: 1615579885794-7
-    author: mehail (generated)
-    changes:
-    - createTable:
-        columns:
-        - column:
-            autoIncrement: true
-            constraints:
-              nullable: false
-              primaryKey: true
-              primaryKeyName: scooter_types_pk
-            name: id
-            type: BIGINT
-        - column:
-            constraints:
-              nullable: false
-            name: model
+              primaryKeyName: scooters_pk
+            name: serial_number
             type: VARCHAR(64)
         - column:
             constraints:
               nullable: false
-            name: maker_id
+            name: point_of_rental_id
             type: BIGINT
         - column:
             constraints:
               nullable: false
-            name: max_speed
-            type: FLOAT8
+            name: scooter_type_id
+            type: BIGINT
         - column:
             constraints:
               nullable: false
-            name: price_per_minute
+            name: time_millage
             type: INTEGER
-        tableName: scooter_types
+        - column:
+            constraints:
+              nullable: false
+            name: status
+            type: INTEGER
+        tableName: scooters
 - changeSet:
-    id: 1615579885794-8
+    id: 1617569654816-10
     author: mehail (generated)
     changes:
     - createTable:
@@ -239,7 +317,7 @@ databaseChangeLog:
             type: BOOLEAN
         tableName: season_tickets
 - changeSet:
-    id: 1615579885794-9
+    id: 1617569654816-11
     author: mehail (generated)
     changes:
     - createTable:
@@ -255,18 +333,13 @@ databaseChangeLog:
         - column:
             constraints:
               nullable: false
-            name: role_id
-            type: BIGINT
-        - column:
-            constraints:
-              nullable: false
-            name: login
-            type: VARCHAR(64)
+            name: email
+            type: VARCHAR(320)
         - column:
             constraints:
               nullable: false
             name: password
-            type: VARCHAR(64)
+            type: VARCHAR(60)
         - column:
             constraints:
               nullable: false
@@ -280,13 +353,13 @@ databaseChangeLog:
         - column:
             constraints:
               nullable: false
-            name: birthday
-            type: date
+            name: role
+            type: INTEGER
         - column:
             constraints:
               nullable: false
-            name: email
-            type: VARCHAR(64)
+            name: status
+            type: INTEGER
         - column:
             constraints:
               nullable: false
@@ -294,113 +367,54 @@ databaseChangeLog:
             type: INTEGER
         tableName: users
 - changeSet:
-    id: 1615579885794-10
+    id: 1617569654816-12
     author: mehail (generated)
     changes:
-    - createTable:
-        columns:
-        - column:
-            constraints:
-              nullable: false
-              primaryKey: true
-              primaryKeyName: promo_cods_pk
-            name: name
-            type: VARCHAR(64)
-        - column:
-            name: start_date
-            type: TIMESTAMP WITHOUT TIME ZONE
-        - column:
-            name: expired_date
-            type: TIMESTAMP WITHOUT TIME ZONE
-        - column:
-            name: discount_percentage
-            type: INTEGER
-        - column:
-            name: bonus_point
-            type: INTEGER
-        - column:
-            name: rental_session_id
-            type: BIGINT
-        tableName: promo_cods
+    - addUniqueConstraint:
+        columnNames: name
+        constraintName: addresses_name_uq
+        tableName: addresses
 - changeSet:
-    id: 1615579885794-11
-    author: mehail (generated)
-    changes:
-    - createTable:
-        columns:
-        - column:
-            constraints:
-              nullable: false
-              primaryKey: true
-              primaryKeyName: scooters_pk
-            name: serial_number
-            type: VARCHAR(64)
-        - column:
-            constraints:
-              nullable: false
-            name: point_of_rental_id
-            type: BIGINT
-        - column:
-            constraints:
-              nullable: false
-            name: scooter_type_id
-            type: BIGINT
-        - column:
-            constraints:
-              nullable: false
-            name: time_of_use
-            type: INTEGER
-        tableName: scooters
-- changeSet:
-    id: 1615579885794-12
-    author: mehail (generated)
-    changes:
-    - createIndex:
-        columns:
-        - column:
-            name: city
-        indexName: cities_city_uindex
-        tableName: cities
-        unique: true
-- changeSet:
-    id: 1615579885794-13
+    id: 1617569654816-13
     author: mehail (generated)
     changes:
     - addForeignKeyConstraint:
-        baseColumnNames: cities_id
+        baseColumnNames: address_id
         baseTableName: point_of_rentals
-        constraintName: point_of_rentals_cities_id_fk
+        constraintName: point_of_rentals_addres_id_fk
         deferrable: false
         initiallyDeferred: false
         onDelete: NO ACTION
         onUpdate: NO ACTION
         referencedColumnNames: id
-        referencedTableName: cities
+        referencedTableName: addresses
         validate: true
 - changeSet:
-    id: 1615579885794-14
+    id: 1617569654816-14
     author: mehail (generated)
     changes:
-    - createIndex:
-        columns:
-        - column:
-            name: country
-        indexName: countries_country_uindex
+    - addUniqueConstraint:
+        columnNames: name
+        constraintName: cities_name_uq
+        tableName: cities
+- changeSet:
+    id: 1617569654816-15
+    author: mehail (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: name
+        constraintName: countries_name_uq
         tableName: countries
-        unique: true
 - changeSet:
-    id: 1615579885794-15
+    id: 1617569654816-16
     author: mehail (generated)
     changes:
-    - createIndex:
-        columns:
-        - column:
-            name: maker
-        indexName: makers_maker_uindex
+    - addUniqueConstraint:
+        columnNames: maker
+        constraintName: makers_maker_uq
         tableName: makers
-        unique: true
 - changeSet:
-    id: 1615579885794-16
+    id: 1617569654816-17
     author: mehail (generated)
     changes:
     - addForeignKeyConstraint:
@@ -415,81 +429,15 @@ databaseChangeLog:
         referencedTableName: makers
         validate: true
 - changeSet:
-    id: 1615579885794-17
+    id: 1617569654816-18
     author: mehail (generated)
     changes:
-    - createIndex:
-        columns:
-        - column:
-            name: name
-        indexName: paint_of_rentals_name_uindex
-        tableName: point_of_rentals
-        unique: true
-- changeSet:
-    id: 1615579885794-18
-    author: mehail (generated)
-    changes:
-    - createIndex:
-        columns:
-        - column:
-            name: address
-        indexName: point_of_rentals_address_uindex
-        tableName: point_of_rentals
-        unique: true
-- changeSet:
-    id: 1615579885794-19
-    author: mehail (generated)
-    changes:
-    - addForeignKeyConstraint:
-        baseColumnNames: point_of_rental_id
-        baseTableName: scooters
-        constraintName: scooters_point_of_rentals_id_fk
-        deferrable: false
-        initiallyDeferred: false
-        onDelete: NO ACTION
-        onUpdate: NO ACTION
-        referencedColumnNames: id
-        referencedTableName: point_of_rentals
-        validate: true
-- changeSet:
-    id: 1615579885794-20
-    author: mehail (generated)
-    changes:
-    - createIndex:
-        columns:
-        - column:
-            name: name
-        indexName: roles_name_uindex
-        tableName: roles
-        unique: true
-- changeSet:
-    id: 1615579885794-21
-    author: mehail (generated)
-    changes:
-    - addForeignKeyConstraint:
-        baseColumnNames: role_id
-        baseTableName: users
-        constraintName: users_roles_id_fk
-        deferrable: false
-        initiallyDeferred: false
-        onDelete: NO ACTION
-        onUpdate: NO ACTION
-        referencedColumnNames: id
-        referencedTableName: roles
-        validate: true
-- changeSet:
-    id: 1615579885794-22
-    author: mehail (generated)
-    changes:
-    - createIndex:
-        columns:
-        - column:
-            name: model
-        indexName: scooter_types_model_uindex
+    - addUniqueConstraint:
+        columnNames: model
+        constraintName: model_name_uq
         tableName: scooter_types
-        unique: true
 - changeSet:
-    id: 1615579885794-23
+    id: 1617569654816-19
     author: mehail (generated)
     changes:
     - addForeignKeyConstraint:
@@ -504,7 +452,7 @@ databaseChangeLog:
         referencedTableName: scooter_types
         validate: true
 - changeSet:
-    id: 1615579885794-24
+    id: 1617569654816-20
     author: mehail (generated)
     changes:
     - addForeignKeyConstraint:
@@ -519,7 +467,45 @@ databaseChangeLog:
         referencedTableName: scooter_types
         validate: true
 - changeSet:
-    id: 1615579885794-25
+    id: 1617569654816-21
+    author: mehail (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: name
+        constraintName: point_of_rentals_name_uq
+        tableName: point_of_rentals
+- changeSet:
+    id: 1617569654816-22
+    author: mehail (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: point_of_rental_id
+        baseTableName: scooters
+        constraintName: scooters_point_of_rentals_id_fk
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: point_of_rentals
+        validate: true
+- changeSet:
+    id: 1617569654816-23
+    author: mehail (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: promo_cod_name
+        baseTableName: rental_sessions
+        constraintName: rental_sessions_promo_cods_name_fk
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: name
+        referencedTableName: promo_cods
+        validate: true
+- changeSet:
+    id: 1617569654816-24
     author: mehail (generated)
     changes:
     - addForeignKeyConstraint:
@@ -534,44 +520,30 @@ databaseChangeLog:
         referencedTableName: season_tickets
         validate: true
 - changeSet:
-    id: 1615579885794-26
+    id: 1617569654816-25
     author: mehail (generated)
     changes:
-    - createIndex:
-        columns:
-        - column:
-            name: email
-        indexName: users_email_uindex
+    - addUniqueConstraint:
+        columnNames: email
+        constraintName: users_email_uq
         tableName: users
-        unique: true
 - changeSet:
-    id: 1615579885794-27
-    author: mehail (generated)
-    changes:
-    - createIndex:
-        columns:
-        - column:
-            name: login
-        indexName: users_login_uindex
-        tableName: users
-        unique: true
-- changeSet:
-    id: 1615579885794-28
+    id: 1617569654816-26
     author: mehail (generated)
     changes:
     - addForeignKeyConstraint:
-        baseColumnNames: rental_session_id
-        baseTableName: promo_cods
-        constraintName: promo_cods_sessions_id_fk
+        baseColumnNames: city_id
+        baseTableName: addresses
+        constraintName: addresses_countries_id_fk
         deferrable: false
         initiallyDeferred: false
         onDelete: NO ACTION
         onUpdate: NO ACTION
         referencedColumnNames: id
-        referencedTableName: rental_sessions
+        referencedTableName: cities
         validate: true
 - changeSet:
-    id: 1615579885794-29
+    id: 1617569654816-27
     author: mehail (generated)
     changes:
     - addForeignKeyConstraint:
@@ -586,7 +558,7 @@ databaseChangeLog:
         referencedTableName: countries
         validate: true
 - changeSet:
-    id: 1615579885794-30
+    id: 1617569654816-28
     author: mehail (generated)
     changes:
     - addForeignKeyConstraint:
@@ -601,7 +573,7 @@ databaseChangeLog:
         referencedTableName: scooters
         validate: true
 - changeSet:
-    id: 1615579885794-31
+    id: 1617569654816-29
     author: mehail (generated)
     changes:
     - addForeignKeyConstraint:
@@ -616,7 +588,7 @@ databaseChangeLog:
         referencedTableName: users
         validate: true
 - changeSet:
-    id: 1615579885794-32
+    id: 1617569654816-30
     author: mehail (generated)
     changes:
     - addForeignKeyConstraint:

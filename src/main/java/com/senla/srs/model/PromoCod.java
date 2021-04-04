@@ -14,8 +14,6 @@ import java.time.LocalDate;
 public class PromoCod extends AbstractEntity{
     @Id
     private String name;
-    @Column(name = "rental_session_id")
-    private Long rentalSessionId;
     @NonNull
     @Column(name = "start_date")
     private LocalDate startDate;

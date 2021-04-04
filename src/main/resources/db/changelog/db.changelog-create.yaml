@@ -206,7 +206,7 @@ databaseChangeLog:
                   type: INTEGER
                   constraints:
                     nullable: false
-                    
+
   - changeSet:
       id: SRS-create-8
       author: Mihail Artugin
@@ -351,6 +351,9 @@ databaseChangeLog:
               - column:
                   name: season_ticket_id
                   type: BIGINT
+              - column:
+                  name: promo_cod_name
+                  type: VARCHAR(64)
 
   - changeSet:
       id: SRS-create-11
@@ -380,9 +383,6 @@ databaseChangeLog:
               - column:
                   name: bonus_point
                   type: INTEGER
-              - column:
-                  name: rental_session_id
-                  type: BIGINT
               - column:
                   name: available
                   type: BOOLEAN
@@ -478,20 +478,6 @@ databaseChangeLog:
       author: Mihail Artugin
       changes:
         - addForeignKeyConstraint:
-            baseColumnNames: rental_session_id
-            baseTableName: promo_cods
-            constraintName: promo_cods_sessions_id_fk
-            deferrable: false
-            initiallyDeferred: false
-            referencedColumnNames: id
-            referencedTableName: rental_sessions
-            validate: true
-
-  - changeSet:
-      id: SRS-create-19
-      author: Mihail Artugin
-      changes:
-        - addForeignKeyConstraint:
             baseColumnNames: country_id
             baseTableName: cities
             constraintName: cities_countries_id_fk
@@ -502,7 +488,7 @@ databaseChangeLog:
             validate: true
 
   - changeSet:
-      id: SRS-create-20
+      id: SRS-create-19
       author: Mihail Artugin
       changes:
         - addForeignKeyConstraint:
@@ -516,7 +502,7 @@ databaseChangeLog:
             validate: true
 
   - changeSet:
-      id: SRS-create-21
+      id: SRS-create-20
       author: Mihail Artugin
       changes:
         - addForeignKeyConstraint:
@@ -527,6 +513,20 @@ databaseChangeLog:
             initiallyDeferred: false
             referencedColumnNames: serial_number
             referencedTableName: scooters
+            validate: true
+
+  - changeSet:
+      id: SRS-create-21
+      author: Mihail Artugin
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: promo_cod_name
+            baseTableName: rental_sessions
+            constraintName: rental_sessions_scooters_serial_number1_fk
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: name
+            referencedTableName: promo_cods
             validate: true
 
   - changeSet:

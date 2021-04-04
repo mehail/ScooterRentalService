@@ -1,7 +1,7 @@
-name,start_date,expired_date,discount_percentage,bonus_point,rental_session_id,available
-cash1,'2021-03-01',null,null,10,2,false
-cash2,'2021-03-01',null,null,20,3,false
-cash3,'2021-03-01',null,null,30,null,true
-percent1,'2021-03-01',null,5,null,5,false
-percent2,'2021-03-01',null,10,null,6,false
-percent3,'2021-03-01',null,15,null,null,true
+name,start_date,expired_date,discount_percentage,bonus_point,available
+cash1,'2021-03-01',null,null,10,false
+cash2,'2021-03-01',null,null,20,false
+cash3,'2021-03-01',null,null,30,true
+percent1,'2021-03-01',null,5,null,false
+percent2,'2021-03-01',null,10,null,false
+percent3,'2021-03-01',null,15,null,true
