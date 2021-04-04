@@ -16,11 +16,11 @@ public class SeasonTicket extends AbstractEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NonNull
-    @ManyToOne(optional=false, cascade=CascadeType.ALL)
+    @ManyToOne(optional=false)
     @JoinColumn(name = "user_id")
     private User user;
     @NonNull
-    @ManyToOne(optional=false, cascade=CascadeType.ALL)
+    @ManyToOne(optional=false)
     @JoinColumn(name = "scooter_type_id")
     private ScooterType scooterType;
     @NonNull

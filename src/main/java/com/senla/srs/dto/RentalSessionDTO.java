@@ -5,6 +5,7 @@ import com.senla.srs.model.User;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -23,4 +24,5 @@ public class RentalSessionDTO extends AbstractDTO {
     private LocalDate begin;
     private LocalDate end;
     private SeasonTicketDTO seasonTicket;
+    private List<PromoCodDTO> promoCods;
 }
