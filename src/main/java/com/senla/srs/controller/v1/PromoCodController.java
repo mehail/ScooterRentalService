@@ -53,7 +53,7 @@ public class PromoCodController {
         if (isValidDate(promoCodDTO)) {
             return create(promoCodDTO);
         } else {
-            return new ResponseEntity<>("The start and end dates of the promotional code are not correct",
+            return new ResponseEntity<>("The start and end dates of the promo code are not correct",
                     HttpStatus.FORBIDDEN);
         }
     }

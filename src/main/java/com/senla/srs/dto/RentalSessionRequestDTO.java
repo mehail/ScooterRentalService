@@ -7,15 +7,12 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(of = {"id"}, callSuper = false)
-public class RentalSessionDTO extends AbstractDTO {
-    @NonNull
-    private Long id;
+@EqualsAndHashCode(of = {"user", "scooter", "begin"}, callSuper = false)
+public class RentalSessionRequestDTO extends AbstractDTO {
     @NonNull
     private UserResponseDTO user;
     @NonNull
     private ScooterDTO scooter;
-    private Integer rate;
     @NonNull
     private LocalDate begin;
     private LocalDate end;
