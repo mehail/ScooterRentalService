@@ -17,7 +17,6 @@ public enum Permission {
     SCOOTER_TYPES_WRITE("scooterTypes:write"),
 
     SEASON_TICKETS_READ("seasonTickets:read"),
-    SEASON_TICKETS_READ_ALL("seasonTickets:readAll"),
     SEASON_TICKETS_WRITE("seasonTickets:write"),
 
     USERS_READ("users:read"),

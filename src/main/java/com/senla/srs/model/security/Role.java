@@ -27,7 +27,6 @@ public enum Role {
             Permission.SCOOTER_TYPES_READ,
             Permission.SCOOTER_TYPES_WRITE,
             Permission.SEASON_TICKETS_READ,
-            Permission.SEASON_TICKETS_READ_ALL,
             Permission.SEASON_TICKETS_WRITE,
             Permission.USERS_READ,
             Permission.USERS_READ_ALL,

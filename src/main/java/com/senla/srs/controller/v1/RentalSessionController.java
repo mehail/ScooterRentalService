@@ -36,7 +36,7 @@ public class RentalSessionController {
     private UserService userService;
     private RentalSessionRequestMapper rentalSessionRequestMapper;
     private RentalSessionResponseMapper rentalSessionResponseMapper;
-    private static final String NO_RENTAL_SESSION_WITH_ID = "No rental session with this serial number found";
+    private static final String NO_RENTAL_SESSION_WITH_ID = "No rental session with this ID found";
 
     @GetMapping
     @PreAuthorize("hasAuthority('rentalSessions:read')")
