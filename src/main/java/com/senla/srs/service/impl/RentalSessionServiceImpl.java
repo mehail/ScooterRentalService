@@ -35,6 +35,12 @@ public class RentalSessionServiceImpl implements RentalSessionService {
     }
 
     @Override
+    public Optional<RentalSession> retrieveRentalSessionByUserAndScooterAndBegin(RentalSession rentalSession) {
+        return rentalSessionRepository.findAllByUserAndScooterAndBegin(rentalSession.getUser(),
+                rentalSession.getScooter(), rentalSession.getBegin());
+    }
+
+    @Override
     public void deleteById(Long id) {
         rentalSessionRepository.deleteById(id);
     }
