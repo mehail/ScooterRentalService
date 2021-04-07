@@ -1,5 +1,6 @@
-package com.senla.srs.dto;
+package com.senla.srs.dto.scooterType;
 
+import com.senla.srs.dto.AbstractDTO;
 import lombok.*;
 
 @Data

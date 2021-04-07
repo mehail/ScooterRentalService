@@ -1,4 +1,4 @@
-package com.senla.srs.dto;
+package com.senla.srs.dto.seasonTicket;
 
 import lombok.*;
 
@@ -6,7 +6,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
-public class SeasonTicketResponseDTO extends SeasonTicketRequestDTO{
+public class SeasonTicketResponseDTO extends SeasonTicketRequestDTO {
     @NonNull
     private Long id;
 }

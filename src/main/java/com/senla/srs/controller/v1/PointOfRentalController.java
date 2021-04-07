@@ -1,6 +1,6 @@
 package com.senla.srs.controller.v1;
 
-import com.senla.srs.dto.PointOfRentalDTO;
+import com.senla.srs.dto.pointOfRental.PointOfRentalDTO;
 import com.senla.srs.mapper.PointOfRentalMapper;
 import com.senla.srs.model.PointOfRental;
 import com.senla.srs.service.PointOfRentalService;

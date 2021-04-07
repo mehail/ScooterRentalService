@@ -1,5 +1,7 @@
-package com.senla.srs.dto;
+package com.senla.srs.dto.seasonTicket;
 
+import com.senla.srs.dto.AbstractDTO;
+import com.senla.srs.dto.scooterType.ScooterTypeDTO;
 import lombok.*;
 
 import java.time.LocalDate;

@@ -1,5 +1,9 @@
-package com.senla.srs.dto;
+package com.senla.srs.dto.rentalSession;
 
+import com.senla.srs.dto.promoCod.PromoCodDTO;
+import com.senla.srs.dto.scooter.ScooterDTO;
+import com.senla.srs.dto.seasonTicket.SeasonTicketRequestDTO;
+import com.senla.srs.dto.user.UserResponseDTO;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -8,7 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
-public class RentalSessionResponseDTO extends RentalSessionRequestDTO{
+public class RentalSessionResponseDTO extends RentalSessionRequestDTO {
 
     public RentalSessionResponseDTO(@NonNull UserResponseDTO user, @NonNull ScooterDTO scooter, @NonNull LocalDate begin,
                                     LocalDate end, SeasonTicketRequestDTO seasonTicket, PromoCodDTO promoCod, @NonNull Long id, @NonNull Integer rate) {

@@ -1,6 +1,6 @@
 package com.senla.srs.controller.v1;
 
-import com.senla.srs.dto.ScooterDTO;
+import com.senla.srs.dto.scooter.ScooterDTO;
 import com.senla.srs.mapper.ScooterMapper;
 import com.senla.srs.model.Scooter;
 import com.senla.srs.service.ScooterService;

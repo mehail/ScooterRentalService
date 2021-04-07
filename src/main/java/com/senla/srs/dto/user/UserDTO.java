@@ -1,5 +1,6 @@
-package com.senla.srs.dto;
+package com.senla.srs.dto.user;
 
+import com.senla.srs.dto.AbstractDTO;
 import com.senla.srs.model.UserStatus;
 import com.senla.srs.model.security.Role;
 import lombok.*;

@@ -1,5 +1,6 @@
-package com.senla.srs.dto;
+package com.senla.srs.dto.promoCod;
 
+import com.senla.srs.dto.AbstractDTO;
 import lombok.*;
 
 import java.time.LocalDate;

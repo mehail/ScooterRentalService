@@ -1,6 +1,6 @@
 package com.senla.srs.mapper;
 
-import com.senla.srs.dto.ScooterDTO;
+import com.senla.srs.dto.scooter.ScooterDTO;
 import com.senla.srs.model.Scooter;
 import org.springframework.stereotype.Component;
 

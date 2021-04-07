@@ -1,4 +1,4 @@
-package com.senla.srs.dto;
+package com.senla.srs.dto.user;
 
 import com.senla.srs.model.UserStatus;
 import com.senla.srs.model.security.Role;
@@ -10,7 +10,7 @@ import lombok.NonNull;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"password"}, callSuper = false)
-public class UserRequestDTO extends UserDTO{
+public class UserRequestDTO extends UserDTO {
     @NonNull
     private String password;
 

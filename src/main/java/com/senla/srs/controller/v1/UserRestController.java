@@ -1,7 +1,7 @@
 package com.senla.srs.controller.v1;
 
-import com.senla.srs.dto.UserDTO;
-import com.senla.srs.dto.UserRequestDTO;
+import com.senla.srs.dto.user.UserDTO;
+import com.senla.srs.dto.user.UserRequestDTO;
 import com.senla.srs.mapper.UserRequestMapper;
 import com.senla.srs.mapper.UserResponseMapper;
 import com.senla.srs.model.User;

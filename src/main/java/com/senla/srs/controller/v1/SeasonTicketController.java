@@ -1,6 +1,6 @@
 package com.senla.srs.controller.v1;
 
-import com.senla.srs.dto.SeasonTicketRequestDTO;
+import com.senla.srs.dto.seasonTicket.SeasonTicketRequestDTO;
 import com.senla.srs.mapper.ScooterTypeMapper;
 import com.senla.srs.mapper.SeasonTicketRequestMapper;
 import com.senla.srs.mapper.SeasonTicketResponseMapper;

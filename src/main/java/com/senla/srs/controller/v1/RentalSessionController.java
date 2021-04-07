@@ -1,9 +1,9 @@
 package com.senla.srs.controller.v1;
 
-import com.senla.srs.dto.PromoCodDTO;
-import com.senla.srs.dto.RentalSessionRequestDTO;
-import com.senla.srs.dto.SeasonTicketRequestDTO;
-import com.senla.srs.dto.UserResponseDTO;
+import com.senla.srs.dto.promoCod.PromoCodDTO;
+import com.senla.srs.dto.rentalSession.RentalSessionRequestDTO;
+import com.senla.srs.dto.seasonTicket.SeasonTicketRequestDTO;
+import com.senla.srs.dto.user.UserResponseDTO;
 import com.senla.srs.mapper.RentalSessionRequestMapper;
 import com.senla.srs.mapper.RentalSessionResponseMapper;
 import com.senla.srs.model.RentalSession;
@@ -152,16 +152,11 @@ public class RentalSessionController {
         if (seasonTicketDTO == null) {
             return true;
         } else {
-            boolean isAvailable = seasonTicketDTO.getAvailableForUse();
             boolean isThisUser = userResponseDTO.getId().equals(seasonTicketDTO.getUserId());
             boolean isValidScooterType = rentalSessionRequestDTO.getScooter().getType().equals(seasonTicketDTO.getScooterType());
-            boolean isCorrectRemainingTime = seasonTicketDTO.getRemainingTime() > 0;
 
-            return isAvailable &&
-                    isThisUser &&
-                    isValidScooterType &&
-                    isCorrectRemainingTime &&
-                    isValidDate(rentalSessionRequestDTO, seasonTicketDTO.getStartDate(), seasonTicketDTO.getExpiredDate());
+            return  isThisUser &&
+                    isValidScooterType;
         }
     }
 
