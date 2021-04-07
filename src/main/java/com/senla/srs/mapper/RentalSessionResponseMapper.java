@@ -6,7 +6,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class RentalSessionResponseMapper extends AbstractMapper<RentalSession, RentalSessionResponseDTO>{
-    RentalSessionResponseMapper(Class<RentalSession> entityClass, Class<RentalSessionResponseDTO> dtoClass) {
-        super(entityClass, dtoClass);
+
+    public RentalSessionResponseMapper() {
+        super(RentalSession.class, RentalSessionResponseDTO.class);
     }
 }
