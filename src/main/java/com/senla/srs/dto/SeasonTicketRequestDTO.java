@@ -13,12 +13,5 @@ public class SeasonTicketRequestDTO extends AbstractDTO {
     private Long userId;
     @NonNull
     private ScooterTypeDTO scooterType;
-    @NonNull
-    private Integer price;
-    @NonNull
-    private Integer remainingTime;
     private LocalDate startDate;
-    private LocalDate expiredDate;
-    @NonNull
-    private Boolean availableForUse;
 }

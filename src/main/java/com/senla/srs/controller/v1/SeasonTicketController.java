@@ -1,6 +1,7 @@
 package com.senla.srs.controller.v1;
 
 import com.senla.srs.dto.SeasonTicketRequestDTO;
+import com.senla.srs.mapper.ScooterTypeMapper;
 import com.senla.srs.mapper.SeasonTicketRequestMapper;
 import com.senla.srs.mapper.SeasonTicketResponseMapper;
 import com.senla.srs.model.SeasonTicket;
@@ -20,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Data
@@ -29,9 +29,10 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/v1/season_tickets")
 public class SeasonTicketController {
     private SeasonTicketService seasonTicketService;
+    private UserService userService;
     private SeasonTicketRequestMapper seasonTicketRequestMapper;
     private SeasonTicketResponseMapper seasonTicketResponseMapper;
-    private UserService userService;
+    private ScooterTypeMapper scooterTypeMapper;
     private static final String NO_SEASON_TICKET_WITH_ID = "No season ticket with this ID found";
 
     @GetMapping
@@ -39,23 +40,16 @@ public class SeasonTicketController {
     public List<SeasonTicketRequestDTO> getAll(@AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
 
         if (userService.isAdmin(userSecurity)) {
-            return convertCollectionSeasonTicketsToResponseDTO(seasonTicketService.retrieveAllSeasonTickets());
+            return seasonTicketResponseMapper.listToDto(seasonTicketService.retrieveAllSeasonTickets());
         } else {
             try {
                 User authUser = userService.retrieveUserByAuthenticationPrincipal(userSecurity).get();
-                return convertCollectionSeasonTicketsToResponseDTO(seasonTicketService.retrieveAllSeasonTicketsByUserId(authUser.getId()));
+                return seasonTicketResponseMapper.listToDto(seasonTicketService.retrieveAllSeasonTicketsByUserId(authUser.getId()));
             } catch (NoSuchElementException e) {
                 log.error(e.getMessage(), NO_SEASON_TICKET_WITH_ID);
                 return new ArrayList<>();
             }
         }
-    }
-
-    //ToDo Output to mapper
-    private List<SeasonTicketRequestDTO> convertCollectionSeasonTicketsToResponseDTO(List<SeasonTicket> seasonTickets) {
-        return seasonTickets.stream()
-                .map(seasonTicket -> seasonTicketResponseMapper.toDto(seasonTicket))
-                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
@@ -79,29 +73,34 @@ public class SeasonTicketController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('seasonTickets:write')")
+    @PreAuthorize("hasAuthority('seasonTickets:read')")
     public ResponseEntity<?> createOrUpdate(@RequestBody SeasonTicketRequestDTO seasonTicketRequestDTO) {
-        if (isValidDate(seasonTicketRequestDTO)) {
-            return create(seasonTicketRequestDTO);
+        Optional<SeasonTicket> optionalSeasonTicket =
+                seasonTicketService.retrieveSeasonTicketByUserIdAndScooterTypeAndStartDate(
+                        seasonTicketRequestDTO.getUserId(),
+                        scooterTypeMapper.toEntity(seasonTicketRequestDTO.getScooterType()),
+                        seasonTicketRequestDTO.getStartDate());
+
+        if (optionalSeasonTicket.isEmpty()) {
+            SeasonTicket seasonTicket = seasonTicketRequestMapper.toEntity(seasonTicketRequestDTO);
+            seasonTicketService.save(seasonTicket);
+
+            try {
+                SeasonTicket createdSeasonTicket =
+                        seasonTicketService.retrieveSeasonTicketByUserIdAndScooterTypeAndStartDate(
+                                seasonTicketRequestDTO.getUserId(),
+                                scooterTypeMapper.toEntity(seasonTicketRequestDTO.getScooterType()),
+                                seasonTicketRequestDTO.getStartDate()).get();
+
+                return ResponseEntity.ok(seasonTicketResponseMapper.toDto(createdSeasonTicket));
+            } catch (NoSuchElementException e) {
+                String errorMessage = "The season ticket is not created";
+                log.error(e.getMessage(), errorMessage);
+                return new ResponseEntity<>(errorMessage, HttpStatus.FORBIDDEN);
+            }
+
         } else {
-            return new ResponseEntity<>("The start and end dates of the promo code are not correct",
-                    HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("Modification of the existing Season Ticket is prohibited", HttpStatus.FORBIDDEN);
         }
     }
-
-    //ToDo Rewrite, remove the stub
-    private ResponseEntity<?> create(SeasonTicketRequestDTO seasonTicketRequestDTO) {
-        return null;
-    }
-
-
-    private boolean isValidDate(SeasonTicketRequestDTO seasonTicketRequestDTO) {
-        boolean isCorrectPrice = seasonTicketRequestDTO.getPrice() == seasonTicketRequestDTO.getRemainingTime() *
-                        seasonTicketRequestDTO.getScooterType().getPricePerMinute();
-        boolean isCorrectDate = seasonTicketRequestDTO.getExpiredDate() == null ||
-                seasonTicketRequestDTO.getStartDate().isBefore(seasonTicketRequestDTO.getExpiredDate());
-
-        return isCorrectDate && isCorrectPrice;
-    }
-
 }
