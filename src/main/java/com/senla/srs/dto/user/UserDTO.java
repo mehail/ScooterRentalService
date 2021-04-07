@@ -6,7 +6,6 @@ import com.senla.srs.model.security.Role;
 import lombok.*;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"email"}, callSuper = false)
 public class UserDTO extends AbstractDTO {

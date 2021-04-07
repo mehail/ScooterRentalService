@@ -2,7 +2,7 @@ package com.senla.srs.dto.pointOfRental;
 
 import com.senla.srs.dto.AbstractDTO;
 import com.senla.srs.dto.scooter.ScooterDTO;
-import com.senla.srs.dto.db.AddressDTO;
+import com.senla.srs.dto.address.AddressDTO;
 import lombok.*;
 
 import java.util.List;

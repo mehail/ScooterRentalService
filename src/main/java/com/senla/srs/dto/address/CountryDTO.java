@@ -1,4 +1,4 @@
-package com.senla.srs.dto.db;
+package com.senla.srs.dto.address;
 
 import com.senla.srs.dto.AbstractDTO;
 import lombok.Data;

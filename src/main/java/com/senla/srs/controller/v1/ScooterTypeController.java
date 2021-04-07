@@ -7,6 +7,7 @@ import com.senla.srs.service.ScooterTypeService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -67,7 +68,7 @@ public class ScooterTypeController {
         try {
             scooterTypeService.deleteById(id);
             return new ResponseEntity<>("Scooter type with this id was deleted", HttpStatus.ACCEPTED);
-        } catch (NoSuchElementException e) {
+        } catch (EmptyResultDataAccessException e) {
             String errorMessage = "A scooter type with this id was not detected";
             log.error(e.getMessage(), errorMessage);
             return new ResponseEntity<>(errorMessage, HttpStatus.FORBIDDEN);

@@ -13,6 +13,7 @@ import com.senla.srs.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -190,7 +191,7 @@ public class RentalSessionController {
             } else {
                 return new ResponseEntity<>("Rental session closed and cannot be deleted", HttpStatus.FORBIDDEN);
             }
-        } catch (NoSuchElementException e) {
+        } catch (EmptyResultDataAccessException e) {
             String errorMessage = "A rental session with this id was not detected";
             log.error(e.getMessage(), errorMessage);
             return new ResponseEntity<>(errorMessage, HttpStatus.FORBIDDEN);

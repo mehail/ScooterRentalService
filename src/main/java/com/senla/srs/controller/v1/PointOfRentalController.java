@@ -7,6 +7,7 @@ import com.senla.srs.service.PointOfRentalService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -67,7 +68,7 @@ public class PointOfRentalController {
         try {
             pointOfRentalService.deleteById(id);
             return new ResponseEntity<>("Point of rental with this id was deleted", HttpStatus.ACCEPTED);
-        } catch (NoSuchElementException e) {
+        } catch (EmptyResultDataAccessException e) {
             log.error(e.getMessage(), POINT_OF_RENTAL_NOT_DETECTED);
             return new ResponseEntity<>(POINT_OF_RENTAL_NOT_DETECTED, HttpStatus.FORBIDDEN);
         }
