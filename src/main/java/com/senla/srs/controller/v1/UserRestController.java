@@ -32,7 +32,7 @@ public class UserRestController {
     private UserResponseMapper userResponseMapper;
     private UserRequestMapper userRequestMapper;
 
-    private static final String USER_NOT_DETECTED = "A user with this id was not detected";
+    private static final String USER_NOT_FOUND = "A user with this id not found";
     private static final String RE_AUTH = "To change this user reAuthorize";
     private static final String CHANGE_DEFAULT_FIELD = "To top up your balance, obtain administrator rights or " +
             "deactivate a profile, contact the administrator";
@@ -52,7 +52,7 @@ public class UserRestController {
 
         return optionalUser.isPresent()
                 ? ResponseEntity.ok(userResponseMapper.toDto(optionalUser.get()))
-                : new ResponseEntity<>(USER_NOT_DETECTED, HttpStatus.FORBIDDEN);
+                : new ResponseEntity<>(USER_NOT_FOUND, HttpStatus.FORBIDDEN);
     }
 
     @GetMapping("/this/")
@@ -61,7 +61,7 @@ public class UserRestController {
 
         return optionalUser.isPresent()
                 ? ResponseEntity.ok(userResponseMapper.toDto(optionalUser.get()))
-                : new ResponseEntity<>(USER_NOT_DETECTED, HttpStatus.FORBIDDEN);
+                : new ResponseEntity<>(USER_NOT_FOUND, HttpStatus.FORBIDDEN);
     }
 
     @PostMapping
@@ -140,8 +140,8 @@ public class UserRestController {
             userService.deleteById(id);
             return new ResponseEntity<>("User with this id was deleted", HttpStatus.ACCEPTED);
         } catch (EmptyResultDataAccessException e) {
-            log.error(e.getMessage(), USER_NOT_DETECTED);
-            return new ResponseEntity<>(USER_NOT_DETECTED, HttpStatus.FORBIDDEN);
+            log.error(e.getMessage(), USER_NOT_FOUND);
+            return new ResponseEntity<>(USER_NOT_FOUND, HttpStatus.FORBIDDEN);
         }
     }
 }

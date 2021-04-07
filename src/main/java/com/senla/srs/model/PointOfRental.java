@@ -1,6 +1,6 @@
 package com.senla.srs.model;
 
-import com.senla.srs.dto.address.AddressDTO;
+import com.senla.srs.dto.db.AddressDTO;
 import lombok.*;
 
 import javax.persistence.*;

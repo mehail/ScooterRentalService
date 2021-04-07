@@ -1,4 +1,4 @@
-package com.senla.srs.dto.seasonTicket;
+package com.senla.srs.dto.season.ticket;
 
 import lombok.*;
 

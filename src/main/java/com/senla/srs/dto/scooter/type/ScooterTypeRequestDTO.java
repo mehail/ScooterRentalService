@@ -1,19 +1,17 @@
-package com.senla.srs.dto.scooterType;
+package com.senla.srs.dto.scooter.type;
 
 import com.senla.srs.dto.AbstractDTO;
+import com.senla.srs.dto.db.MakerDTO;
 import lombok.*;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(of = {"id"}, callSuper = false)
-public class ScooterTypeDTO extends AbstractDTO {
-    @NonNull
-    private Long id;
+@EqualsAndHashCode(of = {"model", "maker"}, callSuper = false)
+public class ScooterTypeRequestDTO extends AbstractDTO {
     @NonNull
     private String model;
     @NonNull
-    private String maker;
+    private MakerDTO maker;
     @NonNull
     private Double maxSpeed;
     @NonNull

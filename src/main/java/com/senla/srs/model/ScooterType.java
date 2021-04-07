@@ -1,5 +1,6 @@
 package com.senla.srs.model;
 
+import com.senla.srs.dto.db.MakerDTO;
 import lombok.*;
 
 import javax.persistence.*;
@@ -17,8 +18,9 @@ public class ScooterType extends AbstractEntity{
     @NonNull
     private String model;
     @NonNull
-    @Column(name = "maker_id")
-    private String maker;
+    @ManyToOne
+    @JoinColumn(name = "maker_id")
+    private MakerDTO maker;
     @NonNull
     private Double maxSpeed;
     @NonNull

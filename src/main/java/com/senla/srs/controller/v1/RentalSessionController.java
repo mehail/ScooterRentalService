@@ -2,7 +2,7 @@ package com.senla.srs.controller.v1;
 
 import com.senla.srs.dto.promoCod.PromoCodDTO;
 import com.senla.srs.dto.rentalSession.RentalSessionRequestDTO;
-import com.senla.srs.dto.seasonTicket.SeasonTicketRequestDTO;
+import com.senla.srs.dto.season.ticket.SeasonTicketRequestDTO;
 import com.senla.srs.dto.user.UserResponseDTO;
 import com.senla.srs.mapper.RentalSessionRequestMapper;
 import com.senla.srs.mapper.RentalSessionResponseMapper;

@@ -1,4 +1,4 @@
-package com.senla.srs.dto.address;
+package com.senla.srs.dto.db;
 
 import com.senla.srs.dto.AbstractDTO;
 import lombok.Data;
@@ -12,8 +12,8 @@ import javax.persistence.*;
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
 @Entity
-@Table(name = "addresses")
-public class AddressDTO extends AbstractDTO {
+@Table(name = "cities")
+public class CityDTO extends AbstractDTO {
     @Id
     @NonNull
     private Long id;
@@ -21,6 +21,6 @@ public class AddressDTO extends AbstractDTO {
     private String name;
     @NonNull
     @ManyToOne(optional = false)
-    @JoinColumn(name = "city_id")
-    private CityDTO city;
+    @JoinColumn(name = "country_id")
+    private CountryDTO country;
 }

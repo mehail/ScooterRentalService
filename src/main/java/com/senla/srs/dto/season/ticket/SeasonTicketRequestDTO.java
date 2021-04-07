@@ -1,7 +1,7 @@
-package com.senla.srs.dto.seasonTicket;
+package com.senla.srs.dto.season.ticket;
 
 import com.senla.srs.dto.AbstractDTO;
-import com.senla.srs.dto.scooterType.ScooterTypeDTO;
+import com.senla.srs.dto.scooter.type.ScooterTypeRequestDTO;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -14,6 +14,6 @@ public class SeasonTicketRequestDTO extends AbstractDTO {
     @NonNull
     private Long userId;
     @NonNull
-    private ScooterTypeDTO scooterType;
+    private ScooterTypeRequestDTO scooterType;
     private LocalDate startDate;
 }

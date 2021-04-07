@@ -1,7 +1,7 @@
 package com.senla.srs.controller.v1;
 
-import com.senla.srs.dto.seasonTicket.SeasonTicketRequestDTO;
-import com.senla.srs.mapper.ScooterTypeMapper;
+import com.senla.srs.dto.season.ticket.SeasonTicketRequestDTO;
+import com.senla.srs.mapper.ScooterTypeRequestMapper;
 import com.senla.srs.mapper.SeasonTicketRequestMapper;
 import com.senla.srs.mapper.SeasonTicketResponseMapper;
 import com.senla.srs.model.SeasonTicket;
@@ -32,7 +32,7 @@ public class SeasonTicketController {
     private UserService userService;
     private SeasonTicketRequestMapper seasonTicketRequestMapper;
     private SeasonTicketResponseMapper seasonTicketResponseMapper;
-    private ScooterTypeMapper scooterTypeMapper;
+    private ScooterTypeRequestMapper scooterTypeRequestMapper;
     private static final String NO_SEASON_TICKET_WITH_ID = "No season ticket with this ID found";
 
     @GetMapping
@@ -78,7 +78,7 @@ public class SeasonTicketController {
         Optional<SeasonTicket> optionalSeasonTicket =
                 seasonTicketService.retrieveSeasonTicketByUserIdAndScooterTypeAndStartDate(
                         seasonTicketRequestDTO.getUserId(),
-                        scooterTypeMapper.toEntity(seasonTicketRequestDTO.getScooterType()),
+                        scooterTypeRequestMapper.toEntity(seasonTicketRequestDTO.getScooterType()),
                         seasonTicketRequestDTO.getStartDate());
 
         if (optionalSeasonTicket.isEmpty()) {
@@ -89,7 +89,7 @@ public class SeasonTicketController {
                 SeasonTicket createdSeasonTicket =
                         seasonTicketService.retrieveSeasonTicketByUserIdAndScooterTypeAndStartDate(
                                 seasonTicketRequestDTO.getUserId(),
-                                scooterTypeMapper.toEntity(seasonTicketRequestDTO.getScooterType()),
+                                scooterTypeRequestMapper.toEntity(seasonTicketRequestDTO.getScooterType()),
                                 seasonTicketRequestDTO.getStartDate()).get();
 
                 return ResponseEntity.ok(seasonTicketResponseMapper.toDto(createdSeasonTicket));
