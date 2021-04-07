@@ -1,7 +1,11 @@
 package com.senla.srs.controller.v1;
 
-import com.senla.srs.dto.RentalSessionDTO;
-import com.senla.srs.mapper.RentalSessionMapper;
+import com.senla.srs.dto.PromoCodDTO;
+import com.senla.srs.dto.RentalSessionRequestDTO;
+import com.senla.srs.dto.SeasonTicketRequestDTO;
+import com.senla.srs.dto.UserResponseDTO;
+import com.senla.srs.mapper.RentalSessionRequestMapper;
+import com.senla.srs.mapper.RentalSessionResponseMapper;
 import com.senla.srs.model.RentalSession;
 import com.senla.srs.model.User;
 import com.senla.srs.service.RentalSessionService;
@@ -15,9 +19,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -28,22 +34,23 @@ import java.util.stream.Collectors;
 public class RentalSessionController {
     private RentalSessionService rentalSessionService;
     private UserService userService;
-    private RentalSessionMapper rentalSessionMapper;
-    private static final String NO_RENTAL_SESSION_WITH_ID = "No rental session with this serial number found";
+    private RentalSessionRequestMapper rentalSessionRequestMapper;
+    private RentalSessionResponseMapper rentalSessionResponseMapper;
+    private static final String NO_RENTAL_SESSION_WITH_ID = "No rental session with this ID found";
 
     @GetMapping
     @PreAuthorize("hasAuthority('rentalSessions:read')")
-    public List<RentalSessionDTO> getAll(@AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
+    public List<RentalSessionRequestDTO> getAll(@AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
 
         if (userService.isAdmin(userSecurity)) {
             return rentalSessionService.retrieveAllRentalSessions().stream()
-                    .map(rentalSession -> rentalSessionMapper.toDto(rentalSession))
+                    .map(rentalSession -> rentalSessionResponseMapper.toDto(rentalSession))
                     .collect(Collectors.toList());
         } else {
             try {
                 User authUser = userService.retrieveUserByAuthenticationPrincipal(userSecurity).get();
                 return rentalSessionService.retrieveAllRentalSessionsByUserId(authUser.getId()).stream()
-                        .map(rentalSession -> rentalSessionMapper.toDto(rentalSession))
+                        .map(rentalSession -> rentalSessionResponseMapper.toDto(rentalSession))
                         .collect(Collectors.toList());
             } catch (NoSuchElementException e) {
                 log.error(e.getMessage(), NO_RENTAL_SESSION_WITH_ID);
@@ -84,7 +91,7 @@ public class RentalSessionController {
     private ResponseEntity<?> getById(Long id) {
         try {
             RentalSession rentalSession = rentalSessionService.retrieveRentalSessionById(id).get();
-            return ResponseEntity.ok(rentalSessionMapper.toDto(rentalSession));
+            return ResponseEntity.ok(rentalSessionResponseMapper.toDto(rentalSession));
         } catch (NoSuchElementException e) {
             String errorMessage = NO_RENTAL_SESSION_WITH_ID;
             log.error(e.getMessage(), errorMessage);
@@ -94,13 +101,82 @@ public class RentalSessionController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('rentalSessions:read')")
-    public ResponseEntity<?> createOrUpdate(@RequestBody RentalSessionDTO RentalSessionDTO) {
-        //ToDo Plug!!! Add access rights !!!
-        RentalSession rentalSession = rentalSessionMapper.toEntity(RentalSessionDTO);
+    public ResponseEntity<?> createOrUpdate(@AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity,
+                                            @RequestBody RentalSessionRequestDTO rentalSessionRequestDTO) {
+
+        Optional<RentalSession> optionalExistRentalSession =
+                rentalSessionService.retrieveRentalSessionByUserAndScooterAndBegin(rentalSessionRequestMapper
+                        .toEntity(rentalSessionRequestDTO));
+
+        if (optionalExistRentalSession.isEmpty()) {
+            return create(rentalSessionRequestDTO);
+        } else {
+            RentalSession existRentalSession = optionalExistRentalSession.get();
+
+            if (existRentalSession.getEnd() != null) {
+                return new ResponseEntity<>("Rental session closed and not available for modification", HttpStatus.FORBIDDEN);
+            } else if (userService.isAdmin(userSecurity) || isThisUserRentalSession(existRentalSession, userSecurity)) {
+                return create(rentalSessionRequestDTO);
+            } else {
+                return new ResponseEntity<>("Changes to this Rental session are not available", HttpStatus.FORBIDDEN);
+            }
+        }
+    }
+
+    private ResponseEntity<?> create(RentalSessionRequestDTO rentalSessionRequestDTO) {
+        if (isValidCreateRentalSession(rentalSessionRequestDTO)) {
+            //ToDo Добавить расчет, различное поведение при налиичии даты окончания
+            return save(rentalSessionRequestDTO);
+        } else {
+            return new ResponseEntity<>("Rental session is not valid", HttpStatus.FORBIDDEN);
+        }
+    }
+
+    private boolean isValidCreateRentalSession(RentalSessionRequestDTO rentalSessionRequestDTO) {
+        return rentalSessionRequestDTO.getEnd() != null &&
+                isValidSeasonTicket(rentalSessionRequestDTO) &&
+                isValidPromoCod(rentalSessionRequestDTO);
+    }
+
+    private boolean isValidPromoCod(RentalSessionRequestDTO rentalSessionRequestDTO) {
+        PromoCodDTO promoCodDTO = rentalSessionRequestDTO.getPromoCod();
+
+        return promoCodDTO == null || promoCodDTO.getAvailable() &&
+                isValidDate(rentalSessionRequestDTO, promoCodDTO.getStartDate(), promoCodDTO.getExpiredDate());
+    }
+
+    private boolean isValidSeasonTicket(RentalSessionRequestDTO rentalSessionRequestDTO) {
+        UserResponseDTO userResponseDTO = rentalSessionRequestDTO.getUser();
+        SeasonTicketRequestDTO seasonTicketDTO = rentalSessionRequestDTO.getSeasonTicket();
+
+        if (seasonTicketDTO == null) {
+            return true;
+        } else {
+            boolean isAvailable = seasonTicketDTO.getAvailableForUse();
+            boolean isThisUser = userResponseDTO.getId().equals(seasonTicketDTO.getUserId());
+            boolean isValidScooterType = rentalSessionRequestDTO.getScooter().getType().equals(seasonTicketDTO.getScooterType());
+            boolean isCorrectRemainingTime = seasonTicketDTO.getRemainingTime() > 0;
+
+            return isAvailable &&
+                    isThisUser &&
+                    isValidScooterType &&
+                    isCorrectRemainingTime &&
+                    isValidDate(rentalSessionRequestDTO, seasonTicketDTO.getStartDate(), seasonTicketDTO.getExpiredDate());
+        }
+    }
+
+    private boolean isValidDate(RentalSessionRequestDTO rentalSessionRequestDTO, LocalDate begin, LocalDate end) {
+        return begin.isBefore(rentalSessionRequestDTO.getBegin()) &&
+                (end == null || end.isAfter(rentalSessionRequestDTO.getBegin()));
+    }
+
+
+    private ResponseEntity<?> save(RentalSessionRequestDTO rentalSessionRequestDTO) {
+        RentalSession rentalSession = rentalSessionRequestMapper.toEntity(rentalSessionRequestDTO);
         rentalSessionService.save(rentalSession);
         try {
             RentalSession createdRentalSession = rentalSessionService.retrieveRentalSessionById(rentalSession.getId()).get();
-            return ResponseEntity.ok(rentalSessionMapper.toDto(createdRentalSession));
+            return ResponseEntity.ok(rentalSessionResponseMapper.toDto(createdRentalSession));
         } catch (NoSuchElementException e) {
             String errorMessage = "The rental session is not created";
             log.error(e.getMessage(), errorMessage);
@@ -108,12 +184,17 @@ public class RentalSessionController {
         }
     }
 
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('rentalSessions:write')")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         try {
-            rentalSessionService.deleteById(id);
-            return new ResponseEntity<>("Rental session with this id was deleted", HttpStatus.ACCEPTED);
+            if (rentalSessionService.retrieveRentalSessionById(id).get().getEnd() != null) {
+                rentalSessionService.deleteById(id);
+                return new ResponseEntity<>("Rental session with this id was deleted", HttpStatus.ACCEPTED);
+            } else {
+                return new ResponseEntity<>("Rental session closed and cannot be deleted", HttpStatus.FORBIDDEN);
+            }
         } catch (NoSuchElementException e) {
             String errorMessage = "A rental session with this id was not detected";
             log.error(e.getMessage(), errorMessage);

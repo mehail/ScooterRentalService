@@ -12,5 +12,7 @@ public interface RentalSessionService {
     List<RentalSession> retrieveAllRentalSessions();
     List<RentalSession> retrieveAllRentalSessionsByUserId(Long id);
     Optional<RentalSession> retrieveRentalSessionById(Long id);
+    Optional<RentalSession> retrieveRentalSessionByUserAndScooterAndBegin(RentalSession rentalSession);
+
     void deleteById(Long id);
 }

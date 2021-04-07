@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -49,6 +50,26 @@ public class PromoCodController {
     @PostMapping
     @PreAuthorize("hasAuthority('promoCods:write')")
     public ResponseEntity<?> createOrUpdate(@RequestBody PromoCodDTO promoCodDTO) {
+        if (isValidDate(promoCodDTO)) {
+            return create(promoCodDTO);
+        } else {
+            return new ResponseEntity<>("The start and end dates of the promo code are not correct",
+                    HttpStatus.FORBIDDEN);
+        }
+    }
+
+    private boolean isValidDate(PromoCodDTO promoCodDTO) {
+        LocalDate startDate = promoCodDTO.getStartDate();
+        LocalDate expiredDate = promoCodDTO.getExpiredDate();
+
+        if (expiredDate == null) {
+            return true;
+        } else {
+            return startDate.isBefore(expiredDate);
+        }
+    }
+
+    private ResponseEntity<?> create(PromoCodDTO promoCodDTO) {
         PromoCod promoCod = promoCodMapper.toEntity(promoCodDTO);
         promoCodService.save(promoCod);
         try {

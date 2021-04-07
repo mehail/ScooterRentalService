@@ -10,6 +10,7 @@ import java.util.Optional;
 public interface SeasonTicketService {
     void save(SeasonTicket seasonTicket);
     List<SeasonTicket> retrieveAllSeasonTickets();
+    List<SeasonTicket> retrieveAllSeasonTicketsByUserId(Long userId);
     Optional<SeasonTicket> retrieveSeasonTicketsById(Long id);
     void deleteById(Long id);
 }

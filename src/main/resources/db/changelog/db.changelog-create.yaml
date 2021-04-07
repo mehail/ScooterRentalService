@@ -346,8 +346,6 @@ databaseChangeLog:
               - column:
                   name: rate
                   type: INTEGER
-                  constraints:
-                    nullable: false
               - column:
                   name: season_ticket_id
                   type: BIGINT

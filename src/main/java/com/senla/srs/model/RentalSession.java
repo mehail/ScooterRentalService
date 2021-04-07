@@ -23,7 +23,6 @@ public class RentalSession extends AbstractEntity{
     @ManyToOne(optional=false)
     @JoinColumn(name = "scooter_serial_number")
     private Scooter scooter;
-    @NonNull
     private Integer rate;
     @NonNull
     private LocalDate begin;

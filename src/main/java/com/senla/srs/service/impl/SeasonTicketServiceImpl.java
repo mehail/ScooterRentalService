@@ -25,6 +25,11 @@ public class SeasonTicketServiceImpl implements SeasonTicketService {
     }
 
     @Override
+    public List<SeasonTicket> retrieveAllSeasonTicketsByUserId(Long userId) {
+        return seasonTicketRepository.findAllByUserId(userId);
+    }
+
+    @Override
     public Optional<SeasonTicket> retrieveSeasonTicketsById(Long id) {
         return seasonTicketRepository.findById(id);
     }
