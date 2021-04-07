@@ -1,7 +1,7 @@
 package com.senla.srs.mapper;
 
-import com.senla.srs.dto.SeasonTicketRequestDTO;
-import com.senla.srs.dto.SeasonTicketResponseDTO;
+import com.senla.srs.dto.seasonticket.SeasonTicketRequestDTO;
+import com.senla.srs.dto.seasonticket.SeasonTicketResponseDTO;
 import com.senla.srs.model.SeasonTicket;
 import org.springframework.stereotype.Component;
 

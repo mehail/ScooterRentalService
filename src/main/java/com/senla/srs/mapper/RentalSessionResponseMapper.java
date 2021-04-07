@@ -1,6 +1,6 @@
 package com.senla.srs.mapper;
 
-import com.senla.srs.dto.RentalSessionResponseDTO;
+import com.senla.srs.dto.rentalsession.RentalSessionResponseDTO;
 import com.senla.srs.model.RentalSession;
 import org.springframework.stereotype.Component;
 

@@ -1,11 +1,15 @@
-package com.senla.srs.dto;
+package com.senla.srs.dto.rentalsession;
 
+import com.senla.srs.dto.AbstractDTO;
+import com.senla.srs.dto.promocod.PromoCodDTO;
+import com.senla.srs.dto.scooter.ScooterDTO;
+import com.senla.srs.dto.seasonticket.SeasonTicketRequestDTO;
+import com.senla.srs.dto.user.UserResponseDTO;
 import lombok.*;
 
 import java.time.LocalDate;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"user", "scooter", "begin"}, callSuper = false)
 public class RentalSessionRequestDTO extends AbstractDTO {

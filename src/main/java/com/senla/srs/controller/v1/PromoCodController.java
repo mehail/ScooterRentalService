@@ -1,12 +1,13 @@
 package com.senla.srs.controller.v1;
 
-import com.senla.srs.dto.PromoCodDTO;
+import com.senla.srs.dto.promocod.PromoCodDTO;
 import com.senla.srs.mapper.PromoCodMapper;
 import com.senla.srs.model.PromoCod;
 import com.senla.srs.service.PromoCodService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -88,7 +89,7 @@ public class PromoCodController {
         try {
             promoCodService.deleteById(name);
             return new ResponseEntity<>("Promo code with this serial number was deleted", HttpStatus.ACCEPTED);
-        } catch (NoSuchElementException e) {
+        } catch (EmptyResultDataAccessException e) {
             String errorMessage = "A promo code with this name was not detected";
             log.error(e.getMessage(), errorMessage);
             return new ResponseEntity<>(errorMessage, HttpStatus.FORBIDDEN);

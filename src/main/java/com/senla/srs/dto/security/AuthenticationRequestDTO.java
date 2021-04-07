@@ -1,5 +1,6 @@
-package com.senla.srs.dto;
+package com.senla.srs.dto.security;
 
+import com.senla.srs.dto.AbstractDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

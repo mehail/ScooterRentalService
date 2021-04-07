@@ -1,6 +1,6 @@
 package com.senla.srs.mapper;
 
-import com.senla.srs.dto.UserRequestDTO;
+import com.senla.srs.dto.user.UserRequestDTO;
 import com.senla.srs.model.User;
 import com.senla.srs.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

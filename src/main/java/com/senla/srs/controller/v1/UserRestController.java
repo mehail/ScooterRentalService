@@ -1,7 +1,7 @@
 package com.senla.srs.controller.v1;
 
-import com.senla.srs.dto.UserDTO;
-import com.senla.srs.dto.UserRequestDTO;
+import com.senla.srs.dto.user.UserDTO;
+import com.senla.srs.dto.user.UserRequestDTO;
 import com.senla.srs.mapper.UserRequestMapper;
 import com.senla.srs.mapper.UserResponseMapper;
 import com.senla.srs.model.User;
@@ -11,6 +11,7 @@ import com.senla.srs.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,7 +19,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -31,7 +31,8 @@ public class UserRestController {
     private UserService userService;
     private UserResponseMapper userResponseMapper;
     private UserRequestMapper userRequestMapper;
-    private static final String USER_NOT_DETECTED = "A user with this id was not detected";
+
+    private static final String USER_NOT_FOUND = "A user with this id not found";
     private static final String RE_AUTH = "To change this user reAuthorize";
     private static final String CHANGE_DEFAULT_FIELD = "To top up your balance, obtain administrator rights or " +
             "deactivate a profile, contact the administrator";
@@ -47,24 +48,20 @@ public class UserRestController {
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('users:readAll')")
     public ResponseEntity<?> getById(@PathVariable Long id) {
-        try {
-            User user = userService.retrieveUserById(id).get();
-            return ResponseEntity.ok(userResponseMapper.toDto(user));
-        } catch (NoSuchElementException e) {
-            log.error(e.getMessage(), USER_NOT_DETECTED);
-            return new ResponseEntity<>(USER_NOT_DETECTED, HttpStatus.FORBIDDEN);
-        }
+        Optional<User> optionalUser = userService.retrieveUserById(id);
+
+        return optionalUser.isPresent()
+                ? ResponseEntity.ok(userResponseMapper.toDto(optionalUser.get()))
+                : new ResponseEntity<>(USER_NOT_FOUND, HttpStatus.FORBIDDEN);
     }
 
     @GetMapping("/this/")
     public ResponseEntity<?> getCurrentUser(@AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
-        try {
-            User user = userService.retrieveUserByEmail(userSecurity.getUsername()).get();
-            return ResponseEntity.ok(userResponseMapper.toDto(user));
-        } catch (NoSuchElementException e) {
-            log.error(e.getMessage(), USER_NOT_DETECTED);
-            return new ResponseEntity<>(USER_NOT_DETECTED, HttpStatus.FORBIDDEN);
-        }
+        Optional<User> optionalUser = userService.retrieveUserByEmail(userSecurity.getUsername());
+
+        return optionalUser.isPresent()
+                ? ResponseEntity.ok(userResponseMapper.toDto(optionalUser.get()))
+                : new ResponseEntity<>(USER_NOT_FOUND, HttpStatus.FORBIDDEN);
     }
 
     @PostMapping
@@ -73,37 +70,29 @@ public class UserRestController {
 
         Optional<User> optionalExistUser = userService.retrieveUserByEmail(userRequestDTO.getEmail());
 
-        if (isAuth(userSecurity)) {
+        if (userSecurity != null) {
             if (isAdmin(userSecurity)) {
                 return create(userRequestDTO);
             } else {
-                if (!isExist(optionalExistUser)) {
+                if (optionalExistUser.isEmpty()) {
                     return constrainCreate(userRequestDTO);
                 } else {
                     if (isThis(userRequestDTO, userSecurity)) {
-                        return update(userRequestDTO, optionalExistUser);
+                        return update(userRequestDTO, optionalExistUser.get());
                     } else {
                         return new ResponseEntity<>(RE_AUTH, HttpStatus.FORBIDDEN);
                     }
                 }
             }
-        } else if (!isExist(optionalExistUser)) {
+        } else if (optionalExistUser.isEmpty()) {
             return constrainCreate(userRequestDTO);
         } else {
             return new ResponseEntity<>(RE_AUTH, HttpStatus.FORBIDDEN);
         }
     }
 
-    private boolean isAuth(org.springframework.security.core.userdetails.User userSecurity) {
-        return userSecurity != null;
-    }
-
     private boolean isAdmin(org.springframework.security.core.userdetails.User userSecurity) {
         return userSecurity != null && userService.isAdmin(userSecurity);
-    }
-
-    private boolean isExist(Optional<User> optionalExistUser) {
-        return optionalExistUser.isPresent();
     }
 
     private boolean isThis(UserRequestDTO userRequestDTO, org.springframework.security.core.userdetails.User userSecurity) {
@@ -111,44 +100,37 @@ public class UserRestController {
     }
 
     private ResponseEntity<?> constrainCreate(UserRequestDTO userRequestDTO) {
-        if (userRequestDTO.getStatus() == UserStatus.ACTIVE &&
-                userRequestDTO.getRole() == Role.USER &&
-                userRequestDTO.getBalance() == 0) {
-            return create(userRequestDTO);
-        } else {
-            return new ResponseEntity<>(CHANGE_DEFAULT_FIELD, HttpStatus.FORBIDDEN);
-        }
+        return isValidDtoToConstrainCreate(userRequestDTO)
+                ? create(userRequestDTO)
+                : new ResponseEntity<>(CHANGE_DEFAULT_FIELD, HttpStatus.FORBIDDEN);
     }
 
-    private ResponseEntity<?> update(UserRequestDTO userRequestDTO, Optional<User> optionalExistUser) {
-        try {
-            User existUser = optionalExistUser.get();
-            if (userRequestDTO.getStatus() == existUser.getStatus() &&
-                    userRequestDTO.getRole() == existUser.getRole() &&
-                    userRequestDTO.getBalance().equals(existUser.getBalance())) {
-                return create(userRequestDTO);
-            } else {
-                return new ResponseEntity<>(CHANGE_DEFAULT_FIELD, HttpStatus.FORBIDDEN);
-            }
-        } catch (NoSuchElementException e) {
-            log.error(e.getMessage(), USER_NOT_DETECTED);
-            return new ResponseEntity<>(USER_NOT_DETECTED, HttpStatus.FORBIDDEN);
-        }
+    private boolean isValidDtoToConstrainCreate(UserRequestDTO userRequestDTO) {
+        return userRequestDTO.getStatus() == UserStatus.ACTIVE &&
+                userRequestDTO.getRole() == Role.USER &&
+                userRequestDTO.getBalance() == 0;
+    }
+
+    private ResponseEntity<?> update(UserRequestDTO userRequestDTO, User existUser) {
+        return isValidDtoToUpdate(userRequestDTO, existUser)
+                ? create(userRequestDTO)
+                : new ResponseEntity<>(CHANGE_DEFAULT_FIELD, HttpStatus.FORBIDDEN);
+    }
+
+    private boolean isValidDtoToUpdate(UserRequestDTO userRequestDTO, User existUser) {
+        return userRequestDTO.getStatus() == existUser.getStatus() &&
+                userRequestDTO.getRole() == existUser.getRole() &&
+                userRequestDTO.getBalance().equals(existUser.getBalance());
     }
 
     private ResponseEntity<?> create(UserRequestDTO userRequestDTO) {
-        User user = userRequestMapper.toEntity(userRequestDTO);
+        userService.save(userRequestMapper.toEntity(userRequestDTO));
 
-        userService.save(user);
+        Optional<User> optionalUser = userService.retrieveUserByEmail(userRequestDTO.getEmail());
 
-        try {
-            User createdUser = userService.retrieveUserByEmail(userRequestDTO.getEmail()).get();
-            return ResponseEntity.ok(userResponseMapper.toDto(createdUser));
-        } catch (NoSuchElementException e) {
-            String errorMessage = "The user is not created";
-            log.error(e.getMessage(), errorMessage);
-            return new ResponseEntity<>(errorMessage, HttpStatus.FORBIDDEN);
-        }
+        return optionalUser.isPresent()
+                ? ResponseEntity.ok(userResponseMapper.toDto(optionalUser.get()))
+                : new ResponseEntity<>("The user is not created", HttpStatus.FORBIDDEN);
     }
 
     @DeleteMapping("/{id}")
@@ -157,9 +139,9 @@ public class UserRestController {
         try {
             userService.deleteById(id);
             return new ResponseEntity<>("User with this id was deleted", HttpStatus.ACCEPTED);
-        } catch (NoSuchElementException e) {
-            log.error(e.getMessage(), USER_NOT_DETECTED);
-            return new ResponseEntity<>(USER_NOT_DETECTED, HttpStatus.FORBIDDEN);
+        } catch (EmptyResultDataAccessException e) {
+            log.error(e.getMessage(), USER_NOT_FOUND);
+            return new ResponseEntity<>(USER_NOT_FOUND, HttpStatus.FORBIDDEN);
         }
     }
 }

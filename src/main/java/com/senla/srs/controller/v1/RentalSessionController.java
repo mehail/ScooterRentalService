@@ -1,9 +1,9 @@
 package com.senla.srs.controller.v1;
 
-import com.senla.srs.dto.PromoCodDTO;
-import com.senla.srs.dto.RentalSessionRequestDTO;
-import com.senla.srs.dto.SeasonTicketRequestDTO;
-import com.senla.srs.dto.UserResponseDTO;
+import com.senla.srs.dto.promocod.PromoCodDTO;
+import com.senla.srs.dto.rentalsession.RentalSessionRequestDTO;
+import com.senla.srs.dto.seasonticket.SeasonTicketRequestDTO;
+import com.senla.srs.dto.user.UserResponseDTO;
 import com.senla.srs.mapper.RentalSessionRequestMapper;
 import com.senla.srs.mapper.RentalSessionResponseMapper;
 import com.senla.srs.model.RentalSession;
@@ -13,6 +13,7 @@ import com.senla.srs.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -152,16 +153,11 @@ public class RentalSessionController {
         if (seasonTicketDTO == null) {
             return true;
         } else {
-            boolean isAvailable = seasonTicketDTO.getAvailableForUse();
             boolean isThisUser = userResponseDTO.getId().equals(seasonTicketDTO.getUserId());
             boolean isValidScooterType = rentalSessionRequestDTO.getScooter().getType().equals(seasonTicketDTO.getScooterType());
-            boolean isCorrectRemainingTime = seasonTicketDTO.getRemainingTime() > 0;
 
-            return isAvailable &&
-                    isThisUser &&
-                    isValidScooterType &&
-                    isCorrectRemainingTime &&
-                    isValidDate(rentalSessionRequestDTO, seasonTicketDTO.getStartDate(), seasonTicketDTO.getExpiredDate());
+            return  isThisUser &&
+                    isValidScooterType;
         }
     }
 
@@ -195,7 +191,7 @@ public class RentalSessionController {
             } else {
                 return new ResponseEntity<>("Rental session closed and cannot be deleted", HttpStatus.FORBIDDEN);
             }
-        } catch (NoSuchElementException e) {
+        } catch (EmptyResultDataAccessException e) {
             String errorMessage = "A rental session with this id was not detected";
             log.error(e.getMessage(), errorMessage);
             return new ResponseEntity<>(errorMessage, HttpStatus.FORBIDDEN);
