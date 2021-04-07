@@ -14,7 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -26,6 +26,8 @@ public class ScooterController {
     private ScooterService scooterService;
     private ScooterMapper scooterMapper;
 
+    private static final String SCOOTER_NOT_FOUND = "A scooter with this serial number was not found";
+
     @GetMapping
     @PreAuthorize("hasAuthority('scooters:read')")
     public List<ScooterDTO> getAll() {
@@ -34,32 +36,25 @@ public class ScooterController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{serialNumber}")
     @PreAuthorize("hasAuthority('scooters:read')")
-    public ResponseEntity<?> getById(@PathVariable String id) {
-        try {
-            Scooter scooter = scooterService.retrieveScooterBySerialNumber(id).get();
-            return ResponseEntity.ok(scooterMapper.toDto(scooter));
-        } catch (NoSuchElementException e) {
-            String errorMessage = "No scooter with this serial number found";
-            log.error(e.getMessage(), errorMessage);
-            return new ResponseEntity<>(errorMessage, HttpStatus.FORBIDDEN);
-        }
+    public ResponseEntity<?> getById(@PathVariable String serialNumber) {
+        Optional<Scooter> optionalScooter = scooterService.retrieveScooterBySerialNumber(serialNumber);
+
+        return optionalScooter.isPresent()
+                ? ResponseEntity.ok(scooterMapper.toDto(optionalScooter.get()))
+                : new ResponseEntity<>(SCOOTER_NOT_FOUND, HttpStatus.FORBIDDEN);
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('scooters:write')")
     public ResponseEntity<?> createOrUpdate(@RequestBody ScooterDTO scooterDTO) {
-        Scooter scooter = scooterMapper.toEntity(scooterDTO);
-        scooterService.save(scooter);
-        try {
-            Scooter createdScooter = scooterService.retrieveScooterBySerialNumber(scooter.getSerialNumber()).get();
-            return ResponseEntity.ok(scooterMapper.toDto(createdScooter));
-        } catch (NoSuchElementException e) {
-            String errorMessage = "The scooter is not created";
-            log.error(e.getMessage(), errorMessage);
-            return new ResponseEntity<>(errorMessage, HttpStatus.FORBIDDEN);
-        }
+        scooterService.save(scooterMapper.toEntity(scooterDTO));
+        Optional<Scooter> optionalScooter = scooterService.retrieveScooterBySerialNumber(scooterDTO.getSerialNumber());
+
+        return optionalScooter.isPresent()
+                ? ResponseEntity.ok(scooterMapper.toDto(optionalScooter.get()))
+                : new ResponseEntity<>("The scooter is not created", HttpStatus.FORBIDDEN);
     }
 
     @DeleteMapping("/{serialNumber}")
@@ -69,9 +64,8 @@ public class ScooterController {
             scooterService.deleteById(serialNumber);
             return new ResponseEntity<>("Scooter with this serial number was deleted", HttpStatus.ACCEPTED);
         } catch (EmptyResultDataAccessException e) {
-            String errorMessage = "A scooter with this serial number was not detected";
-            log.error(e.getMessage(), errorMessage);
-            return new ResponseEntity<>(errorMessage, HttpStatus.FORBIDDEN);
+            log.error(e.getMessage(), SCOOTER_NOT_FOUND);
+            return new ResponseEntity<>(SCOOTER_NOT_FOUND, HttpStatus.FORBIDDEN);
         }
     }
 }
