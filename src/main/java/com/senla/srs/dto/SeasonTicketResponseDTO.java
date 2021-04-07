@@ -2,13 +2,11 @@ package com.senla.srs.dto;
 
 import lombok.*;
 
-import java.util.List;
-
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
-public class UserResponseDTO extends UserDTO{
+public class SeasonTicketResponseDTO extends SeasonTicketRequestDTO{
     @NonNull
     private Long id;
-    private List<SeasonTicketRequestDTO> seasonTickets;
 }

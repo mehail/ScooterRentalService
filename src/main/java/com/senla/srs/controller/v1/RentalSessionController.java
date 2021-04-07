@@ -2,7 +2,7 @@ package com.senla.srs.controller.v1;
 
 import com.senla.srs.dto.PromoCodDTO;
 import com.senla.srs.dto.RentalSessionRequestDTO;
-import com.senla.srs.dto.SeasonTicketDTO;
+import com.senla.srs.dto.SeasonTicketRequestDTO;
 import com.senla.srs.dto.UserResponseDTO;
 import com.senla.srs.mapper.RentalSessionRequestMapper;
 import com.senla.srs.mapper.RentalSessionResponseMapper;
@@ -147,7 +147,7 @@ public class RentalSessionController {
 
     private boolean isValidSeasonTicket(RentalSessionRequestDTO rentalSessionRequestDTO) {
         UserResponseDTO userResponseDTO = rentalSessionRequestDTO.getUser();
-        SeasonTicketDTO seasonTicketDTO = rentalSessionRequestDTO.getSeasonTicket();
+        SeasonTicketRequestDTO seasonTicketDTO = rentalSessionRequestDTO.getSeasonTicket();
 
         if (seasonTicketDTO == null) {
             return true;

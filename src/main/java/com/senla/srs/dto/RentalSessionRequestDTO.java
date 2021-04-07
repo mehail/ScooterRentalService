@@ -16,6 +16,6 @@ public class RentalSessionRequestDTO extends AbstractDTO {
     @NonNull
     private LocalDate begin;
     private LocalDate end;
-    private SeasonTicketDTO seasonTicket;
+    private SeasonTicketRequestDTO seasonTicket;
     private PromoCodDTO promoCod;
 }
