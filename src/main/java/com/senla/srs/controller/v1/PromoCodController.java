@@ -1,6 +1,6 @@
 package com.senla.srs.controller.v1;
 
-import com.senla.srs.dto.promoCod.PromoCodDTO;
+import com.senla.srs.dto.promocod.PromoCodDTO;
 import com.senla.srs.mapper.PromoCodMapper;
 import com.senla.srs.model.PromoCod;
 import com.senla.srs.service.PromoCodService;

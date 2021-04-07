@@ -1,9 +1,8 @@
-package com.senla.srs.dto.rentalSession;
+package com.senla.srs.dto.rentalsession;
 
 import lombok.*;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
 public class RentalSessionResponseDTO extends RentalSessionRequestDTO {

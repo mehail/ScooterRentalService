@@ -1,4 +1,4 @@
-package com.senla.srs.dto.pointOfRental;
+package com.senla.srs.dto.pointofrental;
 
 import com.senla.srs.dto.AbstractDTO;
 import com.senla.srs.dto.scooter.ScooterDTO;
@@ -8,7 +8,6 @@ import lombok.*;
 import java.util.List;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
 public class PointOfRentalDTO extends AbstractDTO {

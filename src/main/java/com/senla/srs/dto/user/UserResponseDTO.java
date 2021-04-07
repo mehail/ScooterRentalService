@@ -1,6 +1,6 @@
 package com.senla.srs.dto.user;
 
-import com.senla.srs.dto.season.ticket.SeasonTicketRequestDTO;
+import com.senla.srs.dto.seasonticket.SeasonTicketRequestDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;

@@ -8,7 +8,6 @@ import lombok.*;
 import javax.persistence.Column;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"serialNumber"}, callSuper = false)
 public class ScooterDTO extends AbstractDTO {

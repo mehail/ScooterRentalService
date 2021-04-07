@@ -1,4 +1,4 @@
-package com.senla.srs.dto.promoCod;
+package com.senla.srs.dto.promocod;
 
 import com.senla.srs.dto.AbstractDTO;
 import lombok.*;
@@ -6,7 +6,6 @@ import lombok.*;
 import java.time.LocalDate;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"name"}, callSuper = false)
 public class PromoCodDTO extends AbstractDTO {
