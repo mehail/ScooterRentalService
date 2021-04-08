@@ -2,6 +2,7 @@ package com.senla.srs.controller.v1;
 
 import com.senla.srs.dto.user.UserDTO;
 import com.senla.srs.dto.user.UserRequestDTO;
+import com.senla.srs.dto.user.UserResponseDTO;
 import com.senla.srs.mapper.UserRequestMapper;
 import com.senla.srs.mapper.UserResponseMapper;
 import com.senla.srs.model.User;
@@ -39,7 +40,7 @@ public class UserRestController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('users:readAll')")
-    public List<UserDTO> getAll() {
+    public List<UserResponseDTO> getAll() {
         return userService.retrieveAllUsers().stream()
                 .map(user -> userResponseMapper.toDto(user))
                 .collect(Collectors.toList());
