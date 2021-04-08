@@ -9,10 +9,8 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(of = {"id"}, callSuper = false)
-public class PointOfRentalDTO extends AbstractDTO {
-    @NonNull
-    private Long id;
+@EqualsAndHashCode(of = {"name", "address"}, callSuper = false)
+public class PointOfRentalRequestDTO extends AbstractDTO {
     @NonNull
     private String name;
     @NonNull

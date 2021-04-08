@@ -1,6 +1,7 @@
 package com.senla.srs.controller.v1;
 
 import com.senla.srs.dto.scooter.type.ScooterTypeRequestDTO;
+import com.senla.srs.dto.scooter.type.ScooterTypeResponseDTO;
 import com.senla.srs.mapper.ScooterTypeRequestMapper;
 import com.senla.srs.mapper.ScooterTypeResponseMapper;
 import com.senla.srs.model.ScooterType;
@@ -32,7 +33,7 @@ public class ScooterTypeController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('scooterTypes:read')")
-    public List<ScooterTypeRequestDTO> getAll() {
+    public List<ScooterTypeResponseDTO> getAll() {
         return scooterTypeService.retrieveAllScooterTypes().stream()
                 .map(scooterType -> scooterTypeResponseMapper.toDto(scooterType))
                 .collect(Collectors.toList());
