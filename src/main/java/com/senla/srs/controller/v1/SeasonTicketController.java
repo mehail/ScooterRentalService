@@ -1,6 +1,6 @@
 package com.senla.srs.controller.v1;
 
-import com.senla.srs.dto.seasonticket.SeasonTicketRequestDTO;
+import com.senla.srs.dto.seasonticket.SeasonTicketResponseDTO;
 import com.senla.srs.mapper.ScooterTypeRequestMapper;
 import com.senla.srs.mapper.SeasonTicketRequestMapper;
 import com.senla.srs.mapper.SeasonTicketResponseMapper;
@@ -15,12 +15,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Data
@@ -37,19 +40,23 @@ public class SeasonTicketController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('seasonTickets:read')")
-    public List<SeasonTicketRequestDTO> getAll(@AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
+    public List<SeasonTicketResponseDTO> getAll(@AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
 
         if (userService.isAdmin(userSecurity)) {
-            return seasonTicketResponseMapper.listToDto(seasonTicketService.retrieveAllSeasonTickets());
+            return mapListToDtoList(seasonTicketService.retrieveAllSeasonTickets());
         } else {
-            try {
-                User authUser = userService.retrieveUserByAuthenticationPrincipal(userSecurity).get();
-                return seasonTicketResponseMapper.listToDto(seasonTicketService.retrieveAllSeasonTicketsByUserId(authUser.getId()));
-            } catch (NoSuchElementException e) {
-                log.error(e.getMessage(), NO_SEASON_TICKET_WITH_ID);
-                return new ArrayList<>();
-            }
+            Optional<User> optionalAuthThisUser = userService.retrieveUserByAuthenticationPrincipal(userSecurity);
+
+            return optionalAuthThisUser.isPresent()
+                    ? mapListToDtoList(seasonTicketService.retrieveAllSeasonTicketsByUserId(optionalAuthThisUser.get().getId()))
+                    : new ArrayList<>();
         }
+    }
+
+    private List<SeasonTicketResponseDTO> mapListToDtoList(List<SeasonTicket> seasonTickets) {
+        return seasonTickets.stream()
+                .map(seasonTicket -> seasonTicketResponseMapper.toDto(seasonTicket))
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
@@ -68,39 +75,41 @@ public class SeasonTicketController {
     }
 
     private boolean isThisUser(org.springframework.security.core.userdetails.User userSecurity, SeasonTicket seasonTicket) {
-        User authUser = userService.retrieveUserByAuthenticationPrincipal(userSecurity).get();
-        return seasonTicket.getUserId().equals(authUser.getId());
+        Optional<User> optionalAuthUser = userService.retrieveUserByAuthenticationPrincipal(userSecurity);
+
+        return optionalAuthUser.isPresent() && seasonTicket.getUserId().equals(optionalAuthUser.get().getId());
     }
 
-    @PostMapping
-    @PreAuthorize("hasAuthority('seasonTickets:read')")
-    public ResponseEntity<?> createOrUpdate(@RequestBody SeasonTicketRequestDTO seasonTicketRequestDTO) {
-        Optional<SeasonTicket> optionalSeasonTicket =
-                seasonTicketService.retrieveSeasonTicketByUserIdAndScooterTypeAndStartDate(
-                        seasonTicketRequestDTO.getUserId(),
-                        scooterTypeRequestMapper.toEntity(seasonTicketRequestDTO.getScooterType()),
-                        seasonTicketRequestDTO.getStartDate());
-
-        if (optionalSeasonTicket.isEmpty()) {
-            SeasonTicket seasonTicket = seasonTicketRequestMapper.toEntity(seasonTicketRequestDTO);
-            seasonTicketService.save(seasonTicket);
-
-            try {
-                SeasonTicket createdSeasonTicket =
-                        seasonTicketService.retrieveSeasonTicketByUserIdAndScooterTypeAndStartDate(
-                                seasonTicketRequestDTO.getUserId(),
-                                scooterTypeRequestMapper.toEntity(seasonTicketRequestDTO.getScooterType()),
-                                seasonTicketRequestDTO.getStartDate()).get();
-
-                return ResponseEntity.ok(seasonTicketResponseMapper.toDto(createdSeasonTicket));
-            } catch (NoSuchElementException e) {
-                String errorMessage = "The season ticket is not created";
-                log.error(e.getMessage(), errorMessage);
-                return new ResponseEntity<>(errorMessage, HttpStatus.FORBIDDEN);
-            }
-
-        } else {
-            return new ResponseEntity<>("Modification of the existing Season Ticket is prohibited", HttpStatus.FORBIDDEN);
-        }
-    }
+    //ToDo Refactor
+//    @PostMapping
+//    @PreAuthorize("hasAuthority('seasonTickets:read')")
+//    public ResponseEntity<?> createOrUpdate(@RequestBody SeasonTicketRequestDTO seasonTicketRequestDTO) {
+//        Optional<SeasonTicket> optionalSeasonTicket =
+//                seasonTicketService.retrieveSeasonTicketByUserIdAndScooterTypeAndStartDate(
+//                        seasonTicketRequestDTO.getUserId(),
+//                        scooterTypeRequestMapper.toEntity(seasonTicketRequestDTO.getScooterType()),
+//                        seasonTicketRequestDTO.getStartDate());
+//
+//        if (optionalSeasonTicket.isEmpty()) {
+//            SeasonTicket seasonTicket = seasonTicketRequestMapper.toEntity(seasonTicketRequestDTO);
+//            seasonTicketService.save(seasonTicket);
+//
+//            try {
+//                SeasonTicket createdSeasonTicket =
+//                        seasonTicketService.retrieveSeasonTicketByUserIdAndScooterTypeAndStartDate(
+//                                seasonTicketRequestDTO.getUserId(),
+//                                scooterTypeRequestMapper.toEntity(seasonTicketRequestDTO.getScooterType()),
+//                                seasonTicketRequestDTO.getStartDate()).get();
+//
+//                return ResponseEntity.ok(seasonTicketResponseMapper.toDto(createdSeasonTicket));
+//            } catch (NoSuchElementException e) {
+//                String errorMessage = "The season ticket is not created";
+//                log.error(e.getMessage(), errorMessage);
+//                return new ResponseEntity<>(errorMessage, HttpStatus.FORBIDDEN);
+//            }
+//
+//        } else {
+//            return new ResponseEntity<>("Modification of the existing Season Ticket is prohibited", HttpStatus.FORBIDDEN);
+//        }
+//    }
 }

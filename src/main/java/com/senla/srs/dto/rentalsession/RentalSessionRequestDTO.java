@@ -23,7 +23,7 @@ public class RentalSessionRequestDTO extends AbstractDTO {
     @NonNull
     private LocalDate begin;
     private LocalDate end;
-    //ToDo change
+    //ToDo change to id?
     private SeasonTicketRequestDTO seasonTicket;
     private PromoCodDTO promoCod;
 }
