@@ -9,10 +9,10 @@ import com.senla.srs.model.SeasonTicket;
 import com.senla.srs.model.User;
 import com.senla.srs.service.SeasonTicketService;
 import com.senla.srs.service.UserService;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Data
-@AllArgsConstructor
 @RestController
 @RequestMapping("/api/v1/season_tickets")
 public class SeasonTicketController {
@@ -35,10 +34,22 @@ public class SeasonTicketController {
     private SeasonTicketRequestMapper seasonTicketRequestMapper;
     private SeasonTicketResponseMapper seasonTicketResponseMapper;
     private ScooterTypeRequestMapper scooterTypeRequestMapper;
+    private int duration;
+    private static final String NO_SEASON_TICKET_WITH_ID = "A season ticket with this id was not found";
 
-    @Value("${srs.availability}")
-    private Integer availabilitySeasonTicket;
-    private static final String NO_SEASON_TICKET_WITH_ID = "No season ticket with this ID found";
+    public SeasonTicketController(SeasonTicketService seasonTicketService,
+                                  UserService userService,
+                                  SeasonTicketRequestMapper seasonTicketRequestMapper,
+                                  SeasonTicketResponseMapper seasonTicketResponseMapper,
+                                  ScooterTypeRequestMapper scooterTypeRequestMapper,
+                                  @Value("${srs.season.duration}") int duration) {
+        this.seasonTicketService = seasonTicketService;
+        this.userService = userService;
+        this.seasonTicketRequestMapper = seasonTicketRequestMapper;
+        this.seasonTicketResponseMapper = seasonTicketResponseMapper;
+        this.scooterTypeRequestMapper = scooterTypeRequestMapper;
+        this.duration = duration;
+    }
 
     @GetMapping
     @PreAuthorize("hasAuthority('seasonTickets:read')")
@@ -106,7 +117,7 @@ public class SeasonTicketController {
         }
 
         seasonTicketService.save(seasonTicketRequestMapper.toConsistencySeasonTicket(seasonTicketRequestDTO, price,
-                availabilitySeasonTicket));
+                duration));
 
         Optional<SeasonTicket> optionalCreatedSeasonTicket = getExistOptionalSeasonTicket(seasonTicketRequestDTO);
 
@@ -123,14 +134,34 @@ public class SeasonTicketController {
         );
     }
 
-    private Integer calculatePrice(SeasonTicketRequestDTO seasonTicketRequestDTO) {
-        Integer pricePerMinute = seasonTicketRequestDTO.getScooterType().getPricePerMinute();
-        Integer remainingTime = seasonTicketRequestDTO.getRemainingTime();
+    private int calculatePrice(SeasonTicketRequestDTO seasonTicketRequestDTO) {
+        int pricePerMinute = seasonTicketRequestDTO.getScooterType().getPricePerMinute();
+        int remainingTime = seasonTicketRequestDTO.getRemainingTime();
 
         return pricePerMinute * remainingTime;
     }
 
     private boolean isPayable(Optional<User> optionalUser, Integer price) {
         return optionalUser.isPresent() && optionalUser.get().getBalance() >= price;
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('seasonTickets:write')")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+
+        Optional<SeasonTicket> optionalSeasonTicket = seasonTicketService.retrieveSeasonTicketsById(id);
+
+        if (optionalSeasonTicket.isPresent() && optionalSeasonTicket.get().getAvailableForUse()) {
+            try {
+                seasonTicketService.deleteById(id);
+                return new ResponseEntity<>("Season ticket with this id was deleted", HttpStatus.ACCEPTED);
+            } catch (EmptyResultDataAccessException e) {
+                log.error(e.getMessage(), NO_SEASON_TICKET_WITH_ID);
+                return new ResponseEntity<>(NO_SEASON_TICKET_WITH_ID, HttpStatus.FORBIDDEN);
+            }
+        } else {
+            return new ResponseEntity<>("Season ticket with this id not available for deletion",
+                    HttpStatus.ACCEPTED);
+        }
     }
 }
