@@ -57,7 +57,7 @@ public class PointOfRentalController {
                 pointOfRentalService.retrievePointOfRentalByName(pointOfRentalRequestDTO.getName());
 
         return optionalPointOfRental.isPresent()
-                ? ResponseEntity.ok(pointOfRentalRequestMapper.toDto(optionalPointOfRental.get()))
+                ? ResponseEntity.ok(pointOfRentalResponseMapper.toDto(optionalPointOfRental.get()))
                 : new ResponseEntity<>("The point of rental is not created", HttpStatus.FORBIDDEN);
     }
 

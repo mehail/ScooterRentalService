@@ -27,6 +27,7 @@ public class SeasonTicket extends AbstractEntity{
     @NonNull
     @Column(name = "remaining_time")
     private Integer remainingTime;
+    @NonNull
     @Column(name = "start_date")
     private LocalDate startDate;
     @Column(name = "expired_date")

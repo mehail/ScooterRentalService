@@ -1,6 +1,5 @@
 package com.senla.srs.controller.v1;
 
-import com.senla.srs.dto.user.UserDTO;
 import com.senla.srs.dto.user.UserRequestDTO;
 import com.senla.srs.dto.user.UserResponseDTO;
 import com.senla.srs.mapper.UserRequestMapper;
@@ -139,7 +138,7 @@ public class UserRestController {
     public ResponseEntity<?> delete(@PathVariable Long id) {
         try {
             userService.deleteById(id);
-            return new ResponseEntity<>("User with this id was deleted", HttpStatus.ACCEPTED);
+            return new ResponseEntity<>("User with this id was found", HttpStatus.ACCEPTED);
         } catch (EmptyResultDataAccessException e) {
             log.error(e.getMessage(), USER_NOT_FOUND);
             return new ResponseEntity<>(USER_NOT_FOUND, HttpStatus.FORBIDDEN);
