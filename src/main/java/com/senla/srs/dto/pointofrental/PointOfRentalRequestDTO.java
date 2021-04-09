@@ -1,11 +1,11 @@
 package com.senla.srs.dto.pointofrental;
 
 import com.senla.srs.dto.AbstractDTO;
-import com.senla.srs.dto.scooter.ScooterDTO;
 import com.senla.srs.dto.db.AddressDTO;
-import lombok.*;
-
-import java.util.List;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 @Data
 @NoArgsConstructor
@@ -17,5 +17,4 @@ public class PointOfRentalRequestDTO extends AbstractDTO {
     private AddressDTO address;
     @NonNull
     private Boolean available;
-    private List<ScooterDTO> scooters;
 }
