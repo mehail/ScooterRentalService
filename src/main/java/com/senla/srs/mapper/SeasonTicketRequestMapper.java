@@ -10,14 +10,14 @@ public class SeasonTicketRequestMapper extends AbstractMapper<SeasonTicket, Seas
         super(SeasonTicket.class, SeasonTicketRequestDTO.class);
     }
 
-    public SeasonTicket toConsistencySeasonTicket(SeasonTicketRequestDTO seasonTicketRequestDTO, Integer price,
-                                                  Integer availabilitySeasonTicket) {
+    public SeasonTicket toConsistencySeasonTicket(SeasonTicketRequestDTO seasonTicketRequestDTO, int price,
+                                                  Integer duration) {
 
         SeasonTicket seasonTicket = toEntity(seasonTicketRequestDTO);
 
         seasonTicket.setPrice(price);
         seasonTicket.setAvailableForUse(true);
-        seasonTicket.setExpiredDate(seasonTicket.getStartDate().plusDays(availabilitySeasonTicket));
+        seasonTicket.setExpiredDate(seasonTicket.getStartDate().plusDays(duration));
 
         return seasonTicket;
     }

@@ -19,9 +19,8 @@ public class SeasonTicket extends AbstractEntity{
     @Column(name = "user_id")
     private Long userId;
     @NonNull
-    @ManyToOne(optional=false)
-    @JoinColumn(name = "scooter_type_id")
-    private ScooterType scooterType;
+    @Column(name = "scooter_type_id")
+    private Long scooterTypeId;
     @NonNull
     private Integer price;
     @NonNull

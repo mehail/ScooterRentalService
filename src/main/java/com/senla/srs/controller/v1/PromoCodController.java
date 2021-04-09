@@ -27,6 +27,8 @@ public class PromoCodController {
     private PromoCodService promoCodService;
     private PromoCodMapper promoCodMapper;
 
+    private static final String NO_PROMO_COD_WITH_NAME = "No promo code with this name found";
+
     @GetMapping
     @PreAuthorize("hasAuthority('promoCods:read')")
     public List<PromoCodDTO> getAll() {
@@ -42,7 +44,7 @@ public class PromoCodController {
 
         return optionalPromoCod.isPresent()
                 ? ResponseEntity.ok(promoCodMapper.toDto(optionalPromoCod.get()))
-                : new ResponseEntity<>("No promo code with this name found", HttpStatus.FORBIDDEN);
+                : new ResponseEntity<>(NO_PROMO_COD_WITH_NAME, HttpStatus.FORBIDDEN);
     }
 
     @PostMapping
@@ -76,9 +78,8 @@ public class PromoCodController {
             promoCodService.deleteById(name);
             return new ResponseEntity<>("Promo code with this serial number was deleted", HttpStatus.ACCEPTED);
         } catch (EmptyResultDataAccessException e) {
-            String errorMessage = "A promo code with this name was not found";
-            log.error(e.getMessage(), errorMessage);
-            return new ResponseEntity<>(errorMessage, HttpStatus.FORBIDDEN);
+            log.error(e.getMessage(), NO_PROMO_COD_WITH_NAME);
+            return new ResponseEntity<>(NO_PROMO_COD_WITH_NAME, HttpStatus.FORBIDDEN);
         }
     }
 }

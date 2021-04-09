@@ -1,6 +1,5 @@
 package com.senla.srs.service;
 
-import com.senla.srs.model.ScooterType;
 import com.senla.srs.model.SeasonTicket;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +13,7 @@ public interface SeasonTicketService {
     List<SeasonTicket> retrieveAllSeasonTickets();
     List<SeasonTicket> retrieveAllSeasonTicketsByUserId(Long userId);
     Optional<SeasonTicket> retrieveSeasonTicketsById(Long id);
-    Optional<SeasonTicket> retrieveSeasonTicketByUserIdAndScooterTypeAndStartDate(Long userId, ScooterType scooterType,
+    Optional<SeasonTicket> retrieveSeasonTicketByUserIdAndScooterTypeIdAndStartDate(Long userId, Long scooterTypeId,
                                                                                   LocalDate startDate);
     void deleteById(Long id);
 }

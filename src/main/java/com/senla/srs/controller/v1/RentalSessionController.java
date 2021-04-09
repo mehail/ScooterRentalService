@@ -37,7 +37,7 @@ public class RentalSessionController {
     private UserService userService;
     private RentalSessionRequestMapper rentalSessionRequestMapper;
     private RentalSessionResponseMapper rentalSessionResponseMapper;
-    private static final String NO_RENTAL_SESSION_WITH_ID = "No rental session with this ID found";
+    private static final String NO_RENTAL_SESSION_WITH_ID = "A rental session with this id was not found";
 
     @GetMapping
     @PreAuthorize("hasAuthority('rentalSessions:read')")
@@ -154,10 +154,10 @@ public class RentalSessionController {
             return true;
         } else {
             boolean isThisUser = userResponseDTO.getId().equals(seasonTicketDTO.getUserId());
-            boolean isValidScooterType = rentalSessionRequestDTO.getScooter().getType().equals(seasonTicketDTO.getScooterType());
+            boolean isValidScooterType = rentalSessionRequestDTO.getScooter().getType().getId().
+                    equals(seasonTicketDTO.getScooterTypeId());
 
-            return  isThisUser &&
-                    isValidScooterType;
+            return isThisUser && isValidScooterType;
         }
     }
 
@@ -192,9 +192,8 @@ public class RentalSessionController {
                 return new ResponseEntity<>("Rental session closed and cannot be deleted", HttpStatus.FORBIDDEN);
             }
         } catch (EmptyResultDataAccessException e) {
-            String errorMessage = "A rental session with this id was not detected";
-            log.error(e.getMessage(), errorMessage);
-            return new ResponseEntity<>(errorMessage, HttpStatus.FORBIDDEN);
+            log.error(e.getMessage(), NO_RENTAL_SESSION_WITH_ID);
+            return new ResponseEntity<>(NO_RENTAL_SESSION_WITH_ID, HttpStatus.FORBIDDEN);
         }
     }
 }
