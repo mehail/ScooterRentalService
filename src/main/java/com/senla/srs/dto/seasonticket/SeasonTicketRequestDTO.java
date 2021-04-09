@@ -14,5 +14,8 @@ public class SeasonTicketRequestDTO extends AbstractDTO {
     private Long userId;
     @NonNull
     private ScooterTypeRequestDTO scooterType;
+    @NonNull
+    private Integer remainingTime;
+    @NonNull
     private LocalDate startDate;
 }
