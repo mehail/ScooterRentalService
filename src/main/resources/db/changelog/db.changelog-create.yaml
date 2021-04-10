@@ -304,6 +304,8 @@ databaseChangeLog:
               - column:
                   name: expired_date
                   type: TIMESTAMP WITHOUT TIME ZONE
+                  constraints:
+                    nullable: false
               - column:
                   name: available_for_use
                   type: BOOLEAN

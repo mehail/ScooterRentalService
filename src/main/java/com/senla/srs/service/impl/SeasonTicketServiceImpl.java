@@ -1,6 +1,5 @@
 package com.senla.srs.service.impl;
 
-import com.senla.srs.model.ScooterType;
 import com.senla.srs.model.SeasonTicket;
 import com.senla.srs.repository.SeasonTicketRepository;
 import com.senla.srs.service.SeasonTicketService;
@@ -37,8 +36,9 @@ public class SeasonTicketServiceImpl implements SeasonTicketService {
     }
 
     @Override
-    public Optional<SeasonTicket> retrieveSeasonTicketByUserIdAndScooterTypeAndStartDate(Long userId, ScooterType scooterType, LocalDate startDate) {
-        return seasonTicketRepository.findSeasonTicketByUserIdAndScooterTypeAndStartDate(userId, scooterType, startDate);
+    public Optional<SeasonTicket> retrieveSeasonTicketByUserIdAndScooterTypeIdAndStartDate(Long userId, Long scooterTypeId,
+                                                                                           LocalDate startDate) {
+        return seasonTicketRepository.findSeasonTicketByUserIdAndScooterTypeIdAndStartDate(userId, scooterTypeId, startDate);
     }
 
     @Override

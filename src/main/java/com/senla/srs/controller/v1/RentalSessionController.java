@@ -154,10 +154,10 @@ public class RentalSessionController {
             return true;
         } else {
             boolean isThisUser = userResponseDTO.getId().equals(seasonTicketDTO.getUserId());
-            boolean isValidScooterType = rentalSessionRequestDTO.getScooter().getType().equals(seasonTicketDTO.getScooterType());
+            boolean isValidScooterType = rentalSessionRequestDTO.getScooter().getType().getId().
+                    equals(seasonTicketDTO.getScooterTypeId());
 
-            return  isThisUser &&
-                    isValidScooterType;
+            return isThisUser && isValidScooterType;
         }
     }
 

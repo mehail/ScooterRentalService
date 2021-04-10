@@ -1,4 +1,4 @@
 id,email,password,first_name,last_name,role,status,balance
-1,JohnDoe@mail.ru,$2y$12$OBjYvorEBXyjzdo24EeEFuda2nzCYTz9h/e6cIJi4JdkeVAKxE5de,John,Doe,1,0,0
-2,VasjaPupkin@mail.ru,$2y$12$AZdYy3sW/DZsfzyh2dpThO8Ai5PrK7/00XZeiL4lI43aUFG8L.pMC,Vasja,Pupkin,0,0,1
-3,anonim@mail.ru,$2y$12$U2j2Uf8w95W8ZmFfF2NiXuwO6yFs7N9YnbUnIkAkT/WBcK2R9NrxS,Anon,Secretov,0,0,2
+1,JohnDoe@mail.ru,$2y$12$OBjYvorEBXyjzdo24EeEFuda2nzCYTz9h/e6cIJi4JdkeVAKxE5de,John,Doe,1,0,10000
+2,VasjaPupkin@mail.ru,$2y$12$AZdYy3sW/DZsfzyh2dpThO8Ai5PrK7/00XZeiL4lI43aUFG8L.pMC,Vasja,Pupkin,0,0,20000
+3,anonim@mail.ru,$2y$12$U2j2Uf8w95W8ZmFfF2NiXuwO6yFs7N9YnbUnIkAkT/WBcK2R9NrxS,Anon,Secretov,0,0,30000
