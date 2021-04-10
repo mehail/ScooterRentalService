@@ -37,8 +37,7 @@ public class SeasonTicketController {
     private SeasonTicketRequestMapper seasonTicketRequestMapper;
     private SeasonTicketResponseMapper seasonTicketResponseMapper;
     private ScooterTypeRequestMapper scooterTypeRequestMapper;
-
-    private Integer duration;
+    private int duration;
     private static final String NO_SEASON_TICKET_WITH_ID = "A season ticket with this id was not found";
 
     public SeasonTicketController(SeasonTicketService seasonTicketService,
