@@ -5,6 +5,7 @@ import com.senla.srs.dto.scooter.type.ScooterTypeResponseDTO;
 import com.senla.srs.mapper.ScooterTypeRequestMapper;
 import com.senla.srs.mapper.ScooterTypeResponseMapper;
 import com.senla.srs.model.ScooterType;
+import com.senla.srs.service.MakerDtoService;
 import com.senla.srs.service.ScooterTypeService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/v1/scooter_types")
 public class ScooterTypeController {
     private ScooterTypeService scooterTypeService;
+    private MakerDtoService makerDtoService;
     private ScooterTypeRequestMapper scooterTypeRequestMapper;
     private ScooterTypeResponseMapper scooterTypeResponseMapper;
 
@@ -52,6 +54,11 @@ public class ScooterTypeController {
     @PostMapping
     @PreAuthorize("hasAuthority('scooterTypes:write')")
     public ResponseEntity<?> createOrUpdate(@RequestBody ScooterTypeRequestDTO scooterTypeRequestDTO) {
+
+        if (makerDtoService.retrieveMakerDtoById(scooterTypeRequestDTO.getMakerId()).isEmpty()) {
+            return new ResponseEntity<>("The maker is not found", HttpStatus.FORBIDDEN);
+        }
+
         scooterTypeService.save(scooterTypeRequestMapper.toEntity(scooterTypeRequestDTO));
         Optional<ScooterType> optionalScooterType =
                 scooterTypeService.retrieveScooterTypeByModel(scooterTypeRequestDTO.getModel());

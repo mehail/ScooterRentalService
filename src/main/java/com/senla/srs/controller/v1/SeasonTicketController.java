@@ -2,7 +2,6 @@ package com.senla.srs.controller.v1;
 
 import com.senla.srs.dto.seasonticket.SeasonTicketRequestDTO;
 import com.senla.srs.dto.seasonticket.SeasonTicketResponseDTO;
-import com.senla.srs.mapper.ScooterTypeRequestMapper;
 import com.senla.srs.mapper.SeasonTicketRequestMapper;
 import com.senla.srs.mapper.SeasonTicketResponseMapper;
 import com.senla.srs.model.ScooterType;
@@ -36,7 +35,7 @@ public class SeasonTicketController {
     private UserService userService;
     private SeasonTicketRequestMapper seasonTicketRequestMapper;
     private SeasonTicketResponseMapper seasonTicketResponseMapper;
-    private ScooterTypeRequestMapper scooterTypeRequestMapper;
+
     private int duration;
     private static final String NO_SEASON_TICKET_WITH_ID = "A season ticket with this id was not found";
 
@@ -45,14 +44,12 @@ public class SeasonTicketController {
                                   UserService userService,
                                   SeasonTicketRequestMapper seasonTicketRequestMapper,
                                   SeasonTicketResponseMapper seasonTicketResponseMapper,
-                                  ScooterTypeRequestMapper scooterTypeRequestMapper,
                                   @Value("${srs.season.duration:365}") Integer duration) {
         this.seasonTicketService = seasonTicketService;
         this.scooterTypeService = scooterTypeService;
         this.userService = userService;
         this.seasonTicketRequestMapper = seasonTicketRequestMapper;
         this.seasonTicketResponseMapper = seasonTicketResponseMapper;
-        this.scooterTypeRequestMapper = scooterTypeRequestMapper;
         this.duration = duration;
     }
 
