@@ -1,7 +1,9 @@
 package com.senla.srs.dto.seasonticket;
 
-import com.senla.srs.dto.scooter.type.ScooterTypeResponseDTO;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 import java.time.LocalDate;
 
@@ -11,8 +13,6 @@ import java.time.LocalDate;
 public class SeasonTicketResponseDTO extends SeasonTicketDTO {
     @NonNull
     private Long id;
-    @NonNull
-    private ScooterTypeResponseDTO scooterType;
     @NonNull
     private Integer price;
     @NonNull

@@ -1,10 +1,7 @@
 package com.senla.srs.controller.v1;
 
-import com.senla.srs.dto.promocod.PromoCodDTO;
 import com.senla.srs.dto.rentalsession.RentalSessionRequestDTO;
 import com.senla.srs.dto.rentalsession.RentalSessionResponseDTO;
-import com.senla.srs.dto.seasonticket.SeasonTicketRequestDTO;
-import com.senla.srs.dto.user.UserFullResponseDTO;
 import com.senla.srs.mapper.RentalSessionRequestMapper;
 import com.senla.srs.mapper.RentalSessionResponseMapper;
 import com.senla.srs.model.RentalSession;
@@ -82,6 +79,23 @@ public class RentalSessionController {
                 && optionalAuthUser.get().getId().equals(rentalSession.getUser().getId());
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     @PostMapping
     @PreAuthorize("hasAuthority('rentalSessions:read')")
     public ResponseEntity<?> createOrUpdate(@AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity,
@@ -121,26 +135,30 @@ public class RentalSessionController {
                 isValidPromoCod(rentalSessionRequestDTO);
     }
 
+    //ToDo Переписать
     private boolean isValidPromoCod(RentalSessionRequestDTO rentalSessionRequestDTO) {
-        PromoCodDTO promoCodDTO = rentalSessionRequestDTO.getPromoCod();
-
-        return promoCodDTO == null || promoCodDTO.getAvailable() &&
-                isValidDate(rentalSessionRequestDTO, promoCodDTO.getStartDate(), promoCodDTO.getExpiredDate());
+//        PromoCodDTO promoCodDTO = rentalSessionRequestDTO.getPromoCod();
+//
+//        return promoCodDTO == null || promoCodDTO.getAvailable() &&
+//                isValidDate(rentalSessionRequestDTO, promoCodDTO.getStartDate(), promoCodDTO.getExpiredDate());
+        return true;
     }
 
+    //ToDo Переписать
     private boolean isValidSeasonTicket(RentalSessionRequestDTO rentalSessionRequestDTO) {
-        UserFullResponseDTO userFullResponseDTO = rentalSessionRequestDTO.getUser();
-        SeasonTicketRequestDTO seasonTicketDTO = rentalSessionRequestDTO.getSeasonTicket();
-
-        if (seasonTicketDTO == null) {
-            return true;
-        } else {
-            boolean isThisUser = userFullResponseDTO.getId().equals(seasonTicketDTO.getUserId());
-            boolean isValidScooterType = rentalSessionRequestDTO.getScooter().getType()
-                    .equals(seasonTicketDTO.getScooterTypeId());
-
-            return isThisUser && isValidScooterType;
-        }
+//        UserCompactResponseDTO userCompactResponseDTO = rentalSessionRequestDTO.getUser();
+//        SeasonTicketRequestDTO seasonTicketDTO = rentalSessionRequestDTO.getSeasonTicket();
+//
+//        if (seasonTicketDTO == null) {
+//            return true;
+//        } else {
+//            boolean isThisUser = userCompactResponseDTO.getId().equals(seasonTicketDTO.getUserId());
+//            boolean isValidScooterType = rentalSessionRequestDTO.getScooter().getType()
+//                    .equals(seasonTicketDTO.getScooterTypeId());
+//
+//            return isThisUser && isValidScooterType;
+//        }
+        return true;
     }
 
     private boolean isValidDate(RentalSessionRequestDTO rentalSessionRequestDTO, LocalDate begin, LocalDate end) {
