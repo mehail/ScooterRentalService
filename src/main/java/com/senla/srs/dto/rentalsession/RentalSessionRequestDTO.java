@@ -2,7 +2,7 @@ package com.senla.srs.dto.rentalsession;
 
 import com.senla.srs.dto.AbstractDTO;
 import com.senla.srs.dto.promocod.PromoCodDTO;
-import com.senla.srs.dto.scooter.ScooterDTO;
+import com.senla.srs.dto.scooter.ScooterResponseDTO;
 import com.senla.srs.dto.seasonticket.SeasonTicketRequestDTO;
 import com.senla.srs.dto.user.UserResponseDTO;
 import lombok.Data;
@@ -19,7 +19,8 @@ public class RentalSessionRequestDTO extends AbstractDTO {
     @NonNull
     private UserResponseDTO user;
     @NonNull
-    private ScooterDTO scooter;
+    //ToDo переписать на id
+    private ScooterResponseDTO scooter;
     @NonNull
     private LocalDate begin;
     private LocalDate end;

@@ -1,8 +1,9 @@
 package com.senla.srs.controller.v1;
 
-import com.senla.srs.dto.scooter.ScooterDTO;
 import com.senla.srs.dto.scooter.ScooterRequestDTO;
+import com.senla.srs.dto.scooter.ScooterResponseDTO;
 import com.senla.srs.mapper.ScooterRequestMapper;
+import com.senla.srs.mapper.ScooterResponseMapper;
 import com.senla.srs.model.Scooter;
 import com.senla.srs.service.ScooterService;
 import com.senla.srs.service.ScooterTypeService;
@@ -28,6 +29,7 @@ public class ScooterController {
     private ScooterService scooterService;
     private ScooterTypeService scooterTypeService;
     private ScooterRequestMapper scooterRequestMapper;
+    private ScooterResponseMapper scooterResponseMapper;
 
     //ToDo пересмотреть Request и Response cущности
 
@@ -35,9 +37,9 @@ public class ScooterController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('scooters:read')")
-    public List<ScooterDTO> getAll() {
+    public List<ScooterResponseDTO> getAll() {
         return scooterService.retrieveAllScooters().stream()
-                .map(scooter -> scooterRequestMapper.toDto(scooter))
+                .map(scooter -> scooterResponseMapper.toDto(scooter))
                 .collect(Collectors.toList());
     }
 
@@ -47,7 +49,7 @@ public class ScooterController {
         Optional<Scooter> optionalScooter = scooterService.retrieveScooterBySerialNumber(serialNumber);
 
         return optionalScooter.isPresent()
-                ? ResponseEntity.ok(scooterRequestMapper.toDto(optionalScooter.get()))
+                ? ResponseEntity.ok(scooterResponseMapper.toDto(optionalScooter.get()))
                 : new ResponseEntity<>(SCOOTER_NOT_FOUND, HttpStatus.FORBIDDEN);
     }
 
@@ -55,14 +57,15 @@ public class ScooterController {
     @PreAuthorize("hasAuthority('scooters:write')")
     public ResponseEntity<?> createOrUpdate(@RequestBody ScooterRequestDTO scooterDTO) {
         if (scooterTypeService.retrieveScooterTypeById(scooterDTO.getTypeId()).isEmpty()) {
-            return new ResponseEntity<>("The scooter type is not created", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("The scooter type is not correct", HttpStatus.FORBIDDEN);
         }
 
         scooterService.save(scooterRequestMapper.toEntity(scooterDTO));
+
         Optional<Scooter> optionalScooter = scooterService.retrieveScooterBySerialNumber(scooterDTO.getSerialNumber());
 
         return optionalScooter.isPresent()
-                ? ResponseEntity.ok(scooterRequestMapper.toDto(optionalScooter.get()))
+                ? ResponseEntity.ok(scooterResponseMapper.toDto(optionalScooter.get()))
                 : new ResponseEntity<>("The scooter is not created", HttpStatus.FORBIDDEN);
     }
 
