@@ -56,7 +56,7 @@ public class ScooterTypeController {
     public ResponseEntity<?> createOrUpdate(@RequestBody ScooterTypeRequestDTO scooterTypeRequestDTO) {
 
         if (makerDtoService.retrieveMakerDtoById(scooterTypeRequestDTO.getMakerId()).isEmpty()) {
-            return new ResponseEntity<>("The maker is not found", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("The maker is not created", HttpStatus.FORBIDDEN);
         }
 
         scooterTypeService.save(scooterTypeRequestMapper.toEntity(scooterTypeRequestDTO));
