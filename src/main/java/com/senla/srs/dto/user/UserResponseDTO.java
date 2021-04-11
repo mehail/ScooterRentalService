@@ -1,6 +1,6 @@
 package com.senla.srs.dto.user;
 
-import com.senla.srs.dto.seasonticket.SeasonTicketRequestDTO;
+import com.senla.srs.dto.seasonticket.SeasonTicketResponseDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -14,5 +14,5 @@ import java.util.List;
 public class UserResponseDTO extends UserDTO {
     @NonNull
     private Long id;
-    private List<SeasonTicketRequestDTO> seasonTickets;
+    private List<SeasonTicketResponseDTO> seasonTickets;
 }

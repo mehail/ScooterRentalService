@@ -131,6 +131,8 @@ public class SeasonTicketController {
             user.setBalance(user.getBalance() - price);
         }
 
+        //ToDo add valid scooterType id
+
         seasonTicketService.save(seasonTicketRequestMapper.toConsistencySeasonTicket(seasonTicketRequestDTO, price,
                 duration));
 
