@@ -11,7 +11,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -57,13 +56,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Long getAuthUserId(org.springframework.security.core.userdetails.User userSecurity) {
+        return retrieveUserByAuthenticationPrincipal(userSecurity).map(User::getId).orElse(0L);
+    }
+
+    @Override
     public boolean isAdmin(org.springframework.security.core.userdetails.User userSecurity) {
-        try {
-            return retrieveUserByAuthenticationPrincipal(userSecurity).get().getRole() == Role.ADMIN;
-        } catch (NoSuchElementException e) {
-            log.error(e.getMessage(), "A user with this id was not detected");
-            return false;
-        }
+        Optional<User> optionalUser = retrieveUserByAuthenticationPrincipal(userSecurity);
+
+        return optionalUser.isPresent() && optionalUser.get().getRole() == Role.ADMIN;
+    }
+
+    @Override
+    public boolean isThisUser(org.springframework.security.core.userdetails.User userSecurity, Long id) {
+        return getAuthUserId(userSecurity).equals(id);
     }
 
     @Override

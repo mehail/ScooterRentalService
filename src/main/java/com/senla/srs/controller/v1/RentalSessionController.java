@@ -2,6 +2,7 @@ package com.senla.srs.controller.v1;
 
 import com.senla.srs.dto.promocod.PromoCodDTO;
 import com.senla.srs.dto.rentalsession.RentalSessionRequestDTO;
+import com.senla.srs.dto.rentalsession.RentalSessionResponseDTO;
 import com.senla.srs.dto.seasonticket.SeasonTicketRequestDTO;
 import com.senla.srs.dto.user.UserResponseDTO;
 import com.senla.srs.mapper.RentalSessionRequestMapper;
@@ -21,7 +22,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -41,24 +41,31 @@ public class RentalSessionController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('rentalSessions:read')")
-    public List<RentalSessionRequestDTO> getAll(@AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
+    public List<RentalSessionResponseDTO> getAll(@AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
 
-        if (userService.isAdmin(userSecurity)) {
-            return rentalSessionService.retrieveAllRentalSessions().stream()
-                    .map(rentalSession -> rentalSessionResponseMapper.toDto(rentalSession))
-                    .collect(Collectors.toList());
-        } else {
-            try {
-                User authUser = userService.retrieveUserByAuthenticationPrincipal(userSecurity).get();
-                return rentalSessionService.retrieveAllRentalSessionsByUserId(authUser.getId()).stream()
-                        .map(rentalSession -> rentalSessionResponseMapper.toDto(rentalSession))
-                        .collect(Collectors.toList());
-            } catch (NoSuchElementException e) {
-                log.error(e.getMessage(), NO_RENTAL_SESSION_WITH_ID);
-                return new ArrayList<>();
-            }
-        }
+        return userService.isAdmin(userSecurity)
+                ? mapListToDtoList(rentalSessionService.retrieveAllRentalSessions())
+                : mapListToDtoList(rentalSessionService.retrieveAllRentalSessionsByUserId(userService.getAuthUserId(userSecurity)));
 
+//        if (userService.isAdmin(userSecurity)) {
+//            return mapListToDtoList(rentalSessionService.retrieveAllRentalSessions());
+//        } else {
+//            Optional<User> optionalAuthUser = getOptionalAuthUser(userSecurity);
+//
+//            return optionalAuthUser.isPresent()
+//                    ? mapListToDtoList(rentalSessionService.retrieveAllRentalSessionsByUserId(optionalAuthUser.get().getId()))
+//                    : new ArrayList<>();
+//        }
+    }
+
+    private Optional<User> getOptionalAuthUser(org.springframework.security.core.userdetails.User userSecurity) {
+        return userService.retrieveUserByAuthenticationPrincipal(userSecurity);
+    }
+
+    private List<RentalSessionResponseDTO> mapListToDtoList(List<RentalSession> rentalSessions) {
+        return rentalSessions.stream()
+                .map(seasonTicket -> rentalSessionResponseMapper.toDto(seasonTicket))
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
@@ -66,38 +73,24 @@ public class RentalSessionController {
     public ResponseEntity<?> getById(@AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity,
                                      @PathVariable Long id) {
 
-        try {
-            RentalSession rentalSession = rentalSessionService.retrieveRentalSessionById(id).get();
+        if (userService.isAdmin(userSecurity) || userService.isThisUser(userSecurity, id)) {
+            Optional<RentalSession> optionalRentalSession = rentalSessionService.retrieveRentalSessionById(id);
 
-            if (userService.isAdmin(userSecurity) || isThisUserRentalSession(rentalSession, userSecurity)) {
-                return getById(id);
-            } else {
-                return new ResponseEntity<>("Unauthorized user session requested", HttpStatus.FORBIDDEN);
-            }
-        } catch (NoSuchElementException e) {
-            log.error(e.getMessage(), NO_RENTAL_SESSION_WITH_ID);
-            return new ResponseEntity<>(NO_RENTAL_SESSION_WITH_ID, HttpStatus.FORBIDDEN);
+            return optionalRentalSession.isPresent()
+                    ? ResponseEntity.ok(rentalSessionResponseMapper.toDto(optionalRentalSession.get()))
+                    : new ResponseEntity<>(NO_RENTAL_SESSION_WITH_ID, HttpStatus.FORBIDDEN);
+        } else {
+            return new ResponseEntity<>("Unauthorized user session requested", HttpStatus.FORBIDDEN);
         }
     }
 
     private boolean isThisUserRentalSession(RentalSession rentalSession,
                                             org.springframework.security.core.userdetails.User userSecurity) {
 
-        User authUser = userService.retrieveUserByAuthenticationPrincipal(userSecurity).get();
-        User sessionUser = rentalSession.getUser();
+        Optional<User> optionalAuthUser = getOptionalAuthUser(userSecurity);
 
-        return authUser.getId().equals(sessionUser.getId());
-    }
-
-    private ResponseEntity<?> getById(Long id) {
-        try {
-            RentalSession rentalSession = rentalSessionService.retrieveRentalSessionById(id).get();
-            return ResponseEntity.ok(rentalSessionResponseMapper.toDto(rentalSession));
-        } catch (NoSuchElementException e) {
-            String errorMessage = NO_RENTAL_SESSION_WITH_ID;
-            log.error(e.getMessage(), errorMessage);
-            return new ResponseEntity<>(errorMessage, HttpStatus.FORBIDDEN);
-        }
+        return optionalAuthUser.isPresent()
+                && optionalAuthUser.get().getId().equals(rentalSession.getUser().getId());
     }
 
     @PostMapping
