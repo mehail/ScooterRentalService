@@ -42,20 +42,9 @@ public class RentalSessionController {
     @GetMapping
     @PreAuthorize("hasAuthority('rentalSessions:read')")
     public List<RentalSessionResponseDTO> getAll(@AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
-
         return userService.isAdmin(userSecurity)
                 ? mapListToDtoList(rentalSessionService.retrieveAllRentalSessions())
                 : mapListToDtoList(rentalSessionService.retrieveAllRentalSessionsByUserId(userService.getAuthUserId(userSecurity)));
-
-//        if (userService.isAdmin(userSecurity)) {
-//            return mapListToDtoList(rentalSessionService.retrieveAllRentalSessions());
-//        } else {
-//            Optional<User> optionalAuthUser = getOptionalAuthUser(userSecurity);
-//
-//            return optionalAuthUser.isPresent()
-//                    ? mapListToDtoList(rentalSessionService.retrieveAllRentalSessionsByUserId(optionalAuthUser.get().getId()))
-//                    : new ArrayList<>();
-//        }
     }
 
     private Optional<User> getOptionalAuthUser(org.springframework.security.core.userdetails.User userSecurity) {

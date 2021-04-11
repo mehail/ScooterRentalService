@@ -4,6 +4,7 @@ import com.senla.srs.dto.promocod.PromoCodDTO;
 import com.senla.srs.mapper.PromoCodMapper;
 import com.senla.srs.model.PromoCod;
 import com.senla.srs.service.PromoCodService;
+import com.senla.srs.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -11,9 +12,11 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,6 +27,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/v1/promo_codes")
 public class PromoCodController {
+    private UserService userService;
     private PromoCodService promoCodService;
     private PromoCodMapper promoCodMapper;
 
@@ -31,10 +35,14 @@ public class PromoCodController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('promoCods:read')")
-    public List<PromoCodDTO> getAll() {
-        return promoCodService.retrieveAllPromoCods().stream()
+    public List<PromoCodDTO> getAll(@AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
+        return userService.isAdmin(userSecurity)
+
+                ? promoCodService.retrieveAllPromoCods().stream()
                 .map(promoCod -> promoCodMapper.toDto(promoCod))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList())
+
+                : new ArrayList<>();
     }
 
     @GetMapping("/{name}")
