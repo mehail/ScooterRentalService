@@ -1,9 +1,9 @@
 package com.senla.srs.controller.v1;
 
 import com.senla.srs.dto.user.UserRequestDTO;
-import com.senla.srs.dto.user.UserResponseDTO;
+import com.senla.srs.dto.user.UserFullResponseDTO;
 import com.senla.srs.mapper.UserRequestMapper;
-import com.senla.srs.mapper.UserResponseMapper;
+import com.senla.srs.mapper.UserFullResponseMapper;
 import com.senla.srs.model.User;
 import com.senla.srs.model.UserStatus;
 import com.senla.srs.model.security.Role;
@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/v1/users")
 public class UserRestController {
     private UserService userService;
-    private UserResponseMapper userResponseMapper;
+    private UserFullResponseMapper userFullResponseMapper;
     private UserRequestMapper userRequestMapper;
 
     private static final String USER_NOT_FOUND = "A user with this id not found";
@@ -39,9 +39,9 @@ public class UserRestController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('users:readAll')")
-    public List<UserResponseDTO> getAll() {
+    public List<UserFullResponseDTO> getAll() {
         return userService.retrieveAllUsers().stream()
-                .map(user -> userResponseMapper.toDto(user))
+                .map(user -> userFullResponseMapper.toDto(user))
                 .collect(Collectors.toList());
     }
 
@@ -51,7 +51,7 @@ public class UserRestController {
         Optional<User> optionalUser = userService.retrieveUserById(id);
 
         return optionalUser.isPresent()
-                ? ResponseEntity.ok(userResponseMapper.toDto(optionalUser.get()))
+                ? ResponseEntity.ok(userFullResponseMapper.toDto(optionalUser.get()))
                 : new ResponseEntity<>(USER_NOT_FOUND, HttpStatus.FORBIDDEN);
     }
 
@@ -60,7 +60,7 @@ public class UserRestController {
         Optional<User> optionalUser = userService.retrieveUserByEmail(userSecurity.getUsername());
 
         return optionalUser.isPresent()
-                ? ResponseEntity.ok(userResponseMapper.toDto(optionalUser.get()))
+                ? ResponseEntity.ok(userFullResponseMapper.toDto(optionalUser.get()))
                 : new ResponseEntity<>(USER_NOT_FOUND, HttpStatus.FORBIDDEN);
     }
 
@@ -129,7 +129,7 @@ public class UserRestController {
         Optional<User> optionalUser = userService.retrieveUserByEmail(userRequestDTO.getEmail());
 
         return optionalUser.isPresent()
-                ? ResponseEntity.ok(userResponseMapper.toDto(optionalUser.get()))
+                ? ResponseEntity.ok(userFullResponseMapper.toDto(optionalUser.get()))
                 : new ResponseEntity<>("The user is not created", HttpStatus.FORBIDDEN);
     }
 

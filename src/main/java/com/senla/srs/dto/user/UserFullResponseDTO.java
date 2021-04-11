@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
-public class UserResponseDTO extends UserDTO {
+public class UserFullResponseDTO extends UserDTO {
     @NonNull
     private Long id;
     private List<SeasonTicketResponseDTO> seasonTickets;

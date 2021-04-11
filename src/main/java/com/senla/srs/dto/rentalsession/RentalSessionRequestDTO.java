@@ -4,7 +4,7 @@ import com.senla.srs.dto.AbstractDTO;
 import com.senla.srs.dto.promocod.PromoCodDTO;
 import com.senla.srs.dto.scooter.ScooterResponseDTO;
 import com.senla.srs.dto.seasonticket.SeasonTicketRequestDTO;
-import com.senla.srs.dto.user.UserResponseDTO;
+import com.senla.srs.dto.user.UserFullResponseDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @EqualsAndHashCode(of = {"user", "scooter", "begin"}, callSuper = false)
 public class RentalSessionRequestDTO extends AbstractDTO {
     @NonNull
-    private UserResponseDTO user;
+    private UserFullResponseDTO user;
     @NonNull
     //ToDo переписать на id
     private ScooterResponseDTO scooter;

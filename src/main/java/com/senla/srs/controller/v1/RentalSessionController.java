@@ -4,7 +4,7 @@ import com.senla.srs.dto.promocod.PromoCodDTO;
 import com.senla.srs.dto.rentalsession.RentalSessionRequestDTO;
 import com.senla.srs.dto.rentalsession.RentalSessionResponseDTO;
 import com.senla.srs.dto.seasonticket.SeasonTicketRequestDTO;
-import com.senla.srs.dto.user.UserResponseDTO;
+import com.senla.srs.dto.user.UserFullResponseDTO;
 import com.senla.srs.mapper.RentalSessionRequestMapper;
 import com.senla.srs.mapper.RentalSessionResponseMapper;
 import com.senla.srs.model.RentalSession;
@@ -129,13 +129,13 @@ public class RentalSessionController {
     }
 
     private boolean isValidSeasonTicket(RentalSessionRequestDTO rentalSessionRequestDTO) {
-        UserResponseDTO userResponseDTO = rentalSessionRequestDTO.getUser();
+        UserFullResponseDTO userFullResponseDTO = rentalSessionRequestDTO.getUser();
         SeasonTicketRequestDTO seasonTicketDTO = rentalSessionRequestDTO.getSeasonTicket();
 
         if (seasonTicketDTO == null) {
             return true;
         } else {
-            boolean isThisUser = userResponseDTO.getId().equals(seasonTicketDTO.getUserId());
+            boolean isThisUser = userFullResponseDTO.getId().equals(seasonTicketDTO.getUserId());
             boolean isValidScooterType = rentalSessionRequestDTO.getScooter().getType()
                     .equals(seasonTicketDTO.getScooterTypeId());
 
