@@ -15,9 +15,9 @@ public interface RentalSessionService {
     List<RentalSession> retrieveAllRentalSessions();
     List<RentalSession> retrieveAllRentalSessionsByUserId(Long id);
     Optional<RentalSession> retrieveRentalSessionById(Long id);
-    Optional<RentalSession> retrieveRentalSessionByUserAndScooterAndBegin(User user, Scooter scooter, LocalDate begin);
     Optional<RentalSession> retrieveRentalSessionByUserIdAndScooterSerialNumberAndBegin(Long userId,
                                                                                         String scooterSerialNumber,
                                                                                         LocalDate begin);
+
     void deleteById(Long id);
 }

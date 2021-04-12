@@ -38,16 +38,15 @@ public class RentalSessionServiceImpl implements RentalSessionService {
     }
 
     @Override
-    public Optional<RentalSession> retrieveRentalSessionByUserAndScooterAndBegin(User user, Scooter scooter, LocalDate begin) {
-        return rentalSessionRepository.findRentalSessionByUserAndScooterAndBegin(user, scooter, begin);
-    }
-
-    @Override
     public Optional<RentalSession> retrieveRentalSessionByUserIdAndScooterSerialNumberAndBegin(Long userId,
                                                                                                String scooterSerialNumber,
                                                                                                LocalDate begin) {
-        return rentalSessionRepository.findRentalSessionByUser_IdAndScooter_SerialNumberAndBegin(userId,
-                scooterSerialNumber, begin);
+
+
+
+
+        return rentalSessionRepository.findByUserIdAndScooterSerialNumber(userId,
+                scooterSerialNumber);
     }
 
     @Override
