@@ -26,10 +26,10 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/v1/point_of_rentals")
 public class PointOfRentalController {
-    private AddressDtoService addressDtoService;
-    private PointOfRentalService pointOfRentalService;
-    private PointOfRentalRequestMapper pointOfRentalRequestMapper;
-    private PointOfRentalResponseMapper pointOfRentalResponseMapper;
+    private final AddressDtoService addressDtoService;
+    private final PointOfRentalService pointOfRentalService;
+    private final PointOfRentalRequestMapper pointOfRentalRequestMapper;
+    private final PointOfRentalResponseMapper pointOfRentalResponseMapper;
 
     private static final String POINT_OF_RENTAL_NOT_FOUND = "A point of rental with this id was not found";
 
@@ -37,7 +37,7 @@ public class PointOfRentalController {
     @PreAuthorize("hasAuthority('pointOfRentals:read')")
     public List<PointOfRentalResponseDTO> getAll() {
         return pointOfRentalService.retrieveAllPointOfRentals().stream()
-                .map(pointOfRental -> pointOfRentalResponseMapper.toDto(pointOfRental))
+                .map(pointOfRentalResponseMapper::toDto)
                 .collect(Collectors.toList());
     }
 
