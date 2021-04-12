@@ -48,11 +48,18 @@ public class RentalSessionController {
         Optional<RentalSession> rentalSession = rentalSessionService.retrieveRentalSessionById(1L);
         RentalSession rentalSession1 = rentalSession.get();
 
-        soutt(rentalSession1.getBegin().toString() + " " + rentalSession1.getBegin().getClass());
+        soutt("1 "+rentalSession1.getBegin().toString() + " " + rentalSession1.getBegin().getClass());
 //ToDo ошибка в парсинге LocalDate!!!
-        soutt("1"+rentalSession1.toString());
-        soutt("2" + rentalSessionService.retrieveRentalSessionByUserIdAndScooterSerialNumberAndBegin(rentalSession1.getUser().getId(),
-                rentalSession1.getScooter().getSerialNumber(), rentalSession1.getBegin()));
+
+
+//
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
+//        LocalDateTime localDate = LocalDateTime.parse("2021-04-01 12:10:00",formatter);
+//        soutt("2 " + localDate.toString() + " " + localDate.getClass());
+//
+//        soutt("1"+rentalSession1.toString());
+//        soutt("2" + rentalSessionService.retrieveRentalSessionByUserIdAndScooterSerialNumberAndBegin(rentalSession1.getUser().getId(),
+//                rentalSession1.getScooter().getSerialNumber(), rentalSession1.getBegin()));
     }
 
     private void soutt(String s){

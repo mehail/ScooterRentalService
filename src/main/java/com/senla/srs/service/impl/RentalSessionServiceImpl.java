@@ -1,14 +1,12 @@
 package com.senla.srs.service.impl;
 
 import com.senla.srs.model.RentalSession;
-import com.senla.srs.model.Scooter;
-import com.senla.srs.model.User;
 import com.senla.srs.repository.RentalSessionRepository;
 import com.senla.srs.service.RentalSessionService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,7 +38,7 @@ public class RentalSessionServiceImpl implements RentalSessionService {
     @Override
     public Optional<RentalSession> retrieveRentalSessionByUserIdAndScooterSerialNumberAndBegin(Long userId,
                                                                                                String scooterSerialNumber,
-                                                                                               LocalDate begin) {
+                                                                                               LocalDateTime begin) {
 
 
 

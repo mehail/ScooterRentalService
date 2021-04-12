@@ -3,7 +3,7 @@ package com.senla.srs.model;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -25,8 +25,8 @@ public class RentalSession extends AbstractEntity{
     private Scooter scooter;
     private Integer rate;
     @NonNull
-    private LocalDate begin;
-    private LocalDate end;
+    private LocalDateTime begin;
+    private LocalDateTime end;
     @ManyToOne(optional=false)
     @JoinColumn(name = "season_ticket_id")
     private SeasonTicket seasonTicket;
