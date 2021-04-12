@@ -3,12 +3,12 @@ package com.senla.srs.model;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(of = {"id"}, callSuper = false)
+@EqualsAndHashCode(of = {"user", "scooter", "begin"}, callSuper = false)
 @Entity
 @Table(name = "rental_sessions")
 public class RentalSession extends AbstractEntity{
@@ -25,8 +25,8 @@ public class RentalSession extends AbstractEntity{
     private Scooter scooter;
     private Integer rate;
     @NonNull
-    private LocalDate begin;
-    private LocalDate end;
+    private LocalDateTime begin;
+    private LocalDateTime end;
     @ManyToOne(optional=false)
     @JoinColumn(name = "season_ticket_id")
     private SeasonTicket seasonTicket;

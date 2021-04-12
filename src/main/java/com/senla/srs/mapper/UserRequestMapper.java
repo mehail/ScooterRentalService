@@ -1,9 +1,8 @@
 package com.senla.srs.mapper;
 
-import com.senla.srs.dto.UserRequestDTO;
+import com.senla.srs.dto.user.UserRequestDTO;
 import com.senla.srs.model.User;
 import com.senla.srs.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -12,7 +11,6 @@ import java.util.Optional;
 public class UserRequestMapper extends AbstractMapper<User, UserRequestDTO> {
     private final UserService userService;
 
-    @Autowired
     UserRequestMapper(UserService userService) {
         super(User.class, UserRequestDTO.class);
         this.userService = userService;

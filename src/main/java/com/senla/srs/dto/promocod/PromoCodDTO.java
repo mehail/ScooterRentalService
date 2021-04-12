@@ -1,11 +1,11 @@
-package com.senla.srs.dto;
+package com.senla.srs.dto.promocod;
 
+import com.senla.srs.dto.AbstractDTO;
 import lombok.*;
 
 import java.time.LocalDate;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"name"}, callSuper = false)
 public class PromoCodDTO extends AbstractDTO {
@@ -16,5 +16,6 @@ public class PromoCodDTO extends AbstractDTO {
     private LocalDate expiredDate;
     private Integer discountPercentage;
     private Integer bonusPoint;
+    @NonNull
     private Boolean available;
 }

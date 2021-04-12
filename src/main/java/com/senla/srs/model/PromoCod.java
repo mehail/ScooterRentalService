@@ -23,5 +23,6 @@ public class PromoCod extends AbstractEntity{
     private Integer discountPercentage;
     @Column(name = "bonus_point")
     private Integer bonusPoint;
+    @NonNull
     private Boolean available;
 }

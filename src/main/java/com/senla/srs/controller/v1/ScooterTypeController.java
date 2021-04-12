@@ -1,19 +1,23 @@
 package com.senla.srs.controller.v1;
 
-import com.senla.srs.dto.ScooterTypeDTO;
-import com.senla.srs.mapper.ScooterTypeMapper;
+import com.senla.srs.dto.scooter.type.ScooterTypeRequestDTO;
+import com.senla.srs.dto.scooter.type.ScooterTypeResponseDTO;
+import com.senla.srs.mapper.ScooterTypeRequestMapper;
+import com.senla.srs.mapper.ScooterTypeResponseMapper;
 import com.senla.srs.model.ScooterType;
+import com.senla.srs.service.MakerDtoService;
 import com.senla.srs.service.ScooterTypeService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -22,43 +26,46 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/v1/scooter_types")
 public class ScooterTypeController {
-    private ScooterTypeService scooterTypeService;
-    private ScooterTypeMapper scooterTypeMapper;
+    private final ScooterTypeService scooterTypeService;
+    private final MakerDtoService makerDtoService;
+    private final ScooterTypeRequestMapper scooterTypeRequestMapper;
+    private final ScooterTypeResponseMapper scooterTypeResponseMapper;
+
+    private static final String TYPE_NOT_FOUND = "Scooter type with this id not found";
 
     @GetMapping
     @PreAuthorize("hasAuthority('scooterTypes:read')")
-    public List<ScooterTypeDTO> getAll() {
+    public List<ScooterTypeResponseDTO> getAll() {
         return scooterTypeService.retrieveAllScooterTypes().stream()
-                .map(scooterType -> scooterTypeMapper.toDto(scooterType))
+                .map(scooterTypeResponseMapper::toDto)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('scooterTypes:read')")
     public ResponseEntity<?> getById(@PathVariable Long id) {
-        try {
-            ScooterType scooterType = scooterTypeService.retrieveScooterTypeById(id).get();
-            return ResponseEntity.ok(scooterTypeMapper.toDto(scooterType));
-        } catch (NoSuchElementException e) {
-            String errorMessage = "No scooter type with this ID found";
-            log.error(e.getMessage(), errorMessage);
-            return new ResponseEntity<>(errorMessage, HttpStatus.FORBIDDEN);
-        }
+        Optional<ScooterType> optionalScooterType = scooterTypeService.retrieveScooterTypeById(id);
+
+        return optionalScooterType.isPresent()
+                ? ResponseEntity.ok(scooterTypeResponseMapper.toDto(optionalScooterType.get()))
+                : new ResponseEntity<>(TYPE_NOT_FOUND, HttpStatus.FORBIDDEN);
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('scooterTypes:write')")
-    public ResponseEntity<?> createOrUpdate(@RequestBody ScooterTypeDTO scooterTypeDTO) {
-        ScooterType scooterType = scooterTypeMapper.toEntity(scooterTypeDTO);
-        scooterTypeService.save(scooterType);
-        try {
-            ScooterType createdScooterType = scooterTypeService.retrieveScooterTypeByModel(scooterTypeDTO.getModel()).get();
-            return ResponseEntity.ok(scooterTypeMapper.toDto(createdScooterType));
-        } catch (NoSuchElementException e) {
-            String errorMessage = "The scooter type is not created";
-            log.error(e.getMessage(), errorMessage);
-            return new ResponseEntity<>(errorMessage, HttpStatus.FORBIDDEN);
+    public ResponseEntity<?> createOrUpdate(@RequestBody ScooterTypeRequestDTO scooterTypeRequestDTO) {
+
+        if (makerDtoService.retrieveMakerDtoById(scooterTypeRequestDTO.getMakerId()).isEmpty()) {
+            return new ResponseEntity<>("The maker is not correct", HttpStatus.FORBIDDEN);
         }
+
+        scooterTypeService.save(scooterTypeRequestMapper.toEntity(scooterTypeRequestDTO));
+        Optional<ScooterType> optionalScooterType =
+                scooterTypeService.retrieveScooterTypeByModel(scooterTypeRequestDTO.getModel());
+
+        return optionalScooterType.isPresent()
+                ? ResponseEntity.ok(scooterTypeResponseMapper.toDto(optionalScooterType.get()))
+                : new ResponseEntity<>("The scooter type is not created", HttpStatus.FORBIDDEN);
     }
 
     @DeleteMapping("/{id}")
@@ -67,10 +74,9 @@ public class ScooterTypeController {
         try {
             scooterTypeService.deleteById(id);
             return new ResponseEntity<>("Scooter type with this id was deleted", HttpStatus.ACCEPTED);
-        } catch (NoSuchElementException e) {
-            String errorMessage = "A scooter type with this id was not detected";
-            log.error(e.getMessage(), errorMessage);
-            return new ResponseEntity<>(errorMessage, HttpStatus.FORBIDDEN);
+        } catch (EmptyResultDataAccessException e) {
+            log.error(e.getMessage(), TYPE_NOT_FOUND);
+            return new ResponseEntity<>(TYPE_NOT_FOUND, HttpStatus.FORBIDDEN);
         }
     }
 }
