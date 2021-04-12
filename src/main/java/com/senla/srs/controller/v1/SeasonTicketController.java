@@ -1,10 +1,9 @@
 package com.senla.srs.controller.v1;
 
 import com.senla.srs.dto.seasonticket.SeasonTicketRequestDTO;
-import com.senla.srs.dto.seasonticket.SeasonTicketResponseDTO;
-import com.senla.srs.mapper.ScooterTypeRequestMapper;
+import com.senla.srs.dto.seasonticket.SeasonTicketFullResponseDTO;
 import com.senla.srs.mapper.SeasonTicketRequestMapper;
-import com.senla.srs.mapper.SeasonTicketResponseMapper;
+import com.senla.srs.mapper.SeasonTicketFullResponseMapper;
 import com.senla.srs.model.ScooterType;
 import com.senla.srs.model.SeasonTicket;
 import com.senla.srs.model.User;
@@ -35,8 +34,8 @@ public class SeasonTicketController {
     private ScooterTypeService scooterTypeService;
     private UserService userService;
     private SeasonTicketRequestMapper seasonTicketRequestMapper;
-    private SeasonTicketResponseMapper seasonTicketResponseMapper;
-    private ScooterTypeRequestMapper scooterTypeRequestMapper;
+    private SeasonTicketFullResponseMapper seasonTicketFullResponseMapper;
+
     private int duration;
     private static final String NO_SEASON_TICKET_WITH_ID = "A season ticket with this id was not found";
 
@@ -44,21 +43,19 @@ public class SeasonTicketController {
                                   ScooterTypeService scooterTypeService,
                                   UserService userService,
                                   SeasonTicketRequestMapper seasonTicketRequestMapper,
-                                  SeasonTicketResponseMapper seasonTicketResponseMapper,
-                                  ScooterTypeRequestMapper scooterTypeRequestMapper,
+                                  SeasonTicketFullResponseMapper seasonTicketFullResponseMapper,
                                   @Value("${srs.season.duration:365}") Integer duration) {
         this.seasonTicketService = seasonTicketService;
         this.scooterTypeService = scooterTypeService;
         this.userService = userService;
         this.seasonTicketRequestMapper = seasonTicketRequestMapper;
-        this.seasonTicketResponseMapper = seasonTicketResponseMapper;
-        this.scooterTypeRequestMapper = scooterTypeRequestMapper;
+        this.seasonTicketFullResponseMapper = seasonTicketFullResponseMapper;
         this.duration = duration;
     }
 
     @GetMapping
     @PreAuthorize("hasAuthority('seasonTickets:read')")
-    public List<SeasonTicketResponseDTO> getAll(@AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
+    public List<SeasonTicketFullResponseDTO> getAll(@AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
 
         if (userService.isAdmin(userSecurity)) {
             return mapListToDtoList(seasonTicketService.retrieveAllSeasonTickets());
@@ -71,9 +68,9 @@ public class SeasonTicketController {
         }
     }
 
-    private List<SeasonTicketResponseDTO> mapListToDtoList(List<SeasonTicket> seasonTickets) {
+    private List<SeasonTicketFullResponseDTO> mapListToDtoList(List<SeasonTicket> seasonTickets) {
         return seasonTickets.stream()
-                .map(seasonTicket -> seasonTicketResponseMapper.toDto(seasonTicket))
+                .map(seasonTicket -> seasonTicketFullResponseMapper.toDto(seasonTicket))
                 .collect(Collectors.toList());
     }
 
@@ -85,17 +82,12 @@ public class SeasonTicketController {
 
         if (optionalExistSeasonTicket.isEmpty()) {
             return new ResponseEntity<>(NO_SEASON_TICKET_WITH_ID, HttpStatus.FORBIDDEN);
-        } else if (userService.isAdmin(userSecurity) || isThisUser(userSecurity, optionalExistSeasonTicket.get())) {
-            return ResponseEntity.ok(seasonTicketResponseMapper.toDto(optionalExistSeasonTicket.get()));
+        } else if (userService.isAdmin(userSecurity) ||
+                userService.isThisUser(userSecurity, optionalExistSeasonTicket.get().getUserId())) {
+            return ResponseEntity.ok(seasonTicketFullResponseMapper.toDto(optionalExistSeasonTicket.get()));
         } else {
             return new ResponseEntity<>("Another user's season ticket is requested", HttpStatus.FORBIDDEN);
         }
-    }
-
-    private boolean isThisUser(org.springframework.security.core.userdetails.User userSecurity, SeasonTicket seasonTicket) {
-        Optional<User> optionalAuthUser = userService.retrieveUserByAuthenticationPrincipal(userSecurity);
-
-        return optionalAuthUser.isPresent() && seasonTicket.getUserId().equals(optionalAuthUser.get().getId());
     }
 
     @PostMapping
@@ -112,14 +104,14 @@ public class SeasonTicketController {
         Optional<User> optionalUser = userService.retrieveUserById(seasonTicketRequestDTO.getUserId());
 
         if (optionalUser.isEmpty()) {
-            return new ResponseEntity<>("The specified user does not exist", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("The user incorrect", HttpStatus.FORBIDDEN);
         }
 
         Optional<ScooterType> optionalScooterType =
                 scooterTypeService.retrieveScooterTypeById(seasonTicketRequestDTO.getScooterTypeId());
 
         if (optionalScooterType.isEmpty()) {
-            return new ResponseEntity<>("The scooter type does not exist", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("The scooter type incorrect", HttpStatus.FORBIDDEN);
         }
 
         Integer price = calculatePrice(seasonTicketRequestDTO, optionalScooterType.get());
@@ -131,15 +123,13 @@ public class SeasonTicketController {
             user.setBalance(user.getBalance() - price);
         }
 
-        //ToDo add valid scooterType id
-
         seasonTicketService.save(seasonTicketRequestMapper.toConsistencySeasonTicket(seasonTicketRequestDTO, price,
                 duration));
 
         Optional<SeasonTicket> optionalCreatedSeasonTicket = getExistOptionalSeasonTicket(seasonTicketRequestDTO);
 
         return optionalCreatedSeasonTicket.isPresent()
-                ? ResponseEntity.ok(seasonTicketResponseMapper.toDto(optionalCreatedSeasonTicket.get()))
+                ? ResponseEntity.ok(seasonTicketFullResponseMapper.toDto(optionalCreatedSeasonTicket.get()))
                 : new ResponseEntity<>("The season ticket is not created", HttpStatus.FORBIDDEN);
     }
 
@@ -178,7 +168,7 @@ public class SeasonTicketController {
             }
         } else {
             return new ResponseEntity<>("Season ticket with this id not available for deletion",
-                    HttpStatus.ACCEPTED);
+                    HttpStatus.FORBIDDEN);
         }
     }
 }

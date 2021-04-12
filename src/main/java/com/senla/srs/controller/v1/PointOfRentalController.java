@@ -5,6 +5,7 @@ import com.senla.srs.dto.pointofrental.PointOfRentalResponseDTO;
 import com.senla.srs.mapper.PointOfRentalRequestMapper;
 import com.senla.srs.mapper.PointOfRentalResponseMapper;
 import com.senla.srs.model.PointOfRental;
+import com.senla.srs.service.AddressDtoService;
 import com.senla.srs.service.PointOfRentalService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/v1/point_of_rentals")
 public class PointOfRentalController {
+    private AddressDtoService addressDtoService;
     private PointOfRentalService pointOfRentalService;
     private PointOfRentalRequestMapper pointOfRentalRequestMapper;
     private PointOfRentalResponseMapper pointOfRentalResponseMapper;
@@ -52,7 +54,12 @@ public class PointOfRentalController {
     @PostMapping
     @PreAuthorize("hasAuthority('pointOfRentals:write')")
     public ResponseEntity<?> createOrUpdate(@RequestBody PointOfRentalRequestDTO pointOfRentalRequestDTO) {
+        if (addressDtoService.retrieveAddressDtoById(pointOfRentalRequestDTO.getAddressId()).isEmpty()) {
+            return new ResponseEntity<>("The address is not correct", HttpStatus.FORBIDDEN);
+        }
+
         pointOfRentalService.save(pointOfRentalRequestMapper.toEntity(pointOfRentalRequestDTO));
+
         Optional<PointOfRental> optionalPointOfRental =
                 pointOfRentalService.retrievePointOfRentalByName(pointOfRentalRequestDTO.getName());
 

@@ -1,10 +1,7 @@
 package com.senla.srs.controller.v1;
 
-import com.senla.srs.dto.promocod.PromoCodDTO;
 import com.senla.srs.dto.rentalsession.RentalSessionRequestDTO;
 import com.senla.srs.dto.rentalsession.RentalSessionResponseDTO;
-import com.senla.srs.dto.seasonticket.SeasonTicketRequestDTO;
-import com.senla.srs.dto.user.UserResponseDTO;
 import com.senla.srs.mapper.RentalSessionRequestMapper;
 import com.senla.srs.mapper.RentalSessionResponseMapper;
 import com.senla.srs.model.RentalSession;
@@ -42,20 +39,9 @@ public class RentalSessionController {
     @GetMapping
     @PreAuthorize("hasAuthority('rentalSessions:read')")
     public List<RentalSessionResponseDTO> getAll(@AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
-
         return userService.isAdmin(userSecurity)
                 ? mapListToDtoList(rentalSessionService.retrieveAllRentalSessions())
                 : mapListToDtoList(rentalSessionService.retrieveAllRentalSessionsByUserId(userService.getAuthUserId(userSecurity)));
-
-//        if (userService.isAdmin(userSecurity)) {
-//            return mapListToDtoList(rentalSessionService.retrieveAllRentalSessions());
-//        } else {
-//            Optional<User> optionalAuthUser = getOptionalAuthUser(userSecurity);
-//
-//            return optionalAuthUser.isPresent()
-//                    ? mapListToDtoList(rentalSessionService.retrieveAllRentalSessionsByUserId(optionalAuthUser.get().getId()))
-//                    : new ArrayList<>();
-//        }
     }
 
     private Optional<User> getOptionalAuthUser(org.springframework.security.core.userdetails.User userSecurity) {
@@ -92,6 +78,23 @@ public class RentalSessionController {
         return optionalAuthUser.isPresent()
                 && optionalAuthUser.get().getId().equals(rentalSession.getUser().getId());
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     @PostMapping
     @PreAuthorize("hasAuthority('rentalSessions:read')")
@@ -132,26 +135,30 @@ public class RentalSessionController {
                 isValidPromoCod(rentalSessionRequestDTO);
     }
 
+    //ToDo Переписать
     private boolean isValidPromoCod(RentalSessionRequestDTO rentalSessionRequestDTO) {
-        PromoCodDTO promoCodDTO = rentalSessionRequestDTO.getPromoCod();
-
-        return promoCodDTO == null || promoCodDTO.getAvailable() &&
-                isValidDate(rentalSessionRequestDTO, promoCodDTO.getStartDate(), promoCodDTO.getExpiredDate());
+//        PromoCodDTO promoCodDTO = rentalSessionRequestDTO.getPromoCod();
+//
+//        return promoCodDTO == null || promoCodDTO.getAvailable() &&
+//                isValidDate(rentalSessionRequestDTO, promoCodDTO.getStartDate(), promoCodDTO.getExpiredDate());
+        return true;
     }
 
+    //ToDo Переписать
     private boolean isValidSeasonTicket(RentalSessionRequestDTO rentalSessionRequestDTO) {
-        UserResponseDTO userResponseDTO = rentalSessionRequestDTO.getUser();
-        SeasonTicketRequestDTO seasonTicketDTO = rentalSessionRequestDTO.getSeasonTicket();
-
-        if (seasonTicketDTO == null) {
-            return true;
-        } else {
-            boolean isThisUser = userResponseDTO.getId().equals(seasonTicketDTO.getUserId());
-            boolean isValidScooterType = rentalSessionRequestDTO.getScooter().getType().getId().
-                    equals(seasonTicketDTO.getScooterTypeId());
-
-            return isThisUser && isValidScooterType;
-        }
+//        UserCompactResponseDTO userCompactResponseDTO = rentalSessionRequestDTO.getUser();
+//        SeasonTicketRequestDTO seasonTicketDTO = rentalSessionRequestDTO.getSeasonTicket();
+//
+//        if (seasonTicketDTO == null) {
+//            return true;
+//        } else {
+//            boolean isThisUser = userCompactResponseDTO.getId().equals(seasonTicketDTO.getUserId());
+//            boolean isValidScooterType = rentalSessionRequestDTO.getScooter().getType()
+//                    .equals(seasonTicketDTO.getScooterTypeId());
+//
+//            return isThisUser && isValidScooterType;
+//        }
+        return true;
     }
 
     private boolean isValidDate(RentalSessionRequestDTO rentalSessionRequestDTO, LocalDate begin, LocalDate end) {

@@ -1,29 +1,18 @@
 package com.senla.srs.dto.rentalsession;
 
-import com.senla.srs.dto.AbstractDTO;
-import com.senla.srs.dto.promocod.PromoCodDTO;
-import com.senla.srs.dto.scooter.ScooterDTO;
-import com.senla.srs.dto.seasonticket.SeasonTicketRequestDTO;
-import com.senla.srs.dto.user.UserResponseDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
-import java.time.LocalDate;
-
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(of = {"user", "scooter", "begin"}, callSuper = false)
-public class RentalSessionRequestDTO extends AbstractDTO {
+@EqualsAndHashCode(of = {"userId", "scooterSerialNumber"}, callSuper = false)
+public class RentalSessionRequestDTO extends RentalSessionDTO {
     @NonNull
-    private UserResponseDTO user;
+    private Long userId;
     @NonNull
-    private ScooterDTO scooter;
-    @NonNull
-    private LocalDate begin;
-    private LocalDate end;
-    //ToDo change to id?
-    private SeasonTicketRequestDTO seasonTicket;
-    private PromoCodDTO promoCod;
+    private String scooterSerialNumber;
+    private Long seasonTicketId;
+    private String promoCodName;
 }
