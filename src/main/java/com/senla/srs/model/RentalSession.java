@@ -8,7 +8,7 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(of = {"id"}, callSuper = false)
+@EqualsAndHashCode(of = {"user", "scooter", "begin"}, callSuper = false)
 @Entity
 @Table(name = "rental_sessions")
 public class RentalSession extends AbstractEntity{

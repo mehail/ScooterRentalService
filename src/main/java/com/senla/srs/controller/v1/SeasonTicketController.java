@@ -90,6 +90,7 @@ public class SeasonTicketController {
         }
     }
 
+    //ToDo Расписать права доступа!!!!!!!!!!!!
     @PostMapping
     @PreAuthorize("hasAuthority('seasonTickets:read')")
     public ResponseEntity<?> create(@RequestBody SeasonTicketRequestDTO seasonTicketRequestDTO) {

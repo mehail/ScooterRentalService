@@ -1,11 +1,14 @@
 package com.senla.srs.service.impl;
 
 import com.senla.srs.model.RentalSession;
+import com.senla.srs.model.Scooter;
+import com.senla.srs.model.User;
 import com.senla.srs.repository.RentalSessionRepository;
 import com.senla.srs.service.RentalSessionService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,9 +38,16 @@ public class RentalSessionServiceImpl implements RentalSessionService {
     }
 
     @Override
-    public Optional<RentalSession> retrieveRentalSessionByUserAndScooterAndBegin(RentalSession rentalSession) {
-        return rentalSessionRepository.findAllByUserAndScooterAndBegin(rentalSession.getUser(),
-                rentalSession.getScooter(), rentalSession.getBegin());
+    public Optional<RentalSession> retrieveRentalSessionByUserAndScooterAndBegin(User user, Scooter scooter, LocalDate begin) {
+        return rentalSessionRepository.findRentalSessionByUserAndScooterAndBegin(user, scooter, begin);
+    }
+
+    @Override
+    public Optional<RentalSession> retrieveRentalSessionByUserIdAndScooterSerialNumberAndBegin(Long userId,
+                                                                                               String scooterSerialNumber,
+                                                                                               LocalDate begin) {
+        return rentalSessionRepository.findRentalSessionByUser_IdAndScooter_SerialNumberAndBegin(userId,
+                scooterSerialNumber, begin);
     }
 
     @Override
