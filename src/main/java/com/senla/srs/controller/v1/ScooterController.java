@@ -26,12 +26,10 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/v1/scooters")
 public class ScooterController {
-    private ScooterService scooterService;
-    private ScooterTypeService scooterTypeService;
-    private ScooterRequestMapper scooterRequestMapper;
-    private ScooterResponseMapper scooterResponseMapper;
-
-    //ToDo пересмотреть Request и Response cущности
+    private final ScooterService scooterService;
+    private final ScooterTypeService scooterTypeService;
+    private final ScooterRequestMapper scooterRequestMapper;
+    private final ScooterResponseMapper scooterResponseMapper;
 
     private static final String SCOOTER_NOT_FOUND = "A scooter with this serial number was not found";
 
@@ -39,7 +37,7 @@ public class ScooterController {
     @PreAuthorize("hasAuthority('scooters:read')")
     public List<ScooterResponseDTO> getAll() {
         return scooterService.retrieveAllScooters().stream()
-                .map(scooter -> scooterResponseMapper.toDto(scooter))
+                .map(scooterResponseMapper::toDto)
                 .collect(Collectors.toList());
     }
 

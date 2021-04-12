@@ -26,10 +26,10 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/v1/scooter_types")
 public class ScooterTypeController {
-    private ScooterTypeService scooterTypeService;
-    private MakerDtoService makerDtoService;
-    private ScooterTypeRequestMapper scooterTypeRequestMapper;
-    private ScooterTypeResponseMapper scooterTypeResponseMapper;
+    private final ScooterTypeService scooterTypeService;
+    private final MakerDtoService makerDtoService;
+    private final ScooterTypeRequestMapper scooterTypeRequestMapper;
+    private final ScooterTypeResponseMapper scooterTypeResponseMapper;
 
     private static final String TYPE_NOT_FOUND = "Scooter type with this id not found";
 
@@ -37,7 +37,7 @@ public class ScooterTypeController {
     @PreAuthorize("hasAuthority('scooterTypes:read')")
     public List<ScooterTypeResponseDTO> getAll() {
         return scooterTypeService.retrieveAllScooterTypes().stream()
-                .map(scooterType -> scooterTypeResponseMapper.toDto(scooterType))
+                .map(scooterTypeResponseMapper::toDto)
                 .collect(Collectors.toList());
     }
 

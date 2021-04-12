@@ -6,6 +6,7 @@ import com.senla.srs.service.RentalSessionService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,9 +36,11 @@ public class RentalSessionServiceImpl implements RentalSessionService {
     }
 
     @Override
-    public Optional<RentalSession> retrieveRentalSessionByUserAndScooterAndBegin(RentalSession rentalSession) {
-        return rentalSessionRepository.findAllByUserAndScooterAndBegin(rentalSession.getUser(),
-                rentalSession.getScooter(), rentalSession.getBegin());
+    public Optional<RentalSession> retrieveRentalSessionByUserIdAndScooterSerialNumberAndBegin(Long userId,
+                                                                                               String scooterSerialNumber,
+                                                                                               LocalDateTime begin) {
+
+        return  rentalSessionRepository.findByUserIdAndScooterSerialNumberAndBegin(userId, scooterSerialNumber, begin);
     }
 
     @Override

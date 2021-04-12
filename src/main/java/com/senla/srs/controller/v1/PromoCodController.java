@@ -27,9 +27,9 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/v1/promo_codes")
 public class PromoCodController {
-    private UserService userService;
-    private PromoCodService promoCodService;
-    private PromoCodMapper promoCodMapper;
+    private final UserService userService;
+    private final PromoCodService promoCodService;
+    private final PromoCodMapper promoCodMapper;
 
     private static final String NO_PROMO_COD_WITH_NAME = "No promo code with this name found";
 
@@ -39,7 +39,7 @@ public class PromoCodController {
         return userService.isAdmin(userSecurity)
 
                 ? promoCodService.retrieveAllPromoCods().stream()
-                .map(promoCod -> promoCodMapper.toDto(promoCod))
+                .map(promoCodMapper::toDto)
                 .collect(Collectors.toList())
 
                 : new ArrayList<>();

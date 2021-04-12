@@ -29,8 +29,8 @@ import java.util.Map;
 @RequestMapping("/api/v1/auth")
 public class AuthenticationController {
     private final AuthenticationManager authenticationManager;
-    private UserRepository userRepository;
-    private JwtTokenProvider jwtTokenProvider;
+    private final UserRepository userRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticate(@RequestBody AuthenticationRequestDTO request) {
