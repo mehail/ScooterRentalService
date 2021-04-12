@@ -30,11 +30,11 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/v1/season_tickets")
 public class SeasonTicketController {
-    private SeasonTicketService seasonTicketService;
-    private ScooterTypeService scooterTypeService;
-    private UserService userService;
-    private SeasonTicketRequestMapper seasonTicketRequestMapper;
-    private SeasonTicketFullResponseMapper seasonTicketFullResponseMapper;
+    private final SeasonTicketService seasonTicketService;
+    private final ScooterTypeService scooterTypeService;
+    private final UserService userService;
+    private final SeasonTicketRequestMapper seasonTicketRequestMapper;
+    private final SeasonTicketFullResponseMapper seasonTicketFullResponseMapper;
 
     private int duration;
     private static final String NO_SEASON_TICKET_WITH_ID = "A season ticket with this id was not found";
@@ -70,7 +70,7 @@ public class SeasonTicketController {
 
     private List<SeasonTicketFullResponseDTO> mapListToDtoList(List<SeasonTicket> seasonTickets) {
         return seasonTickets.stream()
-                .map(seasonTicket -> seasonTicketFullResponseMapper.toDto(seasonTicket))
+                .map(seasonTicketFullResponseMapper::toDto)
                 .collect(Collectors.toList());
     }
 

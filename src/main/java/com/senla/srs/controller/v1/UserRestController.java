@@ -28,9 +28,9 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/v1/users")
 public class UserRestController {
-    private UserService userService;
-    private UserFullResponseMapper userFullResponseMapper;
-    private UserRequestMapper userRequestMapper;
+    private final UserService userService;
+    private final UserFullResponseMapper userFullResponseMapper;
+    private final UserRequestMapper userRequestMapper;
 
     private static final String USER_NOT_FOUND = "A user with this id not found";
     private static final String RE_AUTH = "To change this user reAuthorize";
@@ -41,7 +41,7 @@ public class UserRestController {
     @PreAuthorize("hasAuthority('users:readAll')")
     public List<UserFullResponseDTO> getAll() {
         return userService.retrieveAllUsers().stream()
-                .map(user -> userFullResponseMapper.toDto(user))
+                .map(userFullResponseMapper::toDto)
                 .collect(Collectors.toList());
     }
 

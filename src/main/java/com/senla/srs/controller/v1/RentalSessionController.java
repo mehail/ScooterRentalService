@@ -80,15 +80,8 @@ public class RentalSessionController {
     @PreAuthorize("hasAuthority('rentalSessions:read')")
     public ResponseEntity<?> createOrUpdate(@AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity,
                                             @RequestBody RentalSessionRequestDTO rentalSessionRequestDTO) {
-
-
-
         return null;
     }
-
-
-
-
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('rentalSessions:write')")
