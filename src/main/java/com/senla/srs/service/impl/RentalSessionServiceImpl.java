@@ -40,11 +40,7 @@ public class RentalSessionServiceImpl implements RentalSessionService {
                                                                                                String scooterSerialNumber,
                                                                                                LocalDateTime begin) {
 
-
-
-
-        return rentalSessionRepository.findByUserIdAndScooterSerialNumber(userId,
-                scooterSerialNumber);
+        return  rentalSessionRepository.findByUserIdAndScooterSerialNumberAndBegin(userId, scooterSerialNumber, begin);
     }
 
     @Override

@@ -37,33 +37,9 @@ public class RentalSessionController {
     @GetMapping
     @PreAuthorize("hasAuthority('rentalSessions:read')")
     public List<RentalSessionResponseDTO> getAll(@AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
-        testing();
-
         return userService.isAdmin(userSecurity)
                 ? mapListToDtoList(rentalSessionService.retrieveAllRentalSessions())
                 : mapListToDtoList(rentalSessionService.retrieveAllRentalSessionsByUserId(userService.getAuthUserId(userSecurity)));
-    }
-
-    private void testing() {
-        Optional<RentalSession> rentalSession = rentalSessionService.retrieveRentalSessionById(1L);
-        RentalSession rentalSession1 = rentalSession.get();
-
-        soutt("1 "+rentalSession1.getBegin().toString() + " " + rentalSession1.getBegin().getClass());
-//ToDo ошибка в парсинге LocalDate!!!
-
-
-//
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
-//        LocalDateTime localDate = LocalDateTime.parse("2021-04-01 12:10:00",formatter);
-//        soutt("2 " + localDate.toString() + " " + localDate.getClass());
-//
-//        soutt("1"+rentalSession1.toString());
-//        soutt("2" + rentalSessionService.retrieveRentalSessionByUserIdAndScooterSerialNumberAndBegin(rentalSession1.getUser().getId(),
-//                rentalSession1.getScooter().getSerialNumber(), rentalSession1.getBegin()));
-    }
-
-    private void soutt(String s){
-        System.out.println("\n\n\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\n\n"+s+"\n\n\n");
     }
 
     private List<RentalSessionResponseDTO> mapListToDtoList(List<RentalSession> rentalSessions) {
