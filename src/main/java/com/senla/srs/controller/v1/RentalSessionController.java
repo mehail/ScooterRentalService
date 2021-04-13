@@ -4,7 +4,10 @@ import com.senla.srs.dto.rentalsession.RentalSessionRequestDTO;
 import com.senla.srs.dto.rentalsession.RentalSessionResponseDTO;
 import com.senla.srs.mapper.RentalSessionRequestMapper;
 import com.senla.srs.mapper.RentalSessionResponseMapper;
+import com.senla.srs.model.PromoCod;
 import com.senla.srs.model.RentalSession;
+import com.senla.srs.model.SeasonTicket;
+import com.senla.srs.model.User;
 import com.senla.srs.service.RentalSessionService;
 import com.senla.srs.service.RentalSessionValidationService;
 import com.senla.srs.service.ScooterService;
@@ -82,6 +85,27 @@ public class RentalSessionController {
                                             @RequestBody RentalSessionRequestDTO rentalSessionRequestDTO) {
         return null;
     }
+
+    private void calculate(User user, SeasonTicket seasonTicket, PromoCod promoCod) {
+
+
+
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('rentalSessions:write')")
