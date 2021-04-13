@@ -4,10 +4,7 @@ import com.senla.srs.dto.rentalsession.RentalSessionRequestDTO;
 import com.senla.srs.dto.rentalsession.RentalSessionResponseDTO;
 import com.senla.srs.mapper.RentalSessionRequestMapper;
 import com.senla.srs.mapper.RentalSessionResponseMapper;
-import com.senla.srs.model.PromoCod;
-import com.senla.srs.model.RentalSession;
-import com.senla.srs.model.SeasonTicket;
-import com.senla.srs.model.User;
+import com.senla.srs.model.*;
 import com.senla.srs.service.RentalSessionService;
 import com.senla.srs.service.RentalSessionValidationService;
 import com.senla.srs.service.ScooterService;
@@ -22,6 +19,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -83,23 +82,72 @@ public class RentalSessionController {
     @PreAuthorize("hasAuthority('rentalSessions:read')")
     public ResponseEntity<?> createOrUpdate(@AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity,
                                             @RequestBody RentalSessionRequestDTO rentalSessionRequestDTO) {
+
+
+
+
         return null;
     }
 
-    private void calculate(User user, SeasonTicket seasonTicket, PromoCod promoCod) {
+    private int calculateRate(RentalSession rentalSession) {
+        LocalDateTime begin = rentalSession.getBegin();
+        LocalDateTime end = rentalSession.getEnd();
+        int usageTime = (int) (Duration.between(begin, end).getSeconds() / 60);
 
+        int pricePerMinute = rentalSession.getScooter().getType().getPricePerMinute();
 
+        int billableTime = calculateBillableTime(rentalSession.getSeasonTicket(), usageTime);
+
+        int priceWithoutPromoCod = billableTime * pricePerMinute;
+
+        return applyPromoCod(priceWithoutPromoCod, rentalSession.getPromoCod(), rentalSession.getUser());
+    }
+
+    private int calculateBillableTime(SeasonTicket seasonTicket, int usageTime) {
+        if (seasonTicket != null) {
+
+            if (seasonTicket.getRemainingTime() >= usageTime) {
+                seasonTicket.setRemainingTime(seasonTicket.getRemainingTime() - usageTime);
+                usageTime = 0;
+            } else {
+                usageTime -= seasonTicket.getRemainingTime();
+                seasonTicket.setRemainingTime(0);
+            }
+
+            if (seasonTicket.getRemainingTime() == 0) {
+                seasonTicket.setAvailableForUse(false);
+            }
+
+        }
+
+        return usageTime;
+    }
+
+    private int applyPromoCod(int rate, PromoCod promoCod, User user) {
+        int discountPercentage = 0;
+
+        if (promoCod != null) {
+            if (promoCod.getBonusPoint() > 0) {
+                user.setBalance(user.getBalance() + promoCod.getBonusPoint());
+            }
+
+            if (promoCod.getDiscountPercentage() > 0) {
+                discountPercentage = promoCod.getDiscountPercentage();
+            }
+
+            promoCod.setAvailable(false);
+        }
+
+        return rate * (1 + discountPercentage / 100);
+    }
+
+    private void applyEntityState(PointOfRental pointOfRental) {
 
 
 
 
 
     }
-
-
-
-
-
 
 
 
