@@ -19,7 +19,6 @@ public class SeasonTicketRequestMapper extends AbstractMapper<SeasonTicket, Seas
 
         SeasonTicket seasonTicket = toEntity(seasonTicketRequestDTO);
 
-        //ToDo refactor
         seasonTicket.setScooterType(scooterTypeService.retrieveScooterTypeById(seasonTicketRequestDTO.getScooterTypeId()).get());
         seasonTicket.setPrice(price);
         seasonTicket.setAvailableForUse(true);

@@ -14,7 +14,6 @@ public class ScooterTypeRequestMapper extends AbstractMapper<ScooterType, Scoote
         this.makerDtoService = makerDtoService;
     }
 
-    //ToDo refactor
     @Override
     public ScooterType toEntity(ScooterTypeRequestDTO dto) {
         ScooterType scooterType = super.toEntity(dto);

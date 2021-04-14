@@ -23,7 +23,6 @@ public enum Permission {
     USERS_READ_ALL("users:readAll"),
     USERS_WRITE("users:write");
 
-
     private final String permission;
 
     Permission(String permission) {

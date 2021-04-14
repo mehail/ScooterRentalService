@@ -19,7 +19,7 @@ public class RentalSessionValidationServiceImpl implements RentalSessionValidati
     private final PromoCodService promoCodService;
 
     @Override
-    public boolean isValidRentalSession(RentalSessionRequestDTO rentalSessionRequestDTO) {
+    public boolean isValid(RentalSessionRequestDTO rentalSessionRequestDTO) {
         Optional<User> optionalUser = userService.retrieveUserById(rentalSessionRequestDTO.getUserId());
         Optional<Scooter> optionalScooter =
                 scooterService.retrieveScooterBySerialNumber(rentalSessionRequestDTO.getScooterSerialNumber());

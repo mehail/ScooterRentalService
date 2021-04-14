@@ -82,11 +82,61 @@ public class RentalSessionController {
     @PreAuthorize("hasAuthority('rentalSessions:read')")
     public ResponseEntity<?> createOrUpdate(@AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity,
                                             @RequestBody RentalSessionRequestDTO rentalSessionRequestDTO) {
+        if (rentalSessionValidationService.isValid(rentalSessionRequestDTO)) {
+            Optional<RentalSession> optionalRentalSession =
+                    rentalSessionService.retrieveRentalSessionByUserIdAndScooterSerialNumberAndBegin(rentalSessionRequestDTO.getUserId(),
+                            rentalSessionRequestDTO.getScooterSerialNumber(),
+                            rentalSessionRequestDTO.getBegin());
+            if (optionalRentalSession.isEmpty()) {
+                return create(rentalSessionRequestDTO);
+            } else if (optionalRentalSession.get().getEnd() != null &&
+                    (userService.isAdmin(userSecurity) ||
+                            userService.isThisUser(userSecurity, rentalSessionRequestDTO.getUserId()))) {
+                return create(rentalSessionRequestDTO);
+            } else {
+                return new ResponseEntity<>("Completed rental session is not available for editing", HttpStatus.FORBIDDEN);
+            }
+        } else {
+            return new ResponseEntity<>("Rental session is not valid", HttpStatus.FORBIDDEN);
+        }
+    }
 
+    private ResponseEntity<?> create(RentalSessionRequestDTO rentalSessionRequestDTO) {
+        RentalSession rentalSession = rentalSessionRequestMapper.toEntity(rentalSessionRequestDTO);
+        changeEntityState(rentalSession);
+        rentalSessionService.save(rentalSession);
 
+        Optional<RentalSession> optionalRentalSession =
+                rentalSessionService.retrieveRentalSessionByUserIdAndScooterSerialNumberAndBegin(rentalSessionRequestDTO.getUserId(),
+                        rentalSessionRequestDTO.getScooterSerialNumber(),
+                        rentalSessionRequestDTO.getBegin());
 
+        return optionalRentalSession.isPresent()
+                ? ResponseEntity.ok(rentalSessionResponseMapper.toDto(optionalRentalSession.get()))
+                : new ResponseEntity<>("The rental session is not created", HttpStatus.FORBIDDEN);
+    }
 
-        return null;
+    private void changeEntityState(RentalSession rentalSession) {
+        Scooter scooter = rentalSession.getScooter();
+        SeasonTicket seasonTicket = rentalSession.getSeasonTicket();
+        User user = rentalSession.getUser();
+
+        if (rentalSession.getEnd() == null) {
+            scooter.setStatus(ScooterStatus.USED);
+
+            if (seasonTicket != null) {
+                seasonTicket.setAvailableForUse(false);
+            }
+
+        } else {
+            user.setBalance(user.getBalance() - calculateRate(rentalSession));
+            rentalSession.getScooter().setStatus(ScooterStatus.AVAILABLE);
+
+            if (seasonTicket != null && seasonTicket.getRemainingTime() > 0) {
+                seasonTicket.setAvailableForUse(true);
+            }
+
+        }
     }
 
     private int calculateRate(RentalSession rentalSession) {
@@ -127,6 +177,7 @@ public class RentalSessionController {
         int discountPercentage = 0;
 
         if (promoCod != null) {
+
             if (promoCod.getBonusPoint() > 0) {
                 user.setBalance(user.getBalance() + promoCod.getBonusPoint());
             }
@@ -138,22 +189,8 @@ public class RentalSessionController {
             promoCod.setAvailable(false);
         }
 
-        return rate * (1 + discountPercentage / 100);
+        return rate * (1 - discountPercentage / 100);
     }
-
-    private void applyEntityState(PointOfRental pointOfRental) {
-
-
-
-
-
-    }
-
-
-
-
-
-
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('rentalSessions:write')")
