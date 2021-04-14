@@ -35,12 +35,9 @@ public class RentalSessionValidationServiceImpl implements RentalSessionValidati
         Optional<PromoCod> optionalPromoCod = promoCodService.retrievePromoCodByName(rentalSessionRequestDTO.getPromoCodName());
 
         return optionalPromoCod.isEmpty() ||
-
                 (optionalPromoCod.get().getAvailable() &&
-                        !optionalPromoCod.get().getStartDate().
-                                isAfter(ChronoLocalDate.from(rentalSessionRequestDTO.getBegin())) &&
-                        optionalPromoCod.get().getExpiredDate().
-                                isAfter(ChronoLocalDate.from(rentalSessionRequestDTO.getBegin())));
+                        !optionalPromoCod.get().getStartDate().isAfter(ChronoLocalDate.from(rentalSessionRequestDTO.getBegin())) &&
+                        optionalPromoCod.get().getExpiredDate().isAfter(ChronoLocalDate.from(rentalSessionRequestDTO.getBegin())));
     }
 
     private boolean isValidSeasonTicket(RentalSessionRequestDTO rentalSessionRequestDTO,
