@@ -14,7 +14,7 @@ public class SeasonTicketResponseDTO extends SeasonTicketDTO {
     @NonNull
     private Long id;
     @NonNull
-    private Integer price;
+    private Integer remainingTime;
     @NonNull
     private LocalDate expiredDate;
     @NonNull

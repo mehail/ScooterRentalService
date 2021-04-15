@@ -12,6 +12,7 @@ import com.senla.srs.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -203,13 +204,19 @@ public class RentalSessionController {
 
         if (optionalRentalSession.isPresent()) {
             if (optionalRentalSession.get().getEnd() == null) {
-                rentalSessionService.deleteById(id);
-                return new ResponseEntity<>("Rental session with this id was deleted", HttpStatus.ACCEPTED);
+                try {
+                    rentalSessionService.deleteById(id);
+                    return new ResponseEntity<>("Rental session with this id was deleted", HttpStatus.ACCEPTED);
+                } catch (EmptyResultDataAccessException e) {
+                    log.error(e.getMessage(), NO_RENTAL_SESSION_WITH_ID);
+                    return new ResponseEntity<>(NO_RENTAL_SESSION_WITH_ID, HttpStatus.FORBIDDEN);
+                }
             } else {
                 return new ResponseEntity<>("Rental session closed and cannot be deleted", HttpStatus.FORBIDDEN);
             }
         } else {
-            return new ResponseEntity<>(NO_RENTAL_SESSION_WITH_ID, HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("Rental session with this id not available for deletion",
+                    HttpStatus.FORBIDDEN);
         }
     }
 }
