@@ -19,6 +19,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -78,8 +79,39 @@ public class RentalSessionController {
                 userService.isThisUser(userSecurity, optionalRentalSession.get().getUser().getId());
     }
 
+
     @PostMapping
     @PreAuthorize("hasAuthority('rentalSessions:read')")
+    public ResponseEntity<?> test(@RequestBody RentalSessionRequestDTO rentalSessionRequestDTO) {
+        Optional<RentalSession> optionalRentalSession = rentalSessionService.retrieveRentalSessionById(1L);
+        RentalSession existRS = optionalRentalSession.get();
+        User user = existRS.getUser();
+        Scooter scooter =existRS.getScooter();
+        LocalDateTime begin = LocalDateTime.of( 2017 , 12 , 25 , 0 , 0 , 0 , 0 );
+        LocalDateTime end = LocalDateTime.of( 2017 , 12 , 25 , 0 , 1 , 0 , 0 );
+
+
+        SeasonTicket seasonTicket = existRS.getSeasonTicket();
+        PromoCod promoCod = existRS.getPromoCod();
+
+        RentalSession rentalSession = new RentalSession(
+                null,
+                user,
+                scooter,
+                0,
+                begin,
+                end,
+                seasonTicket,
+                promoCod
+        );
+        rentalSessionService.save(rentalSession);
+
+
+        return new ResponseEntity<>("Косяк", HttpStatus.FORBIDDEN);
+    }
+
+//    @PostMapping
+//    @PreAuthorize("hasAuthority('rentalSessions:read')")
     public ResponseEntity<?> createOrUpdate(@AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity,
                                             @RequestBody RentalSessionRequestDTO rentalSessionRequestDTO) {
         if (rentalSessionValidationService.isValid(rentalSessionRequestDTO)) {
