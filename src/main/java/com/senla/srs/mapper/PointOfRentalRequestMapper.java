@@ -17,7 +17,7 @@ public class PointOfRentalRequestMapper extends AbstractMapper<PointOfRental, Po
     @Override
     public PointOfRental toEntity(PointOfRentalRequestDTO dto) {
         PointOfRental pointOfRental = super.toEntity(dto);
-        pointOfRental.setAddress(addressDtoService.retrieveAddressDtoById(dto.getAddressId()).get());
+        addressDtoService.retrieveAddressDtoById(dto.getAddressId()).ifPresent(pointOfRental::setAddress);
         return pointOfRental;
     }
 }

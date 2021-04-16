@@ -14,16 +14,16 @@ public class SeasonTicketRequestMapper extends AbstractMapper<SeasonTicket, Seas
         this.scooterTypeService = scooterTypeService;
     }
 
-    public SeasonTicket toConsistencySeasonTicket(SeasonTicketRequestDTO seasonTicketRequestDTO, int price,
+    public SeasonTicket toConsistencySeasonTicket(SeasonTicketRequestDTO seasonTicketRequestDTO, int remainingTime,
                                                   int duration) {
 
         SeasonTicket seasonTicket = toEntity(seasonTicketRequestDTO);
 
-        //ToDo refactor
-        seasonTicket.setScooterType(scooterTypeService.retrieveScooterTypeById(seasonTicketRequestDTO.getScooterTypeId()).get());
-        seasonTicket.setPrice(price);
-        seasonTicket.setAvailableForUse(true);
+        scooterTypeService.retrieveScooterTypeById(seasonTicketRequestDTO.getScooterTypeId()).
+                ifPresent(seasonTicket::setScooterType);
+        seasonTicket.setRemainingTime(remainingTime);
         seasonTicket.setExpiredDate(seasonTicket.getStartDate().plusDays(duration));
+        seasonTicket.setAvailableForUse(true);
 
         return seasonTicket;
     }

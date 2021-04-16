@@ -19,7 +19,7 @@ public class RentalSessionValidationServiceImpl implements RentalSessionValidati
     private final PromoCodService promoCodService;
 
     @Override
-    public boolean isValidRentalSession(RentalSessionRequestDTO rentalSessionRequestDTO) {
+    public boolean isValid(RentalSessionRequestDTO rentalSessionRequestDTO) {
         Optional<User> optionalUser = userService.retrieveUserById(rentalSessionRequestDTO.getUserId());
         Optional<Scooter> optionalScooter =
                 scooterService.retrieveScooterBySerialNumber(rentalSessionRequestDTO.getScooterSerialNumber());
@@ -35,12 +35,9 @@ public class RentalSessionValidationServiceImpl implements RentalSessionValidati
         Optional<PromoCod> optionalPromoCod = promoCodService.retrievePromoCodByName(rentalSessionRequestDTO.getPromoCodName());
 
         return optionalPromoCod.isEmpty() ||
-
                 (optionalPromoCod.get().getAvailable() &&
-                        !optionalPromoCod.get().getStartDate().
-                                isAfter(ChronoLocalDate.from(rentalSessionRequestDTO.getBegin())) &&
-                        optionalPromoCod.get().getExpiredDate().
-                                isAfter(ChronoLocalDate.from(rentalSessionRequestDTO.getBegin())));
+                        !optionalPromoCod.get().getStartDate().isAfter(ChronoLocalDate.from(rentalSessionRequestDTO.getBegin())) &&
+                        optionalPromoCod.get().getExpiredDate().isAfter(ChronoLocalDate.from(rentalSessionRequestDTO.getBegin())));
     }
 
     private boolean isValidSeasonTicket(RentalSessionRequestDTO rentalSessionRequestDTO,

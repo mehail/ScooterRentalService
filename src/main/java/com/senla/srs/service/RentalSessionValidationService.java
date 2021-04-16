@@ -5,5 +5,5 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface RentalSessionValidationService {
-    boolean isValidRentalSession(RentalSessionRequestDTO rentalSessionRequestDTO);
+    boolean isValid(RentalSessionRequestDTO rentalSessionRequestDTO);
 }

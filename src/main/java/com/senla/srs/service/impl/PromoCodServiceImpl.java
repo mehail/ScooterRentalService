@@ -26,7 +26,7 @@ public class PromoCodServiceImpl implements PromoCodService {
 
     @Override
     public Optional<PromoCod> retrievePromoCodByName(String name) {
-        return promoCodRepository.findById(name);
+        return promoCodRepository.findByName(name);
     }
 
     @Override

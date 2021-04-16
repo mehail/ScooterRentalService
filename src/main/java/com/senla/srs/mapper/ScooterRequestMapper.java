@@ -17,7 +17,7 @@ public class ScooterRequestMapper extends AbstractMapper<Scooter, ScooterRequest
     @Override
     public Scooter toEntity(ScooterRequestDTO dto) {
         Scooter scooter = super.toEntity(dto);
-        scooter.setType(scooterTypeService.retrieveScooterTypeById(dto.getPointOfRentalId()).get());
+        scooterTypeService.retrieveScooterTypeById(dto.getPointOfRentalId()).ifPresent(scooter::setType);
         return scooter;
     }
 }
