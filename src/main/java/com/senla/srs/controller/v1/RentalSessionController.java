@@ -54,21 +54,6 @@ public class RentalSessionController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/test")
-    @PreAuthorize("hasAuthority('rentalSessions:read')")
-    public void test() {
-        RentalSession exist = rentalSessionService.retrieveRentalSessionById(1L).get();
-        System.out.println("\n\n\n\n1 Существующая = " + exist);
-        LocalDateTime begin = LocalDateTime.of(2021, 1,1,10,1,0);
-        LocalDateTime end = LocalDateTime.of(2021, 1,1,10,2,0);
-        RentalSession rentalSession = new RentalSession(null, exist.getUser(), exist.getScooter(), 100, begin, end, null, null);
-        System.out.println("\n\n\n\n2 Сохраняемая = " + rentalSession);
-        rentalSessionService.save(rentalSession);
-        System.out.println("\n\n\n\n3 Сохраненная = " + rentalSessionService.retrieveRentalSessionByUserIdAndScooterSerialNumberAndBegin(
-                exist.getUser().getId(), exist.getScooter().getSerialNumber(), begin
-        ));
-    }
-
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('rentalSessions:read')")
     public ResponseEntity<?> getById(@AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity,
@@ -103,18 +88,22 @@ public class RentalSessionController {
                     rentalSessionService.retrieveRentalSessionByUserIdAndScooterSerialNumberAndBegin(rentalSessionRequestDTO.getUserId(),
                             rentalSessionRequestDTO.getScooterSerialNumber(),
                             rentalSessionRequestDTO.getBegin());
-            if (optionalRentalSession.isEmpty()) {
-                return create(rentalSessionRequestDTO);
-            } else if (optionalRentalSession.get().getEnd() != null &&
-                    (userService.isAdmin(userSecurity) ||
-                            userService.isThisUser(userSecurity, rentalSessionRequestDTO.getUserId()))) {
-                return create(rentalSessionRequestDTO);
-            } else {
-                return new ResponseEntity<>("Completed rental session is not available for editing", HttpStatus.FORBIDDEN);
-            }
+
+            return isAvailableForCreate(userSecurity, optionalRentalSession)
+                    ? create(rentalSessionRequestDTO)
+                    : new ResponseEntity<>("Completed rental session is not available for editing", HttpStatus.FORBIDDEN);
+
         } else {
             return new ResponseEntity<>("Rental session is not valid", HttpStatus.FORBIDDEN);
         }
+    }
+
+    private boolean isAvailableForCreate(org.springframework.security.core.userdetails.User userSecurity,
+                                         Optional<RentalSession> optionalRentalSession) {
+        return optionalRentalSession.isEmpty() ||
+                (optionalRentalSession.get().getEnd() != null &&
+                        (userService.isAdmin(userSecurity) ||
+                                userService.isThisUser(userSecurity, optionalRentalSession.get().getUser().getId())));
     }
 
     private ResponseEntity<?> create(RentalSessionRequestDTO rentalSessionRequestDTO) {
@@ -209,7 +198,7 @@ public class RentalSessionController {
             promoCod.setAvailable(false);
         }
 
-        return rate * (1 - discountPercentage / 100);
+        return (rate * (100 - discountPercentage)) / 100;
     }
 
     @DeleteMapping("/{id}")
