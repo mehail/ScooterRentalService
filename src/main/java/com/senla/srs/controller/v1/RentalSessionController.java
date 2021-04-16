@@ -88,22 +88,18 @@ public class RentalSessionController {
                     rentalSessionService.retrieveRentalSessionByUserIdAndScooterSerialNumberAndBegin(rentalSessionRequestDTO.getUserId(),
                             rentalSessionRequestDTO.getScooterSerialNumber(),
                             rentalSessionRequestDTO.getBegin());
-
-            return isAvailableForCreate(userSecurity, optionalRentalSession)
-                    ? create(rentalSessionRequestDTO)
-                    : new ResponseEntity<>("Completed rental session is not available for editing", HttpStatus.FORBIDDEN);
-
+            if (optionalRentalSession.isEmpty()) {
+                return create(rentalSessionRequestDTO);
+            } else if (optionalRentalSession.get().getEnd() != null &&
+                    (userService.isAdmin(userSecurity) ||
+                            userService.isThisUser(userSecurity, rentalSessionRequestDTO.getUserId()))) {
+                return create(rentalSessionRequestDTO);
+            } else {
+                return new ResponseEntity<>("Completed rental session is not available for editing", HttpStatus.FORBIDDEN);
+            }
         } else {
             return new ResponseEntity<>("Rental session is not valid", HttpStatus.FORBIDDEN);
         }
-    }
-
-    private boolean isAvailableForCreate(org.springframework.security.core.userdetails.User userSecurity,
-                                         Optional<RentalSession> optionalRentalSession) {
-        return optionalRentalSession.isEmpty() ||
-                (optionalRentalSession.get().getEnd() != null &&
-                        (userService.isAdmin(userSecurity) ||
-                                userService.isThisUser(userSecurity, optionalRentalSession.get().getUser().getId())));
     }
 
     private ResponseEntity<?> create(RentalSessionRequestDTO rentalSessionRequestDTO) {
@@ -198,7 +194,7 @@ public class RentalSessionController {
             promoCod.setAvailable(false);
         }
 
-        return (rate * (100 - discountPercentage)) / 100;
+        return rate * (1 - discountPercentage / 100);
     }
 
     @DeleteMapping("/{id}")
