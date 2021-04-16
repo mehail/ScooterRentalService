@@ -54,6 +54,21 @@ public class RentalSessionController {
                 .collect(Collectors.toList());
     }
 
+    @GetMapping("/test")
+    @PreAuthorize("hasAuthority('rentalSessions:read')")
+    public void test() {
+        RentalSession exist = rentalSessionService.retrieveRentalSessionById(1L).get();
+        System.out.println("\n\n\n\n1 Существующая = " + exist);
+        LocalDateTime begin = LocalDateTime.of(2021, 1,1,10,1,0);
+        LocalDateTime end = LocalDateTime.of(2021, 1,1,10,2,0);
+        RentalSession rentalSession = new RentalSession(null, exist.getUser(), exist.getScooter(), 100, begin, end, null, null);
+        System.out.println("\n\n\n\n2 Сохраняемая = " + rentalSession);
+        rentalSessionService.save(rentalSession);
+        System.out.println("\n\n\n\n3 Сохраненная = " + rentalSessionService.retrieveRentalSessionByUserIdAndScooterSerialNumberAndBegin(
+                exist.getUser().getId(), exist.getScooter().getSerialNumber(), begin
+        ));
+    }
+
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('rentalSessions:read')")
     public ResponseEntity<?> getById(@AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity,
