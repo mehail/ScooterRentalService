@@ -6,7 +6,7 @@ import com.senla.srs.mapper.RentalSessionRequestMapper;
 import com.senla.srs.mapper.RentalSessionResponseMapper;
 import com.senla.srs.model.*;
 import com.senla.srs.service.RentalSessionService;
-import com.senla.srs.service.RentalSessionValidationService;
+import com.senla.srs.service.RentalSessionValidator;
 import com.senla.srs.service.ScooterService;
 import com.senla.srs.service.UserService;
 import lombok.AllArgsConstructor;
@@ -31,7 +31,7 @@ import java.util.Optional;
 @RequestMapping("/api/v1/rental_sessions")
 public class RentalSessionController {
     private final RentalSessionService rentalSessionService;
-    private final RentalSessionValidationService rentalSessionValidationService;
+    private final RentalSessionValidator rentalSessionValidator;
     private final ScooterService scooterService;
     private final UserService userService;
     private final RentalSessionRequestMapper rentalSessionRequestMapper;
@@ -77,7 +77,7 @@ public class RentalSessionController {
     @PreAuthorize("hasAuthority('rentalSessions:read')")
     public ResponseEntity<?> createOrUpdate(@AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity,
                                             @RequestBody RentalSessionRequestDTO rentalSessionRequestDTO) {
-        if (rentalSessionValidationService.isValid(rentalSessionRequestDTO)) {
+        if (rentalSessionValidator.isValid(rentalSessionRequestDTO)) {
             Optional<RentalSession> optionalRentalSession =
                     rentalSessionService.retrieveRentalSessionByUserIdAndScooterSerialNumberAndBegin(rentalSessionRequestDTO.getUserId(),
                             rentalSessionRequestDTO.getScooterSerialNumber(),
