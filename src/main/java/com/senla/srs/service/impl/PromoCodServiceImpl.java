@@ -15,8 +15,8 @@ public class PromoCodServiceImpl implements PromoCodService {
     private final PromoCodRepository promoCodRepository;
 
     @Override
-    public void save(PromoCod promoCod) {
-        promoCodRepository.save(promoCod);
+    public PromoCod save(PromoCod promoCod) {
+        return promoCodRepository.save(promoCod);
     }
 
     @Override

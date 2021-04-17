@@ -8,7 +8,7 @@ import java.util.Optional;
 
 @Service
 public interface PromoCodService {
-    void save(PromoCod promoCod);
+    PromoCod save(PromoCod promoCod);
     List<PromoCod> retrieveAllPromoCods();
     Optional<PromoCod> retrievePromoCodByName(String name);
     void deleteById(String name);

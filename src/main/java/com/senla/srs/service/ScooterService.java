@@ -8,7 +8,7 @@ import java.util.Optional;
 
 @Service
 public interface ScooterService {
-    void save(Scooter scooter);
+    Scooter save(Scooter scooter);
     List<Scooter> retrieveAllScooters();
     Optional<Scooter> retrieveScooterBySerialNumber(String serialNumber);
     void deleteById(String serialNumber);

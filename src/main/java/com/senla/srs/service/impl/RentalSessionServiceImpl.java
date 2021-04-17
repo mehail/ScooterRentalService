@@ -16,8 +16,8 @@ public class RentalSessionServiceImpl implements RentalSessionService {
     private final RentalSessionRepository rentalSessionRepository;
 
     @Override
-    public void save(RentalSession rentalSession) {
-        rentalSessionRepository.save(rentalSession);
+    public RentalSession save(RentalSession rentalSession) {
+        return rentalSessionRepository.save(rentalSession);
     }
 
     @Override

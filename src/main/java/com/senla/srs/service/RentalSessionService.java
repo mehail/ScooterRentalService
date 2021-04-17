@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Service
 public interface RentalSessionService {
-    void save(RentalSession rentalSession);
+    RentalSession save(RentalSession rentalSession);
     List<RentalSession> retrieveAllRentalSessions();
     List<RentalSession> retrieveAllRentalSessionsByUserId(Long id);
     Optional<RentalSession> retrieveRentalSessionById(Long id);

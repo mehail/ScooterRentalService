@@ -15,8 +15,8 @@ public class PointOfRentalServiceImpl implements PointOfRentalService {
     private final PointOfRentalRepository pointOfRentalRepository;
 
     @Override
-    public void save(PointOfRental pointOfRental) {
-        pointOfRentalRepository.save(pointOfRental);
+    public PointOfRental save(PointOfRental pointOfRental) {
+        return pointOfRentalRepository.save(pointOfRental);
     }
 
     @Override

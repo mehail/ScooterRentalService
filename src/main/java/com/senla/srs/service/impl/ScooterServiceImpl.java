@@ -15,8 +15,8 @@ public class ScooterServiceImpl implements ScooterService {
     private final ScooterRepository scooterRepository;
 
     @Override
-    public void save(Scooter scooter) {
-        scooterRepository.save(scooter);
+    public Scooter save(Scooter scooter) {
+        return scooterRepository.save(scooter);
     }
 
     @Override
