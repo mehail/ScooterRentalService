@@ -1,9 +1,9 @@
 package com.senla.srs.controller.v1;
 
-import com.senla.srs.dto.user.UserRequestDTO;
 import com.senla.srs.dto.user.UserFullResponseDTO;
-import com.senla.srs.mapper.UserRequestMapper;
+import com.senla.srs.dto.user.UserRequestDTO;
 import com.senla.srs.mapper.UserFullResponseMapper;
+import com.senla.srs.mapper.UserRequestMapper;
 import com.senla.srs.model.User;
 import com.senla.srs.model.UserStatus;
 import com.senla.srs.model.security.Role;
@@ -72,7 +72,7 @@ public class UserRestController {
 
         if (userSecurity != null) {
             if (isAdmin(userSecurity)) {
-                return create(userRequestDTO);
+                return save(userRequestDTO);
             } else {
                 if (optionalExistUser.isEmpty()) {
                     return constrainCreate(userRequestDTO);
@@ -101,7 +101,7 @@ public class UserRestController {
 
     private ResponseEntity<?> constrainCreate(UserRequestDTO userRequestDTO) {
         return isValidDtoToConstrainCreate(userRequestDTO)
-                ? create(userRequestDTO)
+                ? save(userRequestDTO)
                 : new ResponseEntity<>(CHANGE_DEFAULT_FIELD, HttpStatus.FORBIDDEN);
     }
 
@@ -113,7 +113,7 @@ public class UserRestController {
 
     private ResponseEntity<?> update(UserRequestDTO userRequestDTO, User existUser) {
         return isValidDtoToUpdate(userRequestDTO, existUser)
-                ? create(userRequestDTO)
+                ? save(userRequestDTO)
                 : new ResponseEntity<>(CHANGE_DEFAULT_FIELD, HttpStatus.FORBIDDEN);
     }
 
@@ -123,14 +123,9 @@ public class UserRestController {
                 userRequestDTO.getBalance().equals(existUser.getBalance());
     }
 
-    private ResponseEntity<?> create(UserRequestDTO userRequestDTO) {
-        userService.save(userRequestMapper.toEntity(userRequestDTO));
-
-        Optional<User> optionalUser = userService.retrieveUserByEmail(userRequestDTO.getEmail());
-
-        return optionalUser.isPresent()
-                ? ResponseEntity.ok(userFullResponseMapper.toDto(optionalUser.get()))
-                : new ResponseEntity<>("The user is not created", HttpStatus.FORBIDDEN);
+    private ResponseEntity<?> save(UserRequestDTO userRequestDTO) {
+        User user = userService.save(userRequestMapper.toEntity(userRequestDTO));
+        return ResponseEntity.ok(userFullResponseMapper.toDto(user));
     }
 
     @DeleteMapping("/{id}")

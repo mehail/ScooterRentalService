@@ -15,8 +15,8 @@ public class ScooterTypeServiceImpl implements ScooterTypeService {
     private final ScooterTypeRepository scooterTypeRepository;
 
     @Override
-    public void save(ScooterType scooterType) {
-        scooterTypeRepository.save(scooterType);
+    public ScooterType save(ScooterType scooterType) {
+        return scooterTypeRepository.save(scooterType);
     }
 
     @Override

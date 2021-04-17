@@ -4,6 +4,6 @@ import com.senla.srs.dto.rentalsession.RentalSessionRequestDTO;
 import org.springframework.stereotype.Service;
 
 @Service
-public interface RentalSessionValidationService {
+public interface RentalSessionValidator {
     boolean isValid(RentalSessionRequestDTO rentalSessionRequestDTO);
 }

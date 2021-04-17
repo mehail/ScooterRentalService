@@ -8,7 +8,7 @@ import java.util.Optional;
 
 @Service
 public interface PointOfRentalService {
-    void save(PointOfRental pointOfRental);
+    PointOfRental save(PointOfRental pointOfRental);
     List<PointOfRental> retrieveAllPointOfRentals();
     Optional<PointOfRental> retrievePointOfRentalById(Long id);
     Optional<PointOfRental> retrievePointOfRentalByName(String name);

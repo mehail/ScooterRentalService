@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
-public class RentalSessionValidationServiceImpl implements RentalSessionValidationService {
+public class RentalSessionValidatorImpl implements RentalSessionValidator {
     private final UserService userService;
     private final ScooterService scooterService;
     private final SeasonTicketService seasonTicketService;

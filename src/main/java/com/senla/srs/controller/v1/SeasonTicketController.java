@@ -129,17 +129,20 @@ public class SeasonTicketController {
                                    Optional<User> optionalUser,
                                    Optional<ScooterType> optionalScooterType) {
 
-        int remainingTime = calculateRemainingTime(seasonTicketRequestDTO, optionalScooterType.get());
+        int remainingTime = 0;
+
+        if (optionalScooterType.isPresent()) {
+            remainingTime = calculateRemainingTime(seasonTicketRequestDTO, optionalScooterType.get());
+        }
+
         optionalUser.ifPresent(user -> user.setBalance(user.getBalance() - seasonTicketRequestDTO.getPrice()));
 
-        seasonTicketService.save(seasonTicketRequestMapper.toConsistencySeasonTicket(seasonTicketRequestDTO, remainingTime,
-                duration));
+        SeasonTicket seasonTicket =
+                seasonTicketService.save(seasonTicketRequestMapper.toConsistencySeasonTicket(seasonTicketRequestDTO,
+                        remainingTime,
+                        duration));
 
-        Optional<SeasonTicket> optionalCreatedSeasonTicket = getExistOptionalSeasonTicket(seasonTicketRequestDTO);
-
-        return optionalCreatedSeasonTicket.isPresent()
-                ? ResponseEntity.ok(seasonTicketFullResponseMapper.toDto(optionalCreatedSeasonTicket.get()))
-                : new ResponseEntity<>("The season ticket is not created", HttpStatus.FORBIDDEN);
+        return ResponseEntity.ok(seasonTicketFullResponseMapper.toDto(seasonTicket));
     }
 
     private Optional<SeasonTicket> getExistOptionalSeasonTicket(SeasonTicketRequestDTO seasonTicketRequestDTO) {
@@ -163,17 +166,17 @@ public class SeasonTicketController {
         Optional<SeasonTicket> optionalSeasonTicket = seasonTicketService.retrieveSeasonTicketsById(id);
 
         if (optionalSeasonTicket.isPresent()) {
-           if (optionalSeasonTicket.get().getAvailableForUse()) {
-               try {
-                   seasonTicketService.deleteById(id);
-                   return new ResponseEntity<>("Season ticket with this id was deleted", HttpStatus.ACCEPTED);
-               } catch (EmptyResultDataAccessException e) {
-                   log.error(e.getMessage(), NO_SEASON_TICKET_WITH_ID);
-                   return new ResponseEntity<>(NO_SEASON_TICKET_WITH_ID, HttpStatus.FORBIDDEN);
-               }
-           } else {
-               return new ResponseEntity<>("Season Ticket isn't available and cannot be deleted", HttpStatus.FORBIDDEN);
-           }
+            if (optionalSeasonTicket.get().getAvailableForUse()) {
+                try {
+                    seasonTicketService.deleteById(id);
+                    return new ResponseEntity<>("Season ticket with this id was deleted", HttpStatus.ACCEPTED);
+                } catch (EmptyResultDataAccessException e) {
+                    log.error(e.getMessage(), NO_SEASON_TICKET_WITH_ID);
+                    return new ResponseEntity<>(NO_SEASON_TICKET_WITH_ID, HttpStatus.FORBIDDEN);
+                }
+            } else {
+                return new ResponseEntity<>("Season Ticket isn't available and cannot be deleted", HttpStatus.FORBIDDEN);
+            }
         } else {
             return new ResponseEntity<>("Season ticket with this id not available for deletion",
                     HttpStatus.FORBIDDEN);

@@ -8,7 +8,7 @@ import java.util.Optional;
 
 @Service
 public interface UserService {
-    void save(User user);
+    User save(User user);
     List<User> retrieveAllUsers();
     Optional<User> retrieveUserById(Long id);
     Optional<User> retrieveUserByEmail(String email);

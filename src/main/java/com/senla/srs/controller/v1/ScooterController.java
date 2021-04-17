@@ -58,13 +58,9 @@ public class ScooterController {
             return new ResponseEntity<>("The scooter type is not correct", HttpStatus.FORBIDDEN);
         }
 
-        scooterService.save(scooterRequestMapper.toEntity(scooterDTO));
+        Scooter scooter = scooterService.save(scooterRequestMapper.toEntity(scooterDTO));
 
-        Optional<Scooter> optionalScooter = scooterService.retrieveScooterBySerialNumber(scooterDTO.getSerialNumber());
-
-        return optionalScooter.isPresent()
-                ? ResponseEntity.ok(scooterResponseMapper.toDto(optionalScooter.get()))
-                : new ResponseEntity<>("The scooter is not created", HttpStatus.FORBIDDEN);
+        return ResponseEntity.ok(scooterResponseMapper.toDto(scooter));
     }
 
     @DeleteMapping("/{serialNumber}")
