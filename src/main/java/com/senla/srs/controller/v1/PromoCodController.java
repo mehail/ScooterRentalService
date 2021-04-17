@@ -71,12 +71,8 @@ public class PromoCodController {
     }
 
     private ResponseEntity<?> create(PromoCodDTO promoCodDTO) {
-        promoCodService.save(promoCodMapper.toEntity(promoCodDTO));
-        Optional<PromoCod> optionalPromoCod = promoCodService.retrievePromoCodByName(promoCodDTO.getName());
-
-        return optionalPromoCod.isPresent()
-                ? ResponseEntity.ok(promoCodMapper.toDto(optionalPromoCod.get()))
-                : new ResponseEntity<>("The promo code is not created", HttpStatus.FORBIDDEN);
+        PromoCod promoCod = promoCodService.save(promoCodMapper.toEntity(promoCodDTO));
+        return ResponseEntity.ok(promoCodMapper.toDto(promoCod));
     }
 
     @DeleteMapping("/{name}")

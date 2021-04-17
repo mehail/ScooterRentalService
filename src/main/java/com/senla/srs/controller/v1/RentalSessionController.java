@@ -98,17 +98,12 @@ public class RentalSessionController {
 
     private ResponseEntity<?> save(RentalSessionRequestDTO rentalSessionRequestDTO) {
         RentalSession rentalSession = rentalSessionRequestMapper.toEntity(rentalSessionRequestDTO);
+
         changeEntityState(rentalSession);
-        rentalSessionService.save(rentalSession);
 
-        Optional<RentalSession> optionalRentalSession =
-                rentalSessionService.retrieveRentalSessionByUserIdAndScooterSerialNumberAndBegin(rentalSessionRequestDTO.getUserId(),
-                        rentalSessionRequestDTO.getScooterSerialNumber(),
-                        rentalSessionRequestDTO.getBegin());
+        RentalSession createdRentalSession = rentalSessionService.save(rentalSession);
 
-        return optionalRentalSession.isPresent()
-                ? ResponseEntity.ok(rentalSessionResponseMapper.toDto(optionalRentalSession.get()))
-                : new ResponseEntity<>("The rental session is not created", HttpStatus.FORBIDDEN);
+        return ResponseEntity.ok(rentalSessionResponseMapper.toDto(createdRentalSession));
     }
 
     private void changeEntityState(RentalSession rentalSession) {

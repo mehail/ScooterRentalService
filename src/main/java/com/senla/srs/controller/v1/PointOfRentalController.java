@@ -58,14 +58,9 @@ public class PointOfRentalController {
             return new ResponseEntity<>("The address is not correct", HttpStatus.FORBIDDEN);
         }
 
-        pointOfRentalService.save(pointOfRentalRequestMapper.toEntity(pointOfRentalRequestDTO));
+        PointOfRental pointOfRental = pointOfRentalService.save(pointOfRentalRequestMapper.toEntity(pointOfRentalRequestDTO));
 
-        Optional<PointOfRental> optionalPointOfRental =
-                pointOfRentalService.retrievePointOfRentalByName(pointOfRentalRequestDTO.getName());
-
-        return optionalPointOfRental.isPresent()
-                ? ResponseEntity.ok(pointOfRentalResponseMapper.toDto(optionalPointOfRental.get()))
-                : new ResponseEntity<>("The point of rental is not created", HttpStatus.FORBIDDEN);
+        return ResponseEntity.ok(pointOfRentalResponseMapper.toDto(pointOfRental));
     }
 
     @DeleteMapping("/{id}")
