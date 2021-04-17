@@ -23,7 +23,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Data
@@ -44,14 +43,9 @@ public class RentalSessionController {
     @PreAuthorize("hasAuthority('rentalSessions:read')")
     public List<RentalSessionResponseDTO> getAll(@AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
         return userService.isAdmin(userSecurity)
-                ? mapListToDtoList(rentalSessionService.retrieveAllRentalSessions())
-                : mapListToDtoList(rentalSessionService.retrieveAllRentalSessionsByUserId(userService.getAuthUserId(userSecurity)));
-    }
-
-    private List<RentalSessionResponseDTO> mapListToDtoList(List<RentalSession> rentalSessions) {
-        return rentalSessions.stream()
-                .map(rentalSessionResponseMapper::toDto)
-                .collect(Collectors.toList());
+                ? rentalSessionResponseMapper.mapListToDtoList(rentalSessionService.retrieveAllRentalSessions())
+                : rentalSessionResponseMapper.mapListToDtoList(
+                        rentalSessionService.retrieveAllRentalSessionsByUserId(userService.getAuthUserId(userSecurity)));
     }
 
     @GetMapping("/{id}")
@@ -89,11 +83,11 @@ public class RentalSessionController {
                             rentalSessionRequestDTO.getScooterSerialNumber(),
                             rentalSessionRequestDTO.getBegin());
             if (optionalRentalSession.isEmpty()) {
-                return create(rentalSessionRequestDTO);
+                return save(rentalSessionRequestDTO);
             } else if (optionalRentalSession.get().getEnd() != null &&
                     (userService.isAdmin(userSecurity) ||
                             userService.isThisUser(userSecurity, rentalSessionRequestDTO.getUserId()))) {
-                return create(rentalSessionRequestDTO);
+                return save(rentalSessionRequestDTO);
             } else {
                 return new ResponseEntity<>("Completed rental session is not available for editing", HttpStatus.FORBIDDEN);
             }
@@ -102,7 +96,7 @@ public class RentalSessionController {
         }
     }
 
-    private ResponseEntity<?> create(RentalSessionRequestDTO rentalSessionRequestDTO) {
+    private ResponseEntity<?> save(RentalSessionRequestDTO rentalSessionRequestDTO) {
         RentalSession rentalSession = rentalSessionRequestMapper.toEntity(rentalSessionRequestDTO);
         changeEntityState(rentalSession);
         rentalSessionService.save(rentalSession);
