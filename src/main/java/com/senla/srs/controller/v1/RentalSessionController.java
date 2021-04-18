@@ -25,27 +25,35 @@ import java.util.List;
 import java.util.Optional;
 
 @Slf4j
-@Data
-@AllArgsConstructor
 @RestController
 @RequestMapping("/api/v1/rental_sessions")
-public class RentalSessionController {
+public class RentalSessionController extends AbstractRestController{
     private final RentalSessionService rentalSessionService;
     private final RentalSessionValidator rentalSessionValidator;
-    private final ScooterService scooterService;
-    private final UserService userService;
     private final RentalSessionRequestMapper rentalSessionRequestMapper;
     private final RentalSessionResponseMapper rentalSessionResponseMapper;
 
     private static final String NO_RENTAL_SESSION_WITH_ID = "A rental session with this id was not found";
 
+    public RentalSessionController(UserService userService,
+                                   RentalSessionService rentalSessionService,
+                                   RentalSessionValidator rentalSessionValidator,
+                                   RentalSessionRequestMapper rentalSessionRequestMapper,
+                                   RentalSessionResponseMapper rentalSessionResponseMapper) {
+        super(userService);
+        this.rentalSessionService = rentalSessionService;
+        this.rentalSessionValidator = rentalSessionValidator;
+        this.rentalSessionRequestMapper = rentalSessionRequestMapper;
+        this.rentalSessionResponseMapper = rentalSessionResponseMapper;
+    }
+
     @GetMapping
     @PreAuthorize("hasAuthority('rentalSessions:read')")
     public List<RentalSessionResponseDTO> getAll(@AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
-        return userService.isAdmin(userSecurity)
+        return isAdmin(userSecurity)
                 ? rentalSessionResponseMapper.mapListToDtoList(rentalSessionService.retrieveAllRentalSessions())
                 : rentalSessionResponseMapper.mapListToDtoList(
-                        rentalSessionService.retrieveAllRentalSessionsByUserId(userService.getAuthUserId(userSecurity)));
+                        rentalSessionService.retrieveAllRentalSessionsByUserId(getAuthUserId(userSecurity)));
     }
 
     @GetMapping("/{id}")
@@ -55,7 +63,7 @@ public class RentalSessionController {
 
         Optional<RentalSession> optionalRentalSession = rentalSessionService.retrieveRentalSessionById(id);
 
-        if (userService.isAdmin(userSecurity) || isThisUserRentalSession(optionalRentalSession, userSecurity)) {
+        if (isAdmin(userSecurity) || isThisUserRentalSession(optionalRentalSession, userSecurity)) {
 
             return optionalRentalSession.isPresent()
                     ? ResponseEntity.ok(rentalSessionResponseMapper.toDto(optionalRentalSession.get()))
@@ -70,7 +78,7 @@ public class RentalSessionController {
                                             org.springframework.security.core.userdetails.User userSecurity) {
 
         return optionalRentalSession.isPresent() &&
-                userService.isThisUser(userSecurity, optionalRentalSession.get().getUser().getId());
+                isThisUserById(userSecurity, optionalRentalSession.get().getUser().getId());
     }
 
     @PostMapping
@@ -85,8 +93,7 @@ public class RentalSessionController {
             if (optionalRentalSession.isEmpty()) {
                 return save(rentalSessionRequestDTO);
             } else if (optionalRentalSession.get().getEnd() != null &&
-                    (userService.isAdmin(userSecurity) ||
-                            userService.isThisUser(userSecurity, rentalSessionRequestDTO.getUserId()))) {
+                    (isAdmin(userSecurity) || isThisUserById(userSecurity, rentalSessionRequestDTO.getUserId()))) {
                 return save(rentalSessionRequestDTO);
             } else {
                 return new ResponseEntity<>("Completed rental session is not available for editing", HttpStatus.FORBIDDEN);
