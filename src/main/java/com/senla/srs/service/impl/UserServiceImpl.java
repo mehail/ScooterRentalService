@@ -40,6 +40,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(id);
     }
 
+    //ToDo заменить name на email!!!!!!!!!!!!!!!!
     @Override
     public Optional<User> retrieveUserByAuthenticationPrincipal(org.springframework.security.core.userdetails.User userSecurity) {
         return retrieveUserByEmail(userSecurity.getUsername());
