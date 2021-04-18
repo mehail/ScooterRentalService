@@ -8,8 +8,6 @@ import com.senla.srs.model.User;
 import com.senla.srs.model.UserStatus;
 import com.senla.srs.model.security.Role;
 import com.senla.srs.service.UserService;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -23,12 +21,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Data
-@AllArgsConstructor
 @RestController
 @RequestMapping("/api/v1/users")
-public class UserRestController {
-    private final UserService userService;
+class UserRestController extends AbstractRestController{
     private final UserFullResponseMapper userFullResponseMapper;
     private final UserRequestMapper userRequestMapper;
 
@@ -37,8 +32,17 @@ public class UserRestController {
     private static final String CHANGE_DEFAULT_FIELD = "To top up your balance, obtain administrator rights or " +
             "deactivate a profile, contact the administrator";
 
+    public UserRestController(UserService userService,
+                              UserFullResponseMapper userFullResponseMapper,
+                              UserRequestMapper userRequestMapper) {
+        super(userService);
+        this.userFullResponseMapper = userFullResponseMapper;
+        this.userRequestMapper = userRequestMapper;
+    }
+
     @GetMapping
     @PreAuthorize("hasAuthority('users:readAll')")
+
     public List<UserFullResponseDTO> getAll() {
         return userService.retrieveAllUsers().stream()
                 .map(userFullResponseMapper::toDto)
@@ -77,7 +81,7 @@ public class UserRestController {
                 if (optionalExistUser.isEmpty()) {
                     return constrainCreate(userRequestDTO);
                 } else {
-                    if (isThis(userRequestDTO, userSecurity)) {
+                    if (isThisUserByEmail(userSecurity, userRequestDTO.getEmail())) {
                         return update(userRequestDTO, optionalExistUser.get());
                     } else {
                         return new ResponseEntity<>(RE_AUTH, HttpStatus.FORBIDDEN);
@@ -89,14 +93,6 @@ public class UserRestController {
         } else {
             return new ResponseEntity<>(RE_AUTH, HttpStatus.FORBIDDEN);
         }
-    }
-
-    private boolean isAdmin(org.springframework.security.core.userdetails.User userSecurity) {
-        return userSecurity != null && userService.isAdmin(userSecurity);
-    }
-
-    private boolean isThis(UserRequestDTO userRequestDTO, org.springframework.security.core.userdetails.User userSecurity) {
-        return userSecurity != null && userSecurity.getUsername().equals(userRequestDTO.getEmail());
     }
 
     private ResponseEntity<?> constrainCreate(UserRequestDTO userRequestDTO) {

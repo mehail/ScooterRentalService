@@ -25,28 +25,26 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Data
 @RestController
 @RequestMapping("/api/v1/season_tickets")
-public class SeasonTicketController {
+public class SeasonTicketController extends AbstractRestController{
     private final SeasonTicketService seasonTicketService;
     private final ScooterTypeService scooterTypeService;
-    private final UserService userService;
     private final SeasonTicketRequestMapper seasonTicketRequestMapper;
     private final SeasonTicketFullResponseMapper seasonTicketFullResponseMapper;
 
-    private int duration;
+    private final int duration;
     private static final String NO_SEASON_TICKET_WITH_ID = "A season ticket with this id was not found";
 
-    public SeasonTicketController(SeasonTicketService seasonTicketService,
+    public SeasonTicketController(UserService userService,
+                                  SeasonTicketService seasonTicketService,
                                   ScooterTypeService scooterTypeService,
-                                  UserService userService,
                                   SeasonTicketRequestMapper seasonTicketRequestMapper,
                                   SeasonTicketFullResponseMapper seasonTicketFullResponseMapper,
-                                  @Value("${srs.season.duration:365}") Integer duration) {
+                                  @Value("${srs.season.duration:365}") int duration) {
+        super(userService);
         this.seasonTicketService = seasonTicketService;
         this.scooterTypeService = scooterTypeService;
-        this.userService = userService;
         this.seasonTicketRequestMapper = seasonTicketRequestMapper;
         this.seasonTicketFullResponseMapper = seasonTicketFullResponseMapper;
         this.duration = duration;
@@ -55,9 +53,9 @@ public class SeasonTicketController {
     @GetMapping
     @PreAuthorize("hasAuthority('seasonTickets:read')")
     public List<SeasonTicketFullResponseDTO> getAll(@AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
-        return userService.isAdmin(userSecurity)
+        return isAdmin(userSecurity)
                 ? mapListToDtoList(seasonTicketService.retrieveAllSeasonTickets())
-                : mapListToDtoList(seasonTicketService.retrieveAllSeasonTicketsByUserId(userService.getAuthUserId(userSecurity)));
+                : mapListToDtoList(seasonTicketService.retrieveAllSeasonTicketsByUserId(getAuthUserId(userSecurity)));
     }
 
     private List<SeasonTicketFullResponseDTO> mapListToDtoList(List<SeasonTicket> seasonTickets) {
@@ -72,7 +70,7 @@ public class SeasonTicketController {
                                      @PathVariable Long id) {
         Optional<SeasonTicket> optionalSeasonTicket = seasonTicketService.retrieveSeasonTicketsById(id);
 
-        if (userService.isAdmin(userSecurity) || isThisUserSeasonTicket(optionalSeasonTicket, userSecurity)) {
+        if (isAdmin(userSecurity) || isThisUserSeasonTicket(optionalSeasonTicket, userSecurity)) {
 
             return optionalSeasonTicket.isPresent()
                     ? ResponseEntity.ok(seasonTicketFullResponseMapper.toDto(optionalSeasonTicket.get()))
@@ -87,7 +85,7 @@ public class SeasonTicketController {
                                            org.springframework.security.core.userdetails.User userSecurity) {
 
         return optionalSeasonTicket.isPresent() &&
-                userService.isThisUser(userSecurity, optionalSeasonTicket.get().getUserId());
+                isThisUserById(userSecurity, optionalSeasonTicket.get().getUserId());
     }
 
     @PostMapping
@@ -121,8 +119,7 @@ public class SeasonTicketController {
     private boolean isCanSave(org.springframework.security.core.userdetails.User userSecurity,
                               SeasonTicketRequestDTO seasonTicketRequestDTO) {
         return getExistOptionalSeasonTicket(seasonTicketRequestDTO).isEmpty() &&
-                (userService.isAdmin(userSecurity) ||
-                        userService.isThisUser(userSecurity, seasonTicketRequestDTO.getUserId()));
+                (isAdmin(userSecurity) || isThisUserById(userSecurity, seasonTicketRequestDTO.getUserId()));
     }
 
     private ResponseEntity<?> save(SeasonTicketRequestDTO seasonTicketRequestDTO,

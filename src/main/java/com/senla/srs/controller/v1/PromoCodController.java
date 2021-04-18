@@ -5,8 +5,6 @@ import com.senla.srs.mapper.PromoCodMapper;
 import com.senla.srs.model.PromoCod;
 import com.senla.srs.service.PromoCodService;
 import com.senla.srs.service.UserService;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -22,25 +20,30 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Data
-@AllArgsConstructor
 @RestController
 @RequestMapping("/api/v1/promo_codes")
-public class PromoCodController {
-    private final UserService userService;
+public class PromoCodController extends AbstractRestController {
     private final PromoCodService promoCodService;
     private final PromoCodMapper promoCodMapper;
 
     private static final String NO_PROMO_COD_WITH_NAME = "No promo code with this name found";
 
+    public PromoCodController(UserService userService,
+                              PromoCodService promoCodService,
+                              PromoCodMapper promoCodMapper) {
+        super(userService);
+        this.promoCodService = promoCodService;
+        this.promoCodMapper = promoCodMapper;
+    }
+
     @GetMapping
     @PreAuthorize("hasAuthority('promoCods:read')")
     public List<PromoCodDTO> getAll(@AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
-        return userService.isAdmin(userSecurity)
+        return isAdmin(userSecurity)
 
                 ? promoCodService.retrieveAllPromoCods().stream()
-                .map(promoCodMapper::toDto)
-                .collect(Collectors.toList())
+                    .map(promoCodMapper::toDto)
+                    .collect(Collectors.toList())
 
                 : new ArrayList<>();
     }
