@@ -9,8 +9,6 @@ import com.senla.srs.service.RentalSessionService;
 import com.senla.srs.service.RentalSessionValidator;
 import com.senla.srs.service.ScooterService;
 import com.senla.srs.service.UserService;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -32,6 +30,7 @@ public class RentalSessionController extends AbstractRestController{
     private final RentalSessionValidator rentalSessionValidator;
     private final RentalSessionRequestMapper rentalSessionRequestMapper;
     private final RentalSessionResponseMapper rentalSessionResponseMapper;
+    private final ScooterService scooterService;
 
     private static final String NO_RENTAL_SESSION_WITH_ID = "A rental session with this id was not found";
 
@@ -39,12 +38,36 @@ public class RentalSessionController extends AbstractRestController{
                                    RentalSessionService rentalSessionService,
                                    RentalSessionValidator rentalSessionValidator,
                                    RentalSessionRequestMapper rentalSessionRequestMapper,
-                                   RentalSessionResponseMapper rentalSessionResponseMapper) {
+                                   RentalSessionResponseMapper rentalSessionResponseMapper, ScooterService scooterService) {
         super(userService);
         this.rentalSessionService = rentalSessionService;
         this.rentalSessionValidator = rentalSessionValidator;
         this.rentalSessionRequestMapper = rentalSessionRequestMapper;
         this.rentalSessionResponseMapper = rentalSessionResponseMapper;
+        this.scooterService = scooterService;
+    }
+
+    @GetMapping("/test/")
+    public ResponseEntity<?> test() {
+        Optional<User> user = userService.retrieveUserById(1L);
+        Optional<Scooter> scooter = scooterService.retrieveScooterBySerialNumber("0001X");
+        LocalDateTime begin = LocalDateTime.of(2020,1,1,10,0,0);
+        LocalDateTime end = LocalDateTime.of(2020,1,1,10,1,0);
+
+        RentalSession rentalSession = new RentalSession(
+                null,
+                user.get(),
+                scooter.get(),
+                10,
+                begin,
+                end,
+                null, null
+        );
+
+        System.out.println("\n\n\n\n\n rentalSession = " + rentalSession + "\n\n\n\n\n");
+
+        RentalSession created = rentalSessionService.save(rentalSession);
+        return ResponseEntity.ok(created);
     }
 
     @GetMapping
