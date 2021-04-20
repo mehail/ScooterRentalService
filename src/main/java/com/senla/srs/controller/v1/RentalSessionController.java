@@ -25,7 +25,7 @@ import java.util.Optional;
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/rental_sessions")
-public class RentalSessionController extends AbstractRestController{
+public class RentalSessionController extends AbstractRestController {
     private final RentalSessionService rentalSessionService;
     private final RentalSessionValidator rentalSessionValidator;
     private final RentalSessionRequestMapper rentalSessionRequestMapper;
@@ -47,22 +47,39 @@ public class RentalSessionController extends AbstractRestController{
         this.scooterService = scooterService;
     }
 
+    //ToDo Ошибка маппинг LocalDateTime
+    /**
+     * Создавая сессию получаем ошибку синтаксиса "рядом с end", я так понимаю, что это связано с DateLocalTime,
+     * хотя с JPA 2.2 все должно поддерживаться автоматически, пробовал добавить конверторы, они отрабатывают,
+     * но в процессе сохранения не участвуют (ConverterLDT.class)
+     **/
     @GetMapping("/test/")
     public ResponseEntity<?> test() {
         Optional<User> user = userService.retrieveUserById(1L);
         Optional<Scooter> scooter = scooterService.retrieveScooterBySerialNumber("0001X");
-        LocalDateTime begin = LocalDateTime.of(2020,1,1,10,0,0);
-        LocalDateTime end = LocalDateTime.of(2020,1,1,10,1,0);
+        LocalDateTime begin = LocalDateTime.of(2020, 1, 1, 10, 0, 0);
+        LocalDateTime end = LocalDateTime.of(2021, 4, 1, 10, 1, 0);
 
-        RentalSession rentalSession = new RentalSession(
-                null,
-                user.get(),
-                scooter.get(),
-                10,
-                begin,
-                end,
-                null, null
-        );
+        /**
+         Создаем новую сессию
+         **/
+
+//        RentalSession rentalSession = new RentalSession(
+//                null,
+//                user.get(),
+//                scooter.get(),
+//                10,
+//                begin,
+//                end,
+//                null, null
+//        );
+
+        /**
+         Меняем дату окончания в существующей
+         **/
+
+        RentalSession rentalSession = rentalSessionService.retrieveRentalSessionById(1L).get();
+        rentalSession.setEnd(end);
 
         System.out.println("\n\n\n\n\n rentalSession = " + rentalSession + "\n\n\n\n\n");
 
@@ -76,7 +93,7 @@ public class RentalSessionController extends AbstractRestController{
         return isAdmin(userSecurity)
                 ? rentalSessionResponseMapper.mapListToDtoList(rentalSessionService.retrieveAllRentalSessions())
                 : rentalSessionResponseMapper.mapListToDtoList(
-                        rentalSessionService.retrieveAllRentalSessionsByUserId(getAuthUserId(userSecurity)));
+                rentalSessionService.retrieveAllRentalSessionsByUserId(getAuthUserId(userSecurity)));
     }
 
     @GetMapping("/{id}")
