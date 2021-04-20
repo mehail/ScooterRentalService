@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.4.3</version>
+        <version>2.4.5</version>
         <relativePath/>
     </parent>
 
@@ -17,33 +17,38 @@
     <properties>
         <java.version>11</java.version>
         <jjwt.version>0.9.1</jjwt.version>
+        <spring.version>2.4.5</spring.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot</artifactId>
-            <version>2.4.3</version>
+            <version>${spring.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <version>${spring.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <version>${spring.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
+            <version>${spring.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <version>${spring.version}</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -65,20 +70,20 @@
             <version>2.3.9</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.github.chhsiao90/modelmapper-module-java8 -->
-        <dependency>
-            <groupId>com.github.chhsiao90</groupId>
-            <artifactId>modelmapper-module-java8</artifactId>
-            <version>1.0.0</version>
-            <type>pom</type>
-        </dependency>
+        <!--        &lt;!&ndash; https://mvnrepository.com/artifact/com.github.chhsiao90/modelmapper-module-java8 &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>com.github.chhsiao90</groupId>-->
+<!--            <artifactId>modelmapper-module-java8</artifactId>-->
+<!--            <version>1.0.0</version>-->
+<!--            <type>pom</type>-->
+<!--        </dependency>-->
 
-        <!-- https://mvnrepository.com/artifact/com.github.chhsiao90/modelmapper-module-jsr310 -->
-        <dependency>
-            <groupId>com.github.chhsiao90</groupId>
-            <artifactId>modelmapper-module-jsr310</artifactId>
-            <version>1.1.0</version>
-        </dependency>
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/com.github.chhsiao90/modelmapper-module-jsr310 &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>com.github.chhsiao90</groupId>-->
+<!--            <artifactId>modelmapper-module-jsr310</artifactId>-->
+<!--            <version>1.1.0</version>-->
+<!--        </dependency>-->
 
 
         <dependency>
