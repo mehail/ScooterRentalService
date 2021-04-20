@@ -8,6 +8,13 @@ import com.senla.srs.model.User;
 import com.senla.srs.model.UserStatus;
 import com.senla.srs.model.security.Role;
 import com.senla.srs.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -18,12 +25,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
+@Tag(name = "User REST Controller",
+        description = "Interacting with user accounts")
 @RestController
 @RequestMapping("/api/v1/users")
-class UserRestController extends AbstractRestController{
+class UserRestController extends AbstractRestController {
     private final UserFullResponseMapper userFullResponseMapper;
     private final UserRequestMapper userRequestMapper;
 
@@ -40,32 +48,40 @@ class UserRestController extends AbstractRestController{
         this.userRequestMapper = userRequestMapper;
     }
 
+    @Operation(summary = "Get a list of users",
+            description = "If the user is not an Administrator, then a list with an authorized user is returned"
+    )
     @GetMapping
-    @PreAuthorize("hasAuthority('users:readAll')")
-
-    public List<UserFullResponseDTO> getAll() {
-        return userService.retrieveAllUsers().stream()
-                .map(userFullResponseMapper::toDto)
-                .collect(Collectors.toList());
+    @PreAuthorize("hasAuthority('users:read')")
+    public List<UserFullResponseDTO> getAll(@AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
+        return isAdmin(userSecurity)
+                ? userFullResponseMapper.mapListToDtoList(userService.retrieveAllUsers())
+                : userFullResponseMapper.mapListToDtoList(userService.retrieveUserByEmail(userSecurity.getUsername()).get());
     }
 
+    @Operation(summary = "Get a user by its id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Found the user",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = User.class))}),
+            @ApiResponse(responseCode = "400", description = "Invalid id supplied",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "User not found",
+                    content = @Content)})
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('users:readAll')")
-    public ResponseEntity<?> getById(@PathVariable Long id) {
-        Optional<User> optionalUser = userService.retrieveUserById(id);
+    @PreAuthorize("hasAuthority('users:read')")
+    public ResponseEntity<?> getById(@PathVariable @Parameter(description = "User ID")Long id,
+                                     @AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
+        if (isThisUserById(userSecurity, id) || isAdmin(userSecurity)) {
+            Optional<User> optionalUser = userService.retrieveUserById(id);
 
-        return optionalUser.isPresent()
-                ? ResponseEntity.ok(userFullResponseMapper.toDto(optionalUser.get()))
-                : new ResponseEntity<>(USER_NOT_FOUND, HttpStatus.FORBIDDEN);
-    }
-
-    @GetMapping("/this/")
-    public ResponseEntity<?> getCurrentUser(@AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
-        Optional<User> optionalUser = userService.retrieveUserByEmail(userSecurity.getUsername());
-
-        return optionalUser.isPresent()
-                ? ResponseEntity.ok(userFullResponseMapper.toDto(optionalUser.get()))
-                : new ResponseEntity<>(USER_NOT_FOUND, HttpStatus.FORBIDDEN);
+            return optionalUser.isPresent()
+                    ? ResponseEntity.ok(userFullResponseMapper.toDto(optionalUser.get()))
+                    : new ResponseEntity<>(USER_NOT_FOUND, HttpStatus.FORBIDDEN);
+        } else {
+            return new ResponseEntity<>("To view this user profile, please reAuthorize with Administrator " +
+                    "rights or by this user", HttpStatus.FORBIDDEN);
+        }
     }
 
     @PostMapping
