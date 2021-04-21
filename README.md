@@ -22,6 +22,7 @@ RESTful application is written using technologies:
 * Spring Security
 * Spring Data JPA
 * Hibernate
+* Swagger
 
 Object-relational database management system
 * PostgreSQL
@@ -90,6 +91,9 @@ mvn install
 mvn spring-boot:run
 ```
 
+## 5. Technical description
+After starting the application <a href="http://localhost:8080/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/">Swagger UI</a>
+available on localhost with the ability to test functionality using the web interface
 ____
 
 # Contacts
