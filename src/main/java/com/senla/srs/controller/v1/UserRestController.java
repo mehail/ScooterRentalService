@@ -10,10 +10,10 @@ import com.senla.srs.model.security.Role;
 import com.senla.srs.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -35,8 +35,9 @@ class UserRestController extends AbstractRestController {
     private final UserFullResponseMapper userFullResponseMapper;
     private final UserRequestMapper userRequestMapper;
 
-    private static final String USER_NOT_FOUND = "A user with this id not found";
-    private static final String RE_AUTH = "To change this user reAuthorize";
+    private static final String USER_NOT_FOUND = "A User with this id not found";
+    private static final String ACCESS_FORBIDDEN = "Access forbidden";
+    private static final String RE_AUTH = "To change this User reAuthorize";
     private static final String CHANGE_DEFAULT_FIELD = "To top up your balance, obtain administrator rights or " +
             "deactivate a profile, contact the administrator";
 
@@ -59,34 +60,43 @@ class UserRestController extends AbstractRestController {
                 : userFullResponseMapper.mapListToDtoList(userService.retrieveUserByEmail(userSecurity.getUsername()).get());
     }
 
-    @Operation(summary = "Get a user by its id")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Found the user",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = User.class))}),
-            @ApiResponse(responseCode = "400", description = "Invalid id supplied",
-                    content = @Content),
-            @ApiResponse(responseCode = "404", description = "User not found",
-                    content = @Content)})
+
+    @Operation(operationId = "getById", summary = "Get a User by its id")
+    @Parameter(in = ParameterIn.PATH, name = "id", description = "User id")
+    @ApiResponse(responseCode = "200", description = "Successful operation",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = UserFullResponseDTO.class)))
+    @ApiResponse(responseCode = "400", description = "Invalid User ID supplied")
+    @ApiResponse(responseCode = "403", description = "Read access forbidden")
+    @ApiResponse(responseCode = "404", description = USER_NOT_FOUND)
+
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('users:read')")
-    public ResponseEntity<?> getById(@PathVariable @Parameter(description = "User ID")Long id,
+    public ResponseEntity<?> getById(@PathVariable Long id,
                                      @AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
         if (isThisUserById(userSecurity, id) || isAdmin(userSecurity)) {
             Optional<User> optionalUser = userService.retrieveUserById(id);
 
             return optionalUser.isPresent()
                     ? ResponseEntity.ok(userFullResponseMapper.toDto(optionalUser.get()))
-                    : new ResponseEntity<>(USER_NOT_FOUND, HttpStatus.FORBIDDEN);
+                    : new ResponseEntity<>(USER_NOT_FOUND, HttpStatus.NOT_FOUND);
         } else {
-            return new ResponseEntity<>("To view this user profile, please reAuthorize with Administrator " +
-                    "rights or by this user", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(ACCESS_FORBIDDEN, HttpStatus.FORBIDDEN);
         }
     }
 
+
+    @Operation(operationId = "createOrUpdate", summary = "Create or update User",
+            description = "If the User exists - then the fields are updated, if not - created new User")
+    @Parameter(in = ParameterIn.PATH, name = "id", description = "User id")
+    @ApiResponse(responseCode = "200", description = "Successful operation",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = UserFullResponseDTO.class)))
+    @ApiResponse(responseCode = "403", description = "Сreate/Update access forbidden")
+
     @PostMapping
-    public ResponseEntity<?> createOrUpdateUsers(@RequestBody UserRequestDTO userRequestDTO,
-                                                 @AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
+    public ResponseEntity<?> createOrUpdate(@RequestBody UserRequestDTO userRequestDTO,
+                                            @AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
 
         Optional<User> optionalExistUser = userService.retrieveUserByEmail(userRequestDTO.getEmail());
 
@@ -140,6 +150,12 @@ class UserRestController extends AbstractRestController {
         return ResponseEntity.ok(userFullResponseMapper.toDto(user));
     }
 
+
+    @Operation(operationId = "delete", summary = "Delete User")
+    @Parameter(in = ParameterIn.PATH, name = "id", description = "User id")
+    @ApiResponse(responseCode = "202", description = "Accepted operation")
+    @ApiResponse(responseCode = "404", description = USER_NOT_FOUND)
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('users:write')")
     public ResponseEntity<?> delete(@PathVariable Long id) {
@@ -148,7 +164,7 @@ class UserRestController extends AbstractRestController {
             return new ResponseEntity<>("User with this id was found", HttpStatus.ACCEPTED);
         } catch (EmptyResultDataAccessException e) {
             log.error(e.getMessage(), USER_NOT_FOUND);
-            return new ResponseEntity<>(USER_NOT_FOUND, HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(USER_NOT_FOUND, HttpStatus.NOT_FOUND);
         }
     }
 }
