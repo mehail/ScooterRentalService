@@ -50,8 +50,11 @@ class UserController extends AbstractRestController {
     }
 
     @Operation(summary = "Get a list of users",
-            description = "If the user is not an Administrator, then a list with an authorized user is returned"
-    )
+            description = "If the user is not an Administrator, then a list with an authorized user is returned")
+    @ApiResponse(responseCode = "200", description = "Successful operation",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = UserFullResponseDTO.class)))
+
     @GetMapping
     @PreAuthorize("hasAuthority('users:read')")
     public List<UserFullResponseDTO> getAll(@AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {

@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Tag(name = "Season ticket REST Controller",
@@ -60,20 +59,17 @@ public class SeasonTicketController extends AbstractRestController {
     }
 
     @Operation(summary = "Get a list of Season tickets",
-            description = "If the user is not an Administrator, then a list with an authorized user Season tickets is returned"
-    )
+            description = "If the user is not an Administrator, then a list with an authorized user Season tickets is returned")
+    @ApiResponse(responseCode = "200", description = "Successful operation",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = SeasonTicketFullResponseDTO.class)))
+
     @GetMapping
     @PreAuthorize("hasAuthority('seasonTickets:read')")
     public List<SeasonTicketFullResponseDTO> getAll(@AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
         return isAdmin(userSecurity)
-                ? mapListToDtoList(seasonTicketService.retrieveAllSeasonTickets())
-                : mapListToDtoList(seasonTicketService.retrieveAllSeasonTicketsByUserId(getAuthUserId(userSecurity)));
-    }
-
-    private List<SeasonTicketFullResponseDTO> mapListToDtoList(List<SeasonTicket> seasonTickets) {
-        return seasonTickets.stream()
-                .map(seasonTicketFullResponseMapper::toDto)
-                .collect(Collectors.toList());
+                ? seasonTicketFullResponseMapper.mapListToDtoList(seasonTicketService.retrieveAllSeasonTickets())
+                : seasonTicketFullResponseMapper.mapListToDtoList(seasonTicketService.retrieveAllSeasonTicketsByUserId(getAuthUserId(userSecurity)));
     }
 
     @Operation(operationId = "getById", summary = "Get a Season ticket by its id")
