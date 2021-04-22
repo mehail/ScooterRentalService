@@ -10,12 +10,10 @@ import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(of = {"userId", "scooterTypeId", "startDate"}, callSuper = false)
+@EqualsAndHashCode(of = {"userId", "startDate"}, callSuper = false)
 public class SeasonTicketDTO extends AbstractDTO {
     @NonNull
     private Long userId;
-    @NonNull
-    private Long scooterTypeId;
     @NonNull
     private LocalDate startDate;
 }

@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
-public class SeasonTicketResponseDTO extends SeasonTicketDTO {
+public class SeasonTicketResponseDTO extends SeasonTicketDTO{
     @NonNull
     private Long id;
     @NonNull

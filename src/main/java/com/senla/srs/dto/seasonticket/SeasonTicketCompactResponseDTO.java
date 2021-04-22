@@ -7,10 +7,8 @@ import lombok.NonNull;
 
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(of = {"price", "scooterTypeId"}, callSuper = false)
-public class SeasonTicketRequestDTO extends SeasonTicketDTO {
+@EqualsAndHashCode(of = {"scooterTypeId"}, callSuper = false)
+public class SeasonTicketCompactResponseDTO extends SeasonTicketResponseDTO {
     @NonNull
     private Long scooterTypeId;
-    @NonNull
-    private Integer price;
 }

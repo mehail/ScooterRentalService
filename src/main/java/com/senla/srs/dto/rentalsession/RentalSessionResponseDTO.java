@@ -2,7 +2,7 @@ package com.senla.srs.dto.rentalsession;
 
 import com.senla.srs.dto.promocod.PromoCodDTO;
 import com.senla.srs.dto.scooter.ScooterResponseDTO;
-import com.senla.srs.dto.seasonticket.SeasonTicketResponseDTO;
+import com.senla.srs.dto.seasonticket.SeasonTicketCompactResponseDTO;
 import com.senla.srs.dto.user.UserCompactResponseDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -21,6 +21,6 @@ public class RentalSessionResponseDTO extends RentalSessionDTO {
     private ScooterResponseDTO scooter;
     @NonNull
     private Integer rate;
-    private SeasonTicketResponseDTO seasonTicket;
+    private SeasonTicketCompactResponseDTO seasonTicket;
     private PromoCodDTO promoCod;
 }
