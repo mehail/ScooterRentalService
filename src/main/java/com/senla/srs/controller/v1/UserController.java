@@ -16,13 +16,17 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,20 +53,22 @@ class UserController extends AbstractRestController {
         this.userRequestMapper = userRequestMapper;
     }
 
-    @Operation(summary = "Get a list of users",
-            description = "If the user is not an Administrator, then a list with an authorized user is returned")
+    @Operation(summary = "Get a list of Users",
+            description = "If the User is not an Administrator, then a list with an authorized User is returned")
     @ApiResponse(responseCode = "200", description = "Successful operation",
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = UserFullResponseDTO.class)))
-
     @GetMapping
     @PreAuthorize("hasAuthority('users:read')")
-    public List<UserFullResponseDTO> getAll(@AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
+    @PageableAsQueryParam()
+    public Page<User> getAll(Integer page, Integer size, String sort,
+                             @AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
         return isAdmin(userSecurity)
-                ? userFullResponseMapper.mapListToDtoList(userService.retrieveAllUsers())
-                : userFullResponseMapper.mapListToDtoList(userService.retrieveUserByEmail(userSecurity.getUsername()).get());
+                ? userService.retrieveAllUsers(page, size, sort)
+                : userService.retrieveUserByEmail(userSecurity.getUsername())
+                    .map(user -> new PageImpl<>(List.of(user)))
+                    .orElseGet(() -> new PageImpl<>(new ArrayList<>()));
     }
-
 
     @Operation(operationId = "getById", summary = "Get a User by its id")
     @Parameter(in = ParameterIn.PATH, name = "id", description = "User id")
