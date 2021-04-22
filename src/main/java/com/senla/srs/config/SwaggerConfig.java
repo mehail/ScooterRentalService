@@ -6,11 +6,23 @@ import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class SwaggerConfig {
+    @Value("${jwt.header}")
+    private String authorizationHeader;
+    @Value("${swagger.version}")
+    private String version;
+    @Value("${swagger.email}")
+    private String email;
+    @Value("${swagger.url}")
+    private String url;
+    @Value("${swagger.name}")
+    private String name;
+
     private static final String DESCRIPTION = "This software was written as part of the final assignment for Java " +
             "development courses from SENLA. The main goal of creating this application was the practical application " +
             "of the knowledge I have accumulated about creating applications using the Spring framework, " +
@@ -28,16 +40,16 @@ public class SwaggerConfig {
                                         new SecurityScheme()
                                                 .type(SecurityScheme.Type.APIKEY)
                                                 .in(SecurityScheme.In.HEADER)
-                                                .name("Authorization"))
+                                                .name(authorizationHeader))
                 )
                 .info(new Info()
                         .title("Scooter Rental Service Swagger API")
                         .description(DESCRIPTION)
-                        .version("1.0.0")
+                        .version(version)
                         .contact(new Contact()
-                                .email("mehailpost@gmail.com")
-                                .url("https://github.com/mehail/ScooterRentalService")
-                                .name("Mihail Artyugin"))
+                                .email(email)
+                                .url(url)
+                                .name(name))
                 );
     }
 }
