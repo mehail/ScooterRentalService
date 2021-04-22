@@ -31,7 +31,7 @@ import java.util.Optional;
         description = "Interacting with user accounts")
 @RestController
 @RequestMapping("/api/v1/users")
-class UserRestController extends AbstractRestController {
+class UserController extends AbstractRestController {
     private final UserFullResponseMapper userFullResponseMapper;
     private final UserRequestMapper userRequestMapper;
 
@@ -41,9 +41,9 @@ class UserRestController extends AbstractRestController {
     private static final String CHANGE_DEFAULT_FIELD = "To top up your balance, obtain administrator rights or " +
             "deactivate a profile, contact the administrator";
 
-    public UserRestController(UserService userService,
-                              UserFullResponseMapper userFullResponseMapper,
-                              UserRequestMapper userRequestMapper) {
+    public UserController(UserService userService,
+                          UserFullResponseMapper userFullResponseMapper,
+                          UserRequestMapper userRequestMapper) {
         super(userService);
         this.userFullResponseMapper = userFullResponseMapper;
         this.userRequestMapper = userRequestMapper;
