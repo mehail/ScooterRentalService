@@ -5,6 +5,7 @@ public enum Permission {
     POINT_OF_RENTALS_WRITE("pointOfRentals:write"),
 
     PROMO_CODS_READ("promoCods:read"),
+    PROMO_CODS_READ_ALL("promoCods:readAll"),
     PROMO_CODS_WRITE("promoCods:write"),
 
     SCOOTERS_READ("scooters:read"),

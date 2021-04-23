@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -30,8 +31,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Slf4j
-@Tag(name = "Season ticket REST Controller",
-        description = "Interacting with Season tickets")
+@Tag(name = "Season ticket REST Controller")
 @RestController
 @RequestMapping("/api/v1/season_tickets")
 public class SeasonTicketController extends AbstractRestController {
@@ -58,28 +58,33 @@ public class SeasonTicketController extends AbstractRestController {
         this.duration = duration;
     }
 
+
     @Operation(summary = "Get a list of Season tickets",
             description = "If the user is not an Administrator, then a list with an authorized user Season tickets is returned")
-    @ApiResponse(responseCode = "200", description = "Successful operation",
-            content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = SeasonTicketFullResponseDTO.class)))
+    @ApiResponse(responseCode = "200")
+    @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
+    @PageableAsQueryParam()
 
     @GetMapping
     @PreAuthorize("hasAuthority('seasonTickets:read')")
-    public List<SeasonTicketFullResponseDTO> getAll(@AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
+    public List<SeasonTicketFullResponseDTO> getAll(
+            @AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
         return isAdmin(userSecurity)
                 ? seasonTicketFullResponseMapper.mapListToDtoList(seasonTicketService.retrieveAllSeasonTickets())
-                : seasonTicketFullResponseMapper.mapListToDtoList(seasonTicketService.retrieveAllSeasonTicketsByUserId(getAuthUserId(userSecurity)));
+                : seasonTicketFullResponseMapper.mapListToDtoList(
+                        seasonTicketService.retrieveAllSeasonTicketsByUserId(getAuthUserId(userSecurity)));
     }
+
 
     @Operation(operationId = "getById", summary = "Get a Season ticket by its id")
     @Parameter(in = ParameterIn.PATH, name = "id", description = "Season ticket id")
-    @ApiResponse(responseCode = "200", description = "Successful operation",
-            content = @Content(mediaType = "application/json",
+    @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = SeasonTicketFullResponseDTO.class)))
-    @ApiResponse(responseCode = "400", description = "Invalid Season ticket ID supplied")
-    @ApiResponse(responseCode = "403", description = "Read access forbidden")
-    @ApiResponse(responseCode = "404", description = NO_SEASON_TICKET_WITH_ID)
+    @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "404", content = @Content(mediaType = "application/json"),
+            description = NO_SEASON_TICKET_WITH_ID)
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('seasonTickets:read')")
@@ -98,20 +103,15 @@ public class SeasonTicketController extends AbstractRestController {
         }
     }
 
-    private boolean isThisUserSeasonTicket(Optional<SeasonTicket> optionalSeasonTicket,
-                                           org.springframework.security.core.userdetails.User userSecurity) {
-
-        return optionalSeasonTicket.isPresent() &&
-                isThisUserById(userSecurity, optionalSeasonTicket.get().getUserId());
-    }
 
     @Operation(operationId = "createOrUpdate", summary = "Create or update Season ticket",
             description = "If the Season ticket exists - then the fields are updated, if not - created new Season ticket")
     @Parameter(in = ParameterIn.PATH, name = "id", description = "Season ticket id")
-    @ApiResponse(responseCode = "200", description = "Successful operation",
-            content = @Content(mediaType = "application/json",
+    @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = SeasonTicketFullResponseDTO.class)))
-    @ApiResponse(responseCode = "403", description = "Сreate/Update access forbidden")
+    @ApiResponse(responseCode = "400", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
 
     @PostMapping
     @PreAuthorize("hasAuthority('seasonTickets:read')")
@@ -130,6 +130,42 @@ public class SeasonTicketController extends AbstractRestController {
         } else {
             return new ResponseEntity<>("Season ticket is not valid", HttpStatus.FORBIDDEN);
         }
+    }
+
+
+    @Operation(operationId = "delete", summary = "Delete Season ticket")
+    @Parameter(in = ParameterIn.PATH, name = "id", description = "Season ticket id")
+    @ApiResponse(responseCode = "202", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "404", content = @Content(mediaType = "application/json"),
+            description = NO_SEASON_TICKET_WITH_ID)
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('seasonTickets:write')")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        Optional<SeasonTicket> optionalSeasonTicket = seasonTicketService.retrieveSeasonTicketsById(id);
+
+        if (optionalSeasonTicket.isPresent() && optionalSeasonTicket.get().getAvailableForUse()) {
+
+            try {
+                seasonTicketService.deleteById(id);
+                return new ResponseEntity<>("Season ticket with this id was deleted", HttpStatus.ACCEPTED);
+            } catch (EmptyResultDataAccessException e) {
+                log.error(e.getMessage(), NO_SEASON_TICKET_WITH_ID);
+                return new ResponseEntity<>(NO_SEASON_TICKET_WITH_ID, HttpStatus.FORBIDDEN);
+            }
+
+        } else {
+            return new ResponseEntity<>(FORBIDDEN_FOR_DELETE, HttpStatus.FORBIDDEN);
+        }
+    }
+
+    private boolean isThisUserSeasonTicket(Optional<SeasonTicket> optionalSeasonTicket,
+                                           org.springframework.security.core.userdetails.User userSecurity) {
+
+        return optionalSeasonTicket.isPresent() &&
+                isThisUserById(userSecurity, optionalSeasonTicket.get().getUserId());
     }
 
     private boolean isValid(SeasonTicketRequestDTO seasonTicketRequestDTO,
@@ -180,31 +216,5 @@ public class SeasonTicketController extends AbstractRestController {
         int price = seasonTicketRequestDTO.getPrice();
 
         return pricePerMinute * price;
-    }
-
-    @Operation(operationId = "delete", summary = "Delete Season ticket")
-    @Parameter(in = ParameterIn.PATH, name = "id", description = "Season ticket id")
-    @ApiResponse(responseCode = "202", description = "Accepted operation")
-    @ApiResponse(responseCode = "403", description = FORBIDDEN_FOR_DELETE)
-    @ApiResponse(responseCode = "404", description = NO_SEASON_TICKET_WITH_ID)
-
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('seasonTickets:write')")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
-        Optional<SeasonTicket> optionalSeasonTicket = seasonTicketService.retrieveSeasonTicketsById(id);
-
-        if (optionalSeasonTicket.isPresent() && optionalSeasonTicket.get().getAvailableForUse()) {
-
-            try {
-                seasonTicketService.deleteById(id);
-                return new ResponseEntity<>("Season ticket with this id was deleted", HttpStatus.ACCEPTED);
-            } catch (EmptyResultDataAccessException e) {
-                log.error(e.getMessage(), NO_SEASON_TICKET_WITH_ID);
-                return new ResponseEntity<>(NO_SEASON_TICKET_WITH_ID, HttpStatus.FORBIDDEN);
-            }
-
-        } else {
-            return new ResponseEntity<>(FORBIDDEN_FOR_DELETE, HttpStatus.FORBIDDEN);
-        }
     }
 }

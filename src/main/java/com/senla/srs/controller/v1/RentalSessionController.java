@@ -9,7 +9,15 @@ import com.senla.srs.service.RentalSessionService;
 import com.senla.srs.service.RentalSessionValidator;
 import com.senla.srs.service.ScooterService;
 import com.senla.srs.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +31,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Slf4j
+@Tag(name = "Rental session REST Controller")
 @RestController
 @RequestMapping("/api/v1/rental_sessions")
 public class RentalSessionController extends AbstractRestController {
@@ -32,7 +41,7 @@ public class RentalSessionController extends AbstractRestController {
     private final RentalSessionResponseMapper rentalSessionResponseMapper;
     private final ScooterService scooterService;
 
-    private static final String NO_RENTAL_SESSION_WITH_ID = "A rental session with this id was not found";
+    private static final String RENTAL_SESSION_NOT_FOUND = "A rental session with this id was not found";
 
     public RentalSessionController(UserService userService,
                                    RentalSessionService rentalSessionService,
@@ -87,6 +96,14 @@ public class RentalSessionController extends AbstractRestController {
         return ResponseEntity.ok(created);
     }
 
+
+    @Operation(summary = "Get a list of Rental sessions",
+            description = "If the User is not an Administrator, then a list with an authorized User is returned")
+    @ApiResponse(responseCode = "200")
+    @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
+    @PageableAsQueryParam()
+
     @GetMapping
     @PreAuthorize("hasAuthority('rentalSessions:read')")
     public List<RentalSessionResponseDTO> getAll(@AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
@@ -95,6 +112,16 @@ public class RentalSessionController extends AbstractRestController {
                 : rentalSessionResponseMapper.mapListToDtoList(
                 rentalSessionService.retrieveAllRentalSessionsByUserId(getAuthUserId(userSecurity)));
     }
+
+
+    @Operation(operationId = "getById", summary = "Get a Rental session by its id")
+    @Parameter(in = ParameterIn.PATH, name = "id", description = "Rental session id")
+    @ApiResponse(responseCode = "200",content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = RentalSessionResponseDTO.class)))
+    @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "404", content = @Content(mediaType = "application/json"),
+            description = RENTAL_SESSION_NOT_FOUND)
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('rentalSessions:read')")
@@ -107,19 +134,22 @@ public class RentalSessionController extends AbstractRestController {
 
             return optionalRentalSession.isPresent()
                     ? ResponseEntity.ok(rentalSessionResponseMapper.toDto(optionalRentalSession.get()))
-                    : new ResponseEntity<>(NO_RENTAL_SESSION_WITH_ID, HttpStatus.FORBIDDEN);
+                    : new ResponseEntity<>(RENTAL_SESSION_NOT_FOUND, HttpStatus.NOT_FOUND);
 
         } else {
             return new ResponseEntity<>("Unauthorized user session requested", HttpStatus.FORBIDDEN);
         }
     }
 
-    private boolean isThisUserRentalSession(Optional<RentalSession> optionalRentalSession,
-                                            org.springframework.security.core.userdetails.User userSecurity) {
 
-        return optionalRentalSession.isPresent() &&
-                isThisUserById(userSecurity, optionalRentalSession.get().getUser().getId());
-    }
+    @Operation(operationId = "createOrUpdate", summary = "Create or update Rental session",
+            description = "If the Rental session exists - then the fields are updated, if not - created new Rental session")
+    @Parameter(in = ParameterIn.PATH, name = "id", description = "Rental session id")
+    @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = RentalSessionResponseDTO.class)))
+    @ApiResponse(responseCode = "400", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
 
     @PostMapping
     @PreAuthorize("hasAuthority('rentalSessions:read')")
@@ -141,6 +171,45 @@ public class RentalSessionController extends AbstractRestController {
         } else {
             return new ResponseEntity<>("Rental session is not valid", HttpStatus.FORBIDDEN);
         }
+    }
+
+
+    @Operation(operationId = "delete", summary = "Delete Rental session")
+    @Parameter(in = ParameterIn.PATH, name = "id", description = "Rental session id")
+    @ApiResponse(responseCode = "202")
+    @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "404", content = @Content(mediaType = "application/json"),
+            description = RENTAL_SESSION_NOT_FOUND)
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('rentalSessions:write')")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        Optional<RentalSession> optionalRentalSession = rentalSessionService.retrieveRentalSessionById(id);
+
+        if (optionalRentalSession.isPresent()) {
+            if (optionalRentalSession.get().getEnd() == null) {
+                try {
+                    rentalSessionService.deleteById(id);
+                    return new ResponseEntity<>("Rental session with this id was deleted", HttpStatus.ACCEPTED);
+                } catch (EmptyResultDataAccessException e) {
+                    log.error(e.getMessage(), RENTAL_SESSION_NOT_FOUND);
+                    return new ResponseEntity<>(RENTAL_SESSION_NOT_FOUND, HttpStatus.FORBIDDEN);
+                }
+            } else {
+                return new ResponseEntity<>("Rental session closed and cannot be deleted", HttpStatus.FORBIDDEN);
+            }
+        } else {
+            return new ResponseEntity<>("Rental session with this id not available for deletion",
+                    HttpStatus.FORBIDDEN);
+        }
+    }
+
+    private boolean isThisUserRentalSession(Optional<RentalSession> optionalRentalSession,
+                                            org.springframework.security.core.userdetails.User userSecurity) {
+
+        return optionalRentalSession.isPresent() &&
+                isThisUserById(userSecurity, optionalRentalSession.get().getUser().getId());
     }
 
     private ResponseEntity<?> save(RentalSessionRequestDTO rentalSessionRequestDTO) {
@@ -231,28 +300,5 @@ public class RentalSessionController extends AbstractRestController {
         }
 
         return rate * (1 - discountPercentage / 100);
-    }
-
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('rentalSessions:write')")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
-        Optional<RentalSession> optionalRentalSession = rentalSessionService.retrieveRentalSessionById(id);
-
-        if (optionalRentalSession.isPresent()) {
-            if (optionalRentalSession.get().getEnd() == null) {
-                try {
-                    rentalSessionService.deleteById(id);
-                    return new ResponseEntity<>("Rental session with this id was deleted", HttpStatus.ACCEPTED);
-                } catch (EmptyResultDataAccessException e) {
-                    log.error(e.getMessage(), NO_RENTAL_SESSION_WITH_ID);
-                    return new ResponseEntity<>(NO_RENTAL_SESSION_WITH_ID, HttpStatus.FORBIDDEN);
-                }
-            } else {
-                return new ResponseEntity<>("Rental session closed and cannot be deleted", HttpStatus.FORBIDDEN);
-            }
-        } else {
-            return new ResponseEntity<>("Rental session with this id not available for deletion",
-                    HttpStatus.FORBIDDEN);
-        }
     }
 }

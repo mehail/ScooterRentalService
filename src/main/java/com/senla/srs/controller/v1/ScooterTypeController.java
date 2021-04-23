@@ -7,9 +7,16 @@ import com.senla.srs.mapper.ScooterTypeResponseMapper;
 import com.senla.srs.model.ScooterType;
 import com.senla.srs.service.MakerDtoService;
 import com.senla.srs.service.ScooterTypeService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +28,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Data
+@Tag(name = "Scooter type REST Controller")
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/v1/scooter_types")
@@ -33,6 +40,13 @@ public class ScooterTypeController {
 
     private static final String TYPE_NOT_FOUND = "Scooter type with this id not found";
 
+
+    @Operation(summary = "Get a list of Scooter types")
+    @ApiResponse(responseCode = "200")
+    @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
+    @PageableAsQueryParam()
+
     @GetMapping
     @PreAuthorize("hasAuthority('scooterTypes:read')")
     public List<ScooterTypeResponseDTO> getAll() {
@@ -41,6 +55,16 @@ public class ScooterTypeController {
                 .collect(Collectors.toList());
     }
 
+
+    @Operation(operationId = "getById", summary = "Get a Scooter type by its id")
+    @Parameter(in = ParameterIn.PATH, name = "id", description = "Scooter type id")
+    @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = ScooterTypeResponseDTO.class)))
+    @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "404", content = @Content(mediaType = "application/json"),
+            description = TYPE_NOT_FOUND)
+
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('scooterTypes:read')")
     public ResponseEntity<?> getById(@PathVariable Long id) {
@@ -48,8 +72,18 @@ public class ScooterTypeController {
 
         return optionalScooterType.isPresent()
                 ? ResponseEntity.ok(scooterTypeResponseMapper.toDto(optionalScooterType.get()))
-                : new ResponseEntity<>(TYPE_NOT_FOUND, HttpStatus.FORBIDDEN);
+                : new ResponseEntity<>(TYPE_NOT_FOUND, HttpStatus.NOT_FOUND);
     }
+
+
+    @Operation(operationId = "createOrUpdate", summary = "Create or update Scooter type",
+            description = "If the Scooter type exists - then the fields are updated, if not - created new Scooter type")
+    @Parameter(in = ParameterIn.PATH, name = "id", description = "Scooter type id")
+    @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = ScooterTypeResponseDTO.class)))
+    @ApiResponse(responseCode = "400", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
 
     @PostMapping
     @PreAuthorize("hasAuthority('scooterTypes:write')")
@@ -63,6 +97,15 @@ public class ScooterTypeController {
         return ResponseEntity.ok(scooterTypeResponseMapper.toDto(scooterType));
     }
 
+
+    @Operation(operationId = "delete", summary = "Delete Scooter type")
+    @Parameter(in = ParameterIn.PATH, name = "id", description = "Scooter type id")
+    @ApiResponse(responseCode = "202", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "404", content = @Content(mediaType = "application/json"),
+            description = TYPE_NOT_FOUND)
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('scooterTypes:write')")
     public ResponseEntity<?> delete(@PathVariable Long id) {
@@ -71,7 +114,8 @@ public class ScooterTypeController {
             return new ResponseEntity<>("Scooter type with this id was deleted", HttpStatus.ACCEPTED);
         } catch (EmptyResultDataAccessException e) {
             log.error(e.getMessage(), TYPE_NOT_FOUND);
-            return new ResponseEntity<>(TYPE_NOT_FOUND, HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(TYPE_NOT_FOUND, HttpStatus.NOT_FOUND);
         }
     }
 }
+

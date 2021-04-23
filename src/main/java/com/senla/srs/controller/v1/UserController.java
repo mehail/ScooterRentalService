@@ -28,8 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @Slf4j
-@Tag(name = "User REST Controller",
-        description = "Interacting with user accounts")
+@Tag(name = "User REST Controller")
 @RestController
 @RequestMapping("/api/v1/users")
 class UserController extends AbstractRestController {
@@ -50,11 +49,12 @@ class UserController extends AbstractRestController {
         this.userRequestMapper = userRequestMapper;
     }
 
+
     @Operation(summary = "Get a list of Users",
             description = "If the User is not an Administrator, then a list with an authorized User is returned")
-    @ApiResponse(responseCode = "200", description = "Successful operation",
-            content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = UserFullResponseDTO.class)))
+    @ApiResponse(responseCode = "200")
+    @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
     @PageableAsQueryParam()
 
     @GetMapping
@@ -68,14 +68,15 @@ class UserController extends AbstractRestController {
                 page, size, sort));
     }
 
+
     @Operation(operationId = "getById", summary = "Get a User by its id")
     @Parameter(in = ParameterIn.PATH, name = "id", description = "User id")
-    @ApiResponse(responseCode = "200", description = "Successful operation",
-            content = @Content(mediaType = "application/json",
+    @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = UserFullResponseDTO.class)))
-    @ApiResponse(responseCode = "400", description = "Invalid User ID supplied")
-    @ApiResponse(responseCode = "403", description = "Read access forbidden")
-    @ApiResponse(responseCode = "404", description = USER_NOT_FOUND)
+    @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "404", content = @Content(mediaType = "application/json"),
+            description = USER_NOT_FOUND)
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('users:read')")
@@ -96,10 +97,11 @@ class UserController extends AbstractRestController {
     @Operation(operationId = "createOrUpdate", summary = "Create or update User",
             description = "If the User exists - then the fields are updated, if not - created new User")
     @Parameter(in = ParameterIn.PATH, name = "id", description = "User id")
-    @ApiResponse(responseCode = "200", description = "Successful operation",
-            content = @Content(mediaType = "application/json",
+    @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = UserFullResponseDTO.class)))
-    @ApiResponse(responseCode = "403", description = "Сreate/Update access forbidden")
+    @ApiResponse(responseCode = "400", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
 
     @PostMapping
     public ResponseEntity<?> createOrUpdate(@RequestBody UserRequestDTO userRequestDTO,
@@ -125,6 +127,27 @@ class UserController extends AbstractRestController {
             return constrainCreate(userRequestDTO);
         } else {
             return new ResponseEntity<>(RE_AUTH, HttpStatus.FORBIDDEN);
+        }
+    }
+
+
+    @Operation(operationId = "delete", summary = "Delete User")
+    @Parameter(in = ParameterIn.PATH, name = "id", description = "User id")
+    @ApiResponse(responseCode = "202", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "404", content = @Content(mediaType = "application/json"),
+            description = USER_NOT_FOUND)
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('users:write')")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        try {
+            userService.deleteById(id);
+            return new ResponseEntity<>("User with this id was found", HttpStatus.ACCEPTED);
+        } catch (EmptyResultDataAccessException e) {
+            log.error(e.getMessage(), USER_NOT_FOUND);
+            return new ResponseEntity<>(USER_NOT_FOUND, HttpStatus.NOT_FOUND);
         }
     }
 
@@ -155,23 +178,5 @@ class UserController extends AbstractRestController {
     private ResponseEntity<?> save(UserRequestDTO userRequestDTO) {
         User user = userService.save(userRequestMapper.toEntity(userRequestDTO));
         return ResponseEntity.ok(userFullResponseMapper.toDto(user));
-    }
-
-
-    @Operation(operationId = "delete", summary = "Delete User")
-    @Parameter(in = ParameterIn.PATH, name = "id", description = "User id")
-    @ApiResponse(responseCode = "202", description = "Accepted operation")
-    @ApiResponse(responseCode = "404", description = USER_NOT_FOUND)
-
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('users:write')")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
-        try {
-            userService.deleteById(id);
-            return new ResponseEntity<>("User with this id was found", HttpStatus.ACCEPTED);
-        } catch (EmptyResultDataAccessException e) {
-            log.error(e.getMessage(), USER_NOT_FOUND);
-            return new ResponseEntity<>(USER_NOT_FOUND, HttpStatus.NOT_FOUND);
-        }
     }
 }

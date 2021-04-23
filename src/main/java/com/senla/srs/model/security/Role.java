@@ -19,6 +19,7 @@ public enum Role {
     ADMIN(Set.of(Permission.POINT_OF_RENTALS_READ,
             Permission.POINT_OF_RENTALS_WRITE,
             Permission.PROMO_CODS_READ,
+            Permission.PROMO_CODS_READ_ALL,
             Permission.PROMO_CODS_WRITE,
             Permission.SCOOTERS_READ,
             Permission.SCOOTERS_WRITE,
