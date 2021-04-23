@@ -2,9 +2,10 @@ package com.senla.srs.mapper;
 
 import com.senla.srs.dto.user.UserFullResponseDTO;
 import com.senla.srs.model.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,13 +15,11 @@ public class UserFullResponseMapper extends AbstractMapper<User, UserFullRespons
         super(User.class, UserFullResponseDTO.class);
     }
 
-    public List<UserFullResponseDTO> mapListToDtoList(List<User> users) {
-        return users.stream()
+    public Page<UserFullResponseDTO> mapPageToDtoPage(Page<User> users) {
+        List<UserFullResponseDTO> userFullResponseDTOS = users.getContent().stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
-    }
 
-    public List<UserFullResponseDTO> mapListToDtoList(User user) {
-        return mapListToDtoList(Collections.singletonList(user));
+        return new PageImpl<>(userFullResponseDTOS);
     }
 }

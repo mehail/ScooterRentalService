@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -32,6 +30,13 @@ public class UserServiceImpl implements UserService {
         Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
 
         return userRepository.findAll(paging);
+    }
+
+    @Override
+    public Page<User> retrieveAllUsersByEmail(String email, Integer pageNo, Integer pageSize, String sortBy) {
+        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+
+        return userRepository.findAllByEmail(email, paging);
     }
 
     @Override

@@ -19,15 +19,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -58,16 +55,17 @@ class UserController extends AbstractRestController {
     @ApiResponse(responseCode = "200", description = "Successful operation",
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = UserFullResponseDTO.class)))
+    @PageableAsQueryParam()
+
     @GetMapping
     @PreAuthorize("hasAuthority('users:read')")
-    @PageableAsQueryParam()
-    public Page<User> getAll(Integer page, Integer size, String sort,
-                             @AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
+    public Page<UserFullResponseDTO> getAll(Integer page, Integer size, String sort,
+                                            @AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
+
         return isAdmin(userSecurity)
-                ? userService.retrieveAllUsers(page, size, sort)
-                : userService.retrieveUserByEmail(userSecurity.getUsername())
-                    .map(user -> new PageImpl<>(List.of(user)))
-                    .orElseGet(() -> new PageImpl<>(new ArrayList<>()));
+                ? userFullResponseMapper.mapPageToDtoPage(userService.retrieveAllUsers(page, size, sort))
+                : userFullResponseMapper.mapPageToDtoPage(userService.retrieveAllUsersByEmail(userSecurity.getUsername(),
+                page, size, sort));
     }
 
     @Operation(operationId = "getById", summary = "Get a User by its id")
