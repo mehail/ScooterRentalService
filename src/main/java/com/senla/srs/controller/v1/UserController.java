@@ -64,15 +64,16 @@ class UserController extends AbstractRestController {
 
         return isAdmin(userSecurity)
                 ? userFullResponseMapper.mapPageToDtoPage(userService.retrieveAllUsers(page, size, sort))
-                : userFullResponseMapper.mapPageToDtoPage(userService.retrieveAllUsersByEmail(userSecurity.getUsername(),
-                page, size, sort));
+
+                : userFullResponseMapper.mapPageToDtoPage(
+                userService.retrieveAllUsersByEmail(userSecurity.getUsername(), page, size, sort));
     }
 
 
     @Operation(operationId = "getById", summary = "Get a User by its id")
     @Parameter(in = ParameterIn.PATH, name = "id", description = "User id")
     @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = UserFullResponseDTO.class)))
+            schema = @Schema(implementation = UserFullResponseDTO.class)))
     @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "404", content = @Content(mediaType = "application/json"),
@@ -98,7 +99,7 @@ class UserController extends AbstractRestController {
             description = "If the User exists - then the fields are updated, if not - created new User")
     @Parameter(in = ParameterIn.PATH, name = "id", description = "User id")
     @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = UserFullResponseDTO.class)))
+            schema = @Schema(implementation = UserFullResponseDTO.class)))
     @ApiResponse(responseCode = "400", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))

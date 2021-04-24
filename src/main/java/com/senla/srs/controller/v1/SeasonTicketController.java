@@ -72,15 +72,16 @@ public class SeasonTicketController extends AbstractRestController {
                                                     @AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
         return isAdmin(userSecurity)
                 ? seasonTicketFullResponseMapper.mapPageToDtoPage(seasonTicketService.retrieveAllSeasonTickets(page, size, sort))
+
                 : seasonTicketFullResponseMapper.mapPageToDtoPage(
-                        seasonTicketService.retrieveAllSeasonTicketsByUserId(getAuthUserId(userSecurity), page, size, sort));
+                seasonTicketService.retrieveAllSeasonTicketsByUserId(getAuthUserId(userSecurity), page, size, sort));
     }
 
 
     @Operation(operationId = "getById", summary = "Get a Season ticket by its id")
     @Parameter(in = ParameterIn.PATH, name = "id", description = "Season ticket id")
     @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = SeasonTicketFullResponseDTO.class)))
+            schema = @Schema(implementation = SeasonTicketFullResponseDTO.class)))
     @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "404", content = @Content(mediaType = "application/json"),
@@ -108,7 +109,7 @@ public class SeasonTicketController extends AbstractRestController {
             description = "If the Season ticket exists - then the fields are updated, if not - created new Season ticket")
     @Parameter(in = ParameterIn.PATH, name = "id", description = "Season ticket id")
     @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = SeasonTicketFullResponseDTO.class)))
+            schema = @Schema(implementation = SeasonTicketFullResponseDTO.class)))
     @ApiResponse(responseCode = "400", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))

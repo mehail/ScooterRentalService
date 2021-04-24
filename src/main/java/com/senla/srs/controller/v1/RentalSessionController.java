@@ -57,6 +57,7 @@ public class RentalSessionController extends AbstractRestController {
     }
 
     //ToDo Ошибка маппинг LocalDateTime
+
     /**
      * Создавая сессию получаем ошибку синтаксиса "рядом с end", я так понимаю, что это связано с DateLocalTime,
      * хотя с JPA 2.2 все должно поддерживаться автоматически, пробовал добавить конверторы (com.senla.srs.test.ConverterLDT),
@@ -111,6 +112,7 @@ public class RentalSessionController extends AbstractRestController {
 
         return isAdmin(userSecurity)
                 ? rentalSessionResponseMapper.mapPageToDtoPage(rentalSessionService.retrieveAllRentalSessions(page, size, sort))
+
                 : rentalSessionResponseMapper.mapPageToDtoPage(
                 rentalSessionService.retrieveAllRentalSessionsByUserId(getAuthUserId(userSecurity), page, size, sort));
     }
@@ -118,8 +120,8 @@ public class RentalSessionController extends AbstractRestController {
 
     @Operation(operationId = "getById", summary = "Get a Rental session by its id")
     @Parameter(in = ParameterIn.PATH, name = "id", description = "Rental session id")
-    @ApiResponse(responseCode = "200",content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = RentalSessionResponseDTO.class)))
+    @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json",
+            schema = @Schema(implementation = RentalSessionResponseDTO.class)))
     @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "404", content = @Content(mediaType = "application/json"),
@@ -148,7 +150,7 @@ public class RentalSessionController extends AbstractRestController {
             description = "If the Rental session exists - then the fields are updated, if not - created new Rental session")
     @Parameter(in = ParameterIn.PATH, name = "id", description = "Rental session id")
     @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = RentalSessionResponseDTO.class)))
+            schema = @Schema(implementation = RentalSessionResponseDTO.class)))
     @ApiResponse(responseCode = "400", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
