@@ -4,9 +4,12 @@ import com.senla.srs.model.PointOfRental;
 import com.senla.srs.repository.PointOfRentalRepository;
 import com.senla.srs.service.PointOfRentalService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,8 +23,10 @@ public class PointOfRentalServiceImpl implements PointOfRentalService {
     }
 
     @Override
-    public List<PointOfRental> retrieveAllPointOfRentals() {
-        return pointOfRentalRepository.findAll();
+    public Page<PointOfRental> retrieveAllPointOfRentals(Integer pageNo, Integer pageSize, String sortBy) {
+        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+
+        return pointOfRentalRepository.findAll(paging);
     }
 
     @Override

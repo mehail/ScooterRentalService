@@ -21,13 +21,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -68,12 +68,12 @@ public class SeasonTicketController extends AbstractRestController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('seasonTickets:read')")
-    public List<SeasonTicketFullResponseDTO> getAll(
-            @AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
+    public Page<SeasonTicketFullResponseDTO> getAll(Integer page, Integer size, @RequestParam(defaultValue = "id") String sort,
+                                                    @AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
         return isAdmin(userSecurity)
-                ? seasonTicketFullResponseMapper.mapListToDtoList(seasonTicketService.retrieveAllSeasonTickets())
-                : seasonTicketFullResponseMapper.mapListToDtoList(
-                        seasonTicketService.retrieveAllSeasonTicketsByUserId(getAuthUserId(userSecurity)));
+                ? seasonTicketFullResponseMapper.mapPageToDtoPage(seasonTicketService.retrieveAllSeasonTickets(page, size, sort))
+                : seasonTicketFullResponseMapper.mapPageToDtoPage(
+                        seasonTicketService.retrieveAllSeasonTicketsByUserId(getAuthUserId(userSecurity), page, size, sort));
     }
 
 

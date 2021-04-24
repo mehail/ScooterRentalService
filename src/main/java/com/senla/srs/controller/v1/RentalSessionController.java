@@ -19,6 +19,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,7 +28,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -59,8 +59,8 @@ public class RentalSessionController extends AbstractRestController {
     //ToDo Ошибка маппинг LocalDateTime
     /**
      * Создавая сессию получаем ошибку синтаксиса "рядом с end", я так понимаю, что это связано с DateLocalTime,
-     * хотя с JPA 2.2 все должно поддерживаться автоматически, пробовал добавить конверторы, они отрабатывают,
-     * но в процессе сохранения не участвуют (ConverterLDT.class)
+     * хотя с JPA 2.2 все должно поддерживаться автоматически, пробовал добавить конверторы (com.senla.srs.test.ConverterLDT),
+     * они отрабатывают, но в процессе сохранения не участвуют
      **/
     @GetMapping("/test/")
     public ResponseEntity<?> test() {
@@ -106,11 +106,13 @@ public class RentalSessionController extends AbstractRestController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('rentalSessions:read')")
-    public List<RentalSessionResponseDTO> getAll(@AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
+    public Page<RentalSessionResponseDTO> getAll(Integer page, Integer size, @RequestParam(defaultValue = "id") String sort,
+                                                 @AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
+
         return isAdmin(userSecurity)
-                ? rentalSessionResponseMapper.mapListToDtoList(rentalSessionService.retrieveAllRentalSessions())
-                : rentalSessionResponseMapper.mapListToDtoList(
-                rentalSessionService.retrieveAllRentalSessionsByUserId(getAuthUserId(userSecurity)));
+                ? rentalSessionResponseMapper.mapPageToDtoPage(rentalSessionService.retrieveAllRentalSessions(page, size, sort))
+                : rentalSessionResponseMapper.mapPageToDtoPage(
+                rentalSessionService.retrieveAllRentalSessionsByUserId(getAuthUserId(userSecurity), page, size, sort));
     }
 
 

@@ -4,10 +4,13 @@ import com.senla.srs.model.SeasonTicket;
 import com.senla.srs.repository.SeasonTicketRepository;
 import com.senla.srs.service.SeasonTicketService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,13 +24,17 @@ public class SeasonTicketServiceImpl implements SeasonTicketService {
     }
 
     @Override
-    public List<SeasonTicket> retrieveAllSeasonTickets() {
-        return seasonTicketRepository.findAll();
+    public Page<SeasonTicket> retrieveAllSeasonTickets(Integer pageNo, Integer pageSize, String sortBy) {
+        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+
+        return seasonTicketRepository.findAll(paging);
     }
 
     @Override
-    public List<SeasonTicket> retrieveAllSeasonTicketsByUserId(Long userId) {
-        return seasonTicketRepository.findAllByUserId(userId);
+    public Page<SeasonTicket> retrieveAllSeasonTicketsByUserId(Long userId, Integer pageNo, Integer pageSize, String sortBy) {
+        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+
+        return seasonTicketRepository.findAllByUserId(userId, paging);
     }
 
     @Override

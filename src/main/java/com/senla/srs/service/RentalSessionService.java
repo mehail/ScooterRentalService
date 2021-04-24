@@ -1,17 +1,17 @@
 package com.senla.srs.service;
 
 import com.senla.srs.model.RentalSession;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 @Service
 public interface RentalSessionService {
     RentalSession save(RentalSession rentalSession);
-    List<RentalSession> retrieveAllRentalSessions();
-    List<RentalSession> retrieveAllRentalSessionsByUserId(Long id);
+    Page<RentalSession> retrieveAllRentalSessions(Integer pageNo, Integer pageSize, String sortBy);
+    Page<RentalSession> retrieveAllRentalSessionsByUserId(Long id, Integer pageNo, Integer pageSize, String sortBy);
     Optional<RentalSession> retrieveRentalSessionById(Long id);
     Optional<RentalSession> retrieveRentalSessionByUserIdAndScooterSerialNumberAndBegin(Long userId,
                                                                                         String scooterSerialNumber,

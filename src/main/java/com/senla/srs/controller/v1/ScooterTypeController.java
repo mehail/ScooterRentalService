@@ -18,14 +18,13 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Tag(name = "Scooter type REST Controller")
@@ -49,10 +48,8 @@ public class ScooterTypeController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('scooterTypes:read')")
-    public List<ScooterTypeResponseDTO> getAll() {
-        return scooterTypeService.retrieveAllScooterTypes().stream()
-                .map(scooterTypeResponseMapper::toDto)
-                .collect(Collectors.toList());
+    public Page<ScooterTypeResponseDTO> getAll(Integer page, Integer size, @RequestParam(defaultValue = "id") String sort) {
+        return scooterTypeResponseMapper.mapPageToDtoPage(scooterTypeService.retrieveAllScooterTypes(page, size, sort));
     }
 
 

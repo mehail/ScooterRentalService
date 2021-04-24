@@ -15,15 +15,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Tag(name = "PromoCod REST Controller")
@@ -52,10 +51,8 @@ public class PromoCodController extends AbstractRestController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('promoCods:readAll')")
-    public List<PromoCodDTO> getAll() {
-        return promoCodService.retrieveAllPromoCods().stream()
-                .map(promoCodMapper::toDto)
-                .collect(Collectors.toList());
+    public Page<PromoCodDTO> getAll(Integer page, Integer size, @RequestParam(defaultValue = "name") String sort) {
+        return promoCodMapper.mapPageToDtoPage(promoCodService.retrieveAllPromoCods(page, size, sort));
     }
 
 

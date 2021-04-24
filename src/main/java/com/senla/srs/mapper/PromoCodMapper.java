@@ -5,7 +5,7 @@ import com.senla.srs.model.PromoCod;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PromoCodMapper extends AbstractMapper<PromoCod, PromoCodDTO> {
+public class PromoCodMapper extends AbstractMapperWithPagination<PromoCod, PromoCodDTO> {
     public PromoCodMapper() {
         super(PromoCod.class, PromoCodDTO.class);
     }

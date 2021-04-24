@@ -59,7 +59,7 @@ class UserController extends AbstractRestController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('users:read')")
-    public Page<UserFullResponseDTO> getAll(Integer page, Integer size, String sort,
+    public Page<UserFullResponseDTO> getAll(Integer page, Integer size, @RequestParam(defaultValue = "id") String sort,
                                             @AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
 
         return isAdmin(userSecurity)

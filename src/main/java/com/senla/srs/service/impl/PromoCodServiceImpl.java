@@ -4,9 +4,12 @@ import com.senla.srs.model.PromoCod;
 import com.senla.srs.repository.PromoCodRepository;
 import com.senla.srs.service.PromoCodService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,8 +23,10 @@ public class PromoCodServiceImpl implements PromoCodService {
     }
 
     @Override
-    public List<PromoCod> retrieveAllPromoCods() {
-        return promoCodRepository.findAll();
+    public Page<PromoCod> retrieveAllPromoCods(Integer pageNo, Integer pageSize, String sortBy) {
+        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+
+        return promoCodRepository.findAll(paging);
     }
 
     @Override

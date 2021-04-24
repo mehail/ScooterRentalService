@@ -4,9 +4,12 @@ import com.senla.srs.model.ScooterType;
 import com.senla.srs.repository.ScooterTypeRepository;
 import com.senla.srs.service.ScooterTypeService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,8 +23,10 @@ public class ScooterTypeServiceImpl implements ScooterTypeService {
     }
 
     @Override
-    public List<ScooterType> retrieveAllScooterTypes() {
-        return scooterTypeRepository.findAll();
+    public Page<ScooterType> retrieveAllScooterTypes(Integer pageNo, Integer pageSize, String sortBy) {
+        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+
+        return scooterTypeRepository.findAll(paging);
     }
 
     @Override
