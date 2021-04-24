@@ -105,6 +105,7 @@ class UserController extends AbstractRestController {
     @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
 
     @PostMapping
+    @PreAuthorize("hasAuthority('users:read')")
     public ResponseEntity<?> createOrUpdate(@RequestBody UserRequestDTO userRequestDTO,
                                             @AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
 

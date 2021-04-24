@@ -21,7 +21,6 @@ public enum Permission {
     SEASON_TICKETS_WRITE("seasonTickets:write"),
 
     USERS_READ("users:read"),
-    USERS_READ_ALL("users:readAll"),
     USERS_WRITE("users:write");
 
     private final String permission;
