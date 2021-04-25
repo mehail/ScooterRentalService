@@ -298,12 +298,12 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: start_date
-                  type: TIMESTAMP WITHOUT TIME ZONE
+                  type: DATE
                   constraints:
                     nullable: false
               - column:
                   name: expired_date
-                  type: TIMESTAMP WITHOUT TIME ZONE
+                  type: DATE
                   constraints:
                     nullable: false
               - column:
@@ -339,7 +339,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: begin_time
-                  type: TIMESTAMP WITHOUT TIME ZONE
+                  type: TIME WITHOUT TIME ZONE
                   constraints:
                     nullable: false
               - column:
@@ -347,15 +347,7 @@ databaseChangeLog:
                   type: DATE
               - column:
                   name: end_time
-                  type: TIMESTAMP WITHOUT TIME ZONE
-#              - column:
-#                  name: begin
-#                  type: TIMESTAMP WITHOUT TIME ZONE
-#                  constraints:
-#                    nullable: false
-#              - column:
-#                  name: end
-#                  type: TIMESTAMP WITHOUT TIME ZONE
+                  type: TIME WITHOUT TIME ZONE
               - column:
                   name: scooter_serial_number
                   type: VARCHAR(64)
@@ -387,12 +379,12 @@ databaseChangeLog:
                     primaryKeyName: promo_cods_pk
               - column:
                   name: start_date
-                  type: TIMESTAMP WITHOUT TIME ZONE
+                  type: DATE
                   constraints:
                     nullable: false
               - column:
                   name: expired_date
-                  type: TIMESTAMP WITHOUT TIME ZONE
+                  type: DATE
               - column:
                   name: discount_percentage
                   type: INTEGER

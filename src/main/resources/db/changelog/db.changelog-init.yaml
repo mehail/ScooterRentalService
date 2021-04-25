@@ -258,13 +258,13 @@ databaseChangeLog:
                   type: DATE
               - column:
                   name: begin_time
-#                  type: STRING
+                  type: DATE
               - column:
                   name: end_date
                   type: DATE
               - column:
                   name: end_time
-#                  type: STRING
+                  type: DATE
               - column:
                   name: scooter_serial_number
                   type: STRING
