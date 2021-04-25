@@ -3,7 +3,9 @@ package com.senla.srs.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Data
 @AllArgsConstructor
@@ -24,9 +26,24 @@ public class RentalSession extends AbstractEntity {
     @JoinColumn(name = "scooter_serial_number")
     private Scooter scooter;
     private Integer rate;
+//    @NonNull
+//    private LocalDateTime begin;
+//    private LocalDateTime end;
+
+
+
     @NonNull
-    private LocalDateTime begin;
-    private LocalDateTime end;
+    @Column(name = "begin_date")
+    private LocalDate beginDate;
+    @NonNull
+    @Column(name = "begin_time")
+    private LocalTime beginTime;
+    @Column(name = "end_date")
+    private LocalDate endDate;
+    @Column(name = "end_time")
+    private LocalTime endTime;
+
+
     @ManyToOne
     @JoinColumn(name = "season_ticket_id")
     private SeasonTicket seasonTicket;

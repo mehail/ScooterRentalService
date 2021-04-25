@@ -333,13 +333,29 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: begin
+                  name: begin_date
+                  type: DATE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: begin_time
                   type: TIMESTAMP WITHOUT TIME ZONE
                   constraints:
                     nullable: false
               - column:
-                  name: end
+                  name: end_date
+                  type: DATE
+              - column:
+                  name: end_time
                   type: TIMESTAMP WITHOUT TIME ZONE
+#              - column:
+#                  name: begin
+#                  type: TIMESTAMP WITHOUT TIME ZONE
+#                  constraints:
+#                    nullable: false
+#              - column:
+#                  name: end
+#                  type: TIMESTAMP WITHOUT TIME ZONE
               - column:
                   name: scooter_serial_number
                   type: VARCHAR(64)
