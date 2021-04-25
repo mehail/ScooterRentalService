@@ -78,7 +78,6 @@ public class PromoCodController extends AbstractRestController {
 
     @Operation(operationId = "createOrUpdate", summary = "Create or update PromoCod",
             description = "If the PromoCod exists - then the fields are updated, if not - created new PromoCod")
-    @Parameter(in = ParameterIn.PATH, name = "name", description = "PromoCod name")
     @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json",
             schema = @Schema(implementation = PromoCodDTO.class)))
     @ApiResponse(responseCode = "400", content = @Content(mediaType = "application/json"))

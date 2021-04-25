@@ -4,7 +4,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Data
@@ -26,12 +25,6 @@ public class RentalSession extends AbstractEntity {
     @JoinColumn(name = "scooter_serial_number")
     private Scooter scooter;
     private Integer rate;
-//    @NonNull
-//    private LocalDateTime begin;
-//    private LocalDateTime end;
-
-
-
     @NonNull
     @Column(name = "begin_date")
     private LocalDate beginDate;
@@ -42,8 +35,6 @@ public class RentalSession extends AbstractEntity {
     private LocalDate endDate;
     @Column(name = "end_time")
     private LocalTime endTime;
-
-
     @ManyToOne
     @JoinColumn(name = "season_ticket_id")
     private SeasonTicket seasonTicket;

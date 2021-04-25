@@ -6,7 +6,10 @@ import com.senla.srs.service.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.chrono.ChronoLocalDate;
 import java.util.Optional;
 
@@ -26,7 +29,7 @@ public class RentalSessionValidatorImpl implements RentalSessionValidator {
 
         return isUserValid(optionalUser) &&
                 isValidScooter(optionalScooter) &&
-                isValidDate(rentalSessionRequestDTO.getBegin(), rentalSessionRequestDTO.getEnd()) &&
+                isValidDateTime(rentalSessionRequestDTO) &&
                 isValidSeasonTicket(rentalSessionRequestDTO, optionalUser, optionalScooter) &&
                 isValidPromoCod(rentalSessionRequestDTO);
     }
@@ -36,8 +39,8 @@ public class RentalSessionValidatorImpl implements RentalSessionValidator {
 
         return optionalPromoCod.isEmpty() ||
                 (optionalPromoCod.get().getAvailable() &&
-                        !optionalPromoCod.get().getStartDate().isAfter(ChronoLocalDate.from(rentalSessionRequestDTO.getBegin())) &&
-                        optionalPromoCod.get().getExpiredDate().isAfter(ChronoLocalDate.from(rentalSessionRequestDTO.getBegin())));
+                        !optionalPromoCod.get().getStartDate().isAfter(ChronoLocalDate.from(rentalSessionRequestDTO.getBeginDate())) &&
+                        optionalPromoCod.get().getExpiredDate().isAfter(ChronoLocalDate.from(rentalSessionRequestDTO.getBeginDate())));
     }
 
     private boolean isValidSeasonTicket(RentalSessionRequestDTO rentalSessionRequestDTO,
@@ -62,12 +65,26 @@ public class RentalSessionValidatorImpl implements RentalSessionValidator {
                 (optionalScooter.isPresent() &&
                         seasonTicket.getScooterType().getId().equals(optionalScooter.get().getType().getId())) &&
 
-                !seasonTicket.getStartDate().isAfter(ChronoLocalDate.from(rentalSessionRequestDTO.getBegin())) &&
-                seasonTicket.getExpiredDate().isAfter(ChronoLocalDate.from(rentalSessionRequestDTO.getBegin()));
+                !seasonTicket.getStartDate().isAfter(ChronoLocalDate.from(rentalSessionRequestDTO.getBeginDate())) &&
+                seasonTicket.getExpiredDate().isAfter(ChronoLocalDate.from(rentalSessionRequestDTO.getBeginDate()));
     }
 
-    private boolean isValidDate(LocalDateTime begin, LocalDateTime end) {
-        return end == null || begin.isBefore(end);
+    private boolean isValidDateTime(RentalSessionRequestDTO rentalSessionRequestDTO) {
+        LocalDate beginDate = rentalSessionRequestDTO.getBeginDate();
+        LocalTime beginTime = rentalSessionRequestDTO.getBeginTime();
+
+        LocalDate endDate = rentalSessionRequestDTO.getEndDate();
+        LocalTime endTime = rentalSessionRequestDTO.getEndTime();
+
+        if (endDate == null && endTime == null) {
+            return true;
+        } else if (endDate != null && endTime != null) {
+            LocalDateTime begin = LocalDateTime.of(beginDate, beginTime);
+            LocalDateTime end = LocalDateTime.of(endDate, endTime);
+            return Duration.between(begin, end).getSeconds() > 0;
+        } else {
+            return false;
+        }
     }
 
     private boolean isValidScooter(Optional<Scooter> optionalScooter) {

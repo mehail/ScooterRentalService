@@ -107,7 +107,6 @@ public class SeasonTicketController extends AbstractRestController {
 
     @Operation(operationId = "createOrUpdate", summary = "Create or update Season ticket",
             description = "If the Season ticket exists - then the fields are updated, if not - created new Season ticket")
-    @Parameter(in = ParameterIn.PATH, name = "id", description = "Season ticket id")
     @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json",
             schema = @Schema(implementation = SeasonTicketFullResponseDTO.class)))
     @ApiResponse(responseCode = "400", content = @Content(mediaType = "application/json"))

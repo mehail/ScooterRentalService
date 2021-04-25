@@ -76,7 +76,6 @@ public class PointOfRentalController {
 
     @Operation(operationId = "createOrUpdate", summary = "Create or update Point of rental",
             description = "If the Point of rental exists - then the fields are updated, if not - created new Point of rental")
-    @Parameter(in = ParameterIn.PATH, name = "id", description = "Point of rental id")
     @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = PointOfRentalResponseDTO.class)))
     @ApiResponse(responseCode = "400", content = @Content(mediaType = "application/json"))

@@ -10,7 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Optional;
 
 @Service
@@ -43,11 +44,12 @@ public class RentalSessionServiceImpl implements RentalSessionService {
     }
 
     @Override
-    public Optional<RentalSession> retrieveRentalSessionByUserIdAndScooterSerialNumberAndBegin(Long userId,
-                                                                                               String scooterSerialNumber,
-                                                                                               LocalDateTime begin) {
+    public Optional<RentalSession> retrieveRentalSessionByUserIdAndScooterSerialNumberAndBeginDateAndBeginTime(Long userId,
+                                                                                                               String scooterSerialNumber,
+                                                                                                               LocalDate beginDate, LocalTime beginTime) {
 
-        return  rentalSessionRepository.findByUserIdAndScooterSerialNumberAndBegin(userId, scooterSerialNumber, begin);
+        return  rentalSessionRepository.findByUserIdAndScooterSerialNumberAndBeginDateAndBeginTime(userId,
+                scooterSerialNumber, beginDate, beginTime);
     }
 
     @Override

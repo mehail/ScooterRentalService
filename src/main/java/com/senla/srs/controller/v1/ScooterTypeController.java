@@ -75,7 +75,6 @@ public class ScooterTypeController {
 
     @Operation(operationId = "createOrUpdate", summary = "Create or update Scooter type",
             description = "If the Scooter type exists - then the fields are updated, if not - created new Scooter type")
-    @Parameter(in = ParameterIn.PATH, name = "id", description = "Scooter type id")
     @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = ScooterTypeResponseDTO.class)))
     @ApiResponse(responseCode = "400", content = @Content(mediaType = "application/json"))
