@@ -1,8 +1,9 @@
 package com.senla.srs.controller.v1;
 
+import com.senla.srs.dto.user.UserDTO;
 import com.senla.srs.dto.user.UserFullResponseDTO;
 import com.senla.srs.dto.user.UserRequestDTO;
-import com.senla.srs.facade.UserControllerFacade;
+import com.senla.srs.controller.v1.facade.EntityControllerFacade;
 import com.senla.srs.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -24,11 +25,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/users")
 class UserController extends AbstractRestController {
-    private final UserControllerFacade userControllerFacade;
+    private final EntityControllerFacade<UserDTO, UserRequestDTO, UserFullResponseDTO, Long> entityControllerFacade;
 
-    public UserController(UserService userService, UserControllerFacade userControllerFacade) {
+    public UserController(UserService userService,
+                          EntityControllerFacade<UserDTO, UserRequestDTO, UserFullResponseDTO, Long> entityControllerFacade) {
         super(userService);
-        this.userControllerFacade = userControllerFacade;
+        this.entityControllerFacade = entityControllerFacade;
     }
 
 
@@ -44,7 +46,7 @@ class UserController extends AbstractRestController {
     public Page<UserFullResponseDTO> getAll(Integer page, Integer size, @RequestParam(defaultValue = "id") String sort,
                                             @AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
 
-        return userControllerFacade.getAll(page, size, sort, userSecurity);
+        return entityControllerFacade.getAll(page, size, sort, userSecurity);
     }
 
 
@@ -61,7 +63,7 @@ class UserController extends AbstractRestController {
     public ResponseEntity<?> getById(@PathVariable Long id,
                                      @AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
 
-        return userControllerFacade.getById(id, userSecurity);
+        return entityControllerFacade.getById(id, userSecurity);
     }
 
 
@@ -78,7 +80,7 @@ class UserController extends AbstractRestController {
     public ResponseEntity<?> createOrUpdate(@RequestBody UserRequestDTO userRequestDTO,
                                             @AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
 
-        return userControllerFacade.createOrUpdate(userRequestDTO, userSecurity);
+        return entityControllerFacade.createOrUpdate(userRequestDTO, userSecurity);
     }
 
 
@@ -92,6 +94,6 @@ class UserController extends AbstractRestController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('users:write')")
     public ResponseEntity<?> delete(@PathVariable Long id) {
-        return userControllerFacade.delete(id);
+        return entityControllerFacade.delete(id);
     }
 }

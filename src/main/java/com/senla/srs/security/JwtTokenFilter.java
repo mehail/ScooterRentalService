@@ -1,6 +1,5 @@
 package com.senla.srs.security;
 
-import com.senla.srs.exception.JwtAuthenticationException;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

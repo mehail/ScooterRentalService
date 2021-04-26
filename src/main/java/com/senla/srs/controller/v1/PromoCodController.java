@@ -1,9 +1,7 @@
 package com.senla.srs.controller.v1;
 
 import com.senla.srs.dto.promocod.PromoCodDTO;
-import com.senla.srs.mapper.PromoCodMapper;
-import com.senla.srs.model.PromoCod;
-import com.senla.srs.service.PromoCodService;
+import com.senla.srs.controller.v1.facade.EntityControllerFacade;
 import com.senla.srs.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -14,32 +12,22 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
-import java.util.Optional;
 
 @Slf4j
 @Tag(name = "PromoCod REST Controller")
 @RestController
 @RequestMapping("/api/v1/promo_codes")
 public class PromoCodController extends AbstractRestController {
-    private final PromoCodService promoCodService;
-    private final PromoCodMapper promoCodMapper;
-
-    private static final String PROMO_COD_NOT_FOUND = "No PromoCod with this name found";
+    private final EntityControllerFacade<PromoCodDTO, PromoCodDTO, PromoCodDTO, String> entityControllerFacade;
 
     public PromoCodController(UserService userService,
-                              PromoCodService promoCodService,
-                              PromoCodMapper promoCodMapper) {
+                              EntityControllerFacade<PromoCodDTO, PromoCodDTO, PromoCodDTO, String> entityControllerFacade) {
         super(userService);
-        this.promoCodService = promoCodService;
-        this.promoCodMapper = promoCodMapper;
+        this.entityControllerFacade = entityControllerFacade;
     }
 
 
@@ -52,7 +40,7 @@ public class PromoCodController extends AbstractRestController {
     @GetMapping
     @PreAuthorize("hasAuthority('promoCods:readAll')")
     public Page<PromoCodDTO> getAll(Integer page, Integer size, @RequestParam(defaultValue = "name") String sort) {
-        return promoCodMapper.mapPageToDtoPage(promoCodService.retrieveAllPromoCods(page, size, sort));
+        return entityControllerFacade.getAll(page, size, sort, null);
     }
 
 
@@ -62,17 +50,12 @@ public class PromoCodController extends AbstractRestController {
             schema = @Schema(implementation = PromoCodDTO.class)))
     @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
-    @ApiResponse(responseCode = "404", content = @Content(mediaType = "application/json"),
-            description = PROMO_COD_NOT_FOUND)
+    @ApiResponse(responseCode = "404", content = @Content(mediaType = "application/json"))
 
     @GetMapping("/{name}")
     @PreAuthorize("hasAuthority('promoCods:read')")
     public ResponseEntity<?> getByName(@PathVariable String name) {
-        Optional<PromoCod> optionalPromoCod = promoCodService.retrievePromoCodByName(name);
-
-        return optionalPromoCod.isPresent()
-                ? ResponseEntity.ok(promoCodMapper.toDto(optionalPromoCod.get()))
-                : new ResponseEntity<>(PROMO_COD_NOT_FOUND, HttpStatus.NOT_FOUND);
+        return entityControllerFacade.getById(name, null);
     }
 
 
@@ -87,9 +70,7 @@ public class PromoCodController extends AbstractRestController {
     @PostMapping
     @PreAuthorize("hasAuthority('promoCods:write')")
     public ResponseEntity<?> createOrUpdate(@RequestBody PromoCodDTO promoCodDTO) {
-        return isValidDate(promoCodDTO)
-                ? create(promoCodDTO)
-                : new ResponseEntity<>("The start and end dates of the PromoCod are not correct", HttpStatus.BAD_REQUEST);
+        return entityControllerFacade.createOrUpdate(promoCodDTO, null);
     }
 
 
@@ -98,30 +79,11 @@ public class PromoCodController extends AbstractRestController {
     @ApiResponse(responseCode = "202", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
-    @ApiResponse(responseCode = "404", content = @Content(mediaType = "application/json"),
-            description = PROMO_COD_NOT_FOUND)
+    @ApiResponse(responseCode = "404", content = @Content(mediaType = "application/json"))
 
     @DeleteMapping("/{name}")
     @PreAuthorize("hasAuthority('promoCods:write')")
     public ResponseEntity<?> delete(@PathVariable String name) {
-        try {
-            promoCodService.deleteById(name);
-            return new ResponseEntity<>("PromoCod with this serial number was deleted", HttpStatus.ACCEPTED);
-        } catch (EmptyResultDataAccessException e) {
-            log.error(e.getMessage(), PROMO_COD_NOT_FOUND);
-            return new ResponseEntity<>(PROMO_COD_NOT_FOUND, HttpStatus.FORBIDDEN);
-        }
-    }
-
-    private boolean isValidDate(PromoCodDTO promoCodDTO) {
-        LocalDate startDate = promoCodDTO.getStartDate();
-        LocalDate expiredDate = promoCodDTO.getExpiredDate();
-
-        return expiredDate == null || startDate.isBefore(expiredDate);
-    }
-
-    private ResponseEntity<?> create(PromoCodDTO promoCodDTO) {
-        PromoCod promoCod = promoCodService.save(promoCodMapper.toEntity(promoCodDTO));
-        return ResponseEntity.ok(promoCodMapper.toDto(promoCod));
+       return entityControllerFacade.delete(name);
     }
 }

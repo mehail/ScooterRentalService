@@ -1,12 +1,9 @@
 package com.senla.srs.controller.v1;
 
+import com.senla.srs.dto.scooter.ScooterDTO;
 import com.senla.srs.dto.scooter.ScooterRequestDTO;
 import com.senla.srs.dto.scooter.ScooterResponseDTO;
-import com.senla.srs.mapper.ScooterRequestMapper;
-import com.senla.srs.mapper.ScooterResponseMapper;
-import com.senla.srs.model.Scooter;
-import com.senla.srs.service.ScooterService;
-import com.senla.srs.service.ScooterTypeService;
+import com.senla.srs.controller.v1.facade.EntityControllerFacade;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -17,14 +14,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @Slf4j
 @Tag(name = "Scooter REST Controller")
@@ -32,13 +25,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/v1/scooters")
 public class ScooterController {
-    private final ScooterService scooterService;
-    private final ScooterTypeService scooterTypeService;
-    private final ScooterRequestMapper scooterRequestMapper;
-    private final ScooterResponseMapper scooterResponseMapper;
-
-    private static final String SCOOTER_NOT_FOUND = "A scooter with this serial number was not found";
-
+    private final EntityControllerFacade<ScooterDTO, ScooterRequestDTO, ScooterResponseDTO, String> entityControllerFacade;
 
     @Operation(summary = "Get a list of Scooters")
     @ApiResponse(responseCode = "200")
@@ -49,7 +36,7 @@ public class ScooterController {
     @GetMapping
     @PreAuthorize("hasAuthority('scooters:read')")
     public Page<ScooterResponseDTO> getAll(Integer page, Integer size, @RequestParam(defaultValue = "serialNumber") String sort) {
-        return scooterResponseMapper.mapPageToDtoPage(scooterService.retrieveAllScooters(page, size, sort));
+        return entityControllerFacade.getAll(page, size, sort, null);
     }
 
 
@@ -59,17 +46,12 @@ public class ScooterController {
             schema = @Schema(implementation = ScooterResponseDTO.class)))
     @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
-    @ApiResponse(responseCode = "404", content = @Content(mediaType = "application/json"),
-            description = SCOOTER_NOT_FOUND)
+    @ApiResponse(responseCode = "404", content = @Content(mediaType = "application/json"))
 
     @GetMapping("/{serialNumber}")
     @PreAuthorize("hasAuthority('scooters:read')")
     public ResponseEntity<?> getBySerialNumber(@PathVariable String serialNumber) {
-        Optional<Scooter> optionalScooter = scooterService.retrieveScooterBySerialNumber(serialNumber);
-
-        return optionalScooter.isPresent()
-                ? ResponseEntity.ok(scooterResponseMapper.toDto(optionalScooter.get()))
-                : new ResponseEntity<>(SCOOTER_NOT_FOUND, HttpStatus.NOT_FOUND);
+        return entityControllerFacade.getById(serialNumber, null);
     }
 
 
@@ -84,13 +66,7 @@ public class ScooterController {
     @PostMapping
     @PreAuthorize("hasAuthority('scooters:write')")
     public ResponseEntity<?> createOrUpdate(@RequestBody ScooterRequestDTO scooterDTO) {
-        if (scooterTypeService.retrieveScooterTypeById(scooterDTO.getTypeId()).isEmpty()) {
-            return new ResponseEntity<>("The scooter type is not correct", HttpStatus.BAD_REQUEST);
-        }
-
-        Scooter scooter = scooterService.save(scooterRequestMapper.toEntity(scooterDTO));
-
-        return ResponseEntity.ok(scooterResponseMapper.toDto(scooter));
+        return entityControllerFacade.createOrUpdate(scooterDTO, null);
     }
 
 
@@ -99,18 +75,11 @@ public class ScooterController {
     @ApiResponse(responseCode = "202", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
-    @ApiResponse(responseCode = "404", content = @Content(mediaType = "application/json"),
-            description = SCOOTER_NOT_FOUND)
+    @ApiResponse(responseCode = "404", content = @Content(mediaType = "application/json"))
 
     @DeleteMapping("/{serialNumber}")
     @PreAuthorize("hasAuthority('scooters:write')")
     public ResponseEntity<?> delete(@PathVariable String serialNumber) {
-        try {
-            scooterService.deleteById(serialNumber);
-            return new ResponseEntity<>("Scooter with this serial number was deleted", HttpStatus.ACCEPTED);
-        } catch (EmptyResultDataAccessException e) {
-            log.error(e.getMessage(), SCOOTER_NOT_FOUND);
-            return new ResponseEntity<>(SCOOTER_NOT_FOUND, HttpStatus.NOT_FOUND);
-        }
+        return entityControllerFacade.delete(serialNumber);
     }
 }

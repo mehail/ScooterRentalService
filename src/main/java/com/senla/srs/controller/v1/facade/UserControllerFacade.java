@@ -1,9 +1,8 @@
-package com.senla.srs.facade.impl;
+package com.senla.srs.controller.v1.facade;
 
+import com.senla.srs.dto.user.UserDTO;
 import com.senla.srs.dto.user.UserFullResponseDTO;
 import com.senla.srs.dto.user.UserRequestDTO;
-import com.senla.srs.facade.AbstractFacade;
-import com.senla.srs.facade.UserControllerFacade;
 import com.senla.srs.mapper.UserFullResponseMapper;
 import com.senla.srs.mapper.UserRequestMapper;
 import com.senla.srs.model.UserStatus;
@@ -21,7 +20,9 @@ import java.util.Optional;
 
 @Slf4j
 @Controller
-public class UserControllerFacadeImpl extends AbstractFacade implements UserControllerFacade {
+public class UserControllerFacade extends AbstractFacade implements
+        EntityControllerFacade<UserDTO, UserRequestDTO, UserFullResponseDTO, Long> {
+
     private final UserFullResponseMapper userFullResponseMapper;
     private final UserRequestMapper userRequestMapper;
 
@@ -31,7 +32,7 @@ public class UserControllerFacadeImpl extends AbstractFacade implements UserCont
     private static final String CHANGE_DEFAULT_FIELD = "To top up your balance, obtain administrator rights or " +
             "deactivate a profile, contact the administrator";
 
-    public UserControllerFacadeImpl(UserService userService, UserFullResponseMapper userFullResponseMapper, UserRequestMapper userRequestMapper) {
+    public UserControllerFacade(UserService userService, UserFullResponseMapper userFullResponseMapper, UserRequestMapper userRequestMapper) {
         super(userService);
         this.userFullResponseMapper = userFullResponseMapper;
         this.userRequestMapper = userRequestMapper;
@@ -60,25 +61,25 @@ public class UserControllerFacadeImpl extends AbstractFacade implements UserCont
     }
 
     @Override
-    public ResponseEntity<?> createOrUpdate(UserRequestDTO userRequestDTO, User userSecurity) {
-        Optional<com.senla.srs.model.User> optionalExistUser = userService.retrieveUserByEmail(userRequestDTO.getEmail());
+    public ResponseEntity<?> createOrUpdate(UserRequestDTO requestDTO, User userSecurity) {
+        Optional<com.senla.srs.model.User> optionalExistUser = userService.retrieveUserByEmail(requestDTO.getEmail());
 
         if (userSecurity != null) {
             if (isAdmin(userSecurity)) {
-                return save(userRequestDTO);
+                return save(requestDTO);
             } else {
                 if (optionalExistUser.isEmpty()) {
-                    return constrainCreate(userRequestDTO);
+                    return constrainCreate(requestDTO);
                 } else {
-                    if (isThisUserByEmail(userSecurity, userRequestDTO.getEmail())) {
-                        return update(userRequestDTO, optionalExistUser.get());
+                    if (isThisUserByEmail(userSecurity, requestDTO.getEmail())) {
+                        return update(requestDTO, optionalExistUser.get());
                     } else {
                         return new ResponseEntity<>(RE_AUTH, HttpStatus.FORBIDDEN);
                     }
                 }
             }
         } else if (optionalExistUser.isEmpty()) {
-            return constrainCreate(userRequestDTO);
+            return constrainCreate(requestDTO);
         } else {
             return new ResponseEntity<>(RE_AUTH, HttpStatus.FORBIDDEN);
         }

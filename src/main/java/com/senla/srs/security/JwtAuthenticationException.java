@@ -1,4 +1,4 @@
-package com.senla.srs.exception;
+package com.senla.srs.security;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

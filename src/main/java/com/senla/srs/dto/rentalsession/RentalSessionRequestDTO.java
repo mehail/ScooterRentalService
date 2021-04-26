@@ -18,7 +18,6 @@ public class RentalSessionRequestDTO extends RentalSessionDTO {
     private String scooterSerialNumber;
     private Long seasonTicketId;
     private String promoCodName;
-    //ToDo ??????????????
     @NonNull
     private LocalDate beginDate;
     @NonNull

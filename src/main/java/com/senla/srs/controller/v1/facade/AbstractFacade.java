@@ -1,4 +1,4 @@
-package com.senla.srs.facade;
+package com.senla.srs.controller.v1.facade;
 
 import com.senla.srs.model.User;
 import com.senla.srs.model.security.Role;
