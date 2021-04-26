@@ -4,7 +4,8 @@ import com.senla.srs.model.RentalSession;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Optional;
 
 @Service
@@ -13,9 +14,9 @@ public interface RentalSessionService {
     Page<RentalSession> retrieveAllRentalSessions(Integer pageNo, Integer pageSize, String sortBy);
     Page<RentalSession> retrieveAllRentalSessionsByUserId(Long id, Integer pageNo, Integer pageSize, String sortBy);
     Optional<RentalSession> retrieveRentalSessionById(Long id);
-    Optional<RentalSession> retrieveRentalSessionByUserIdAndScooterSerialNumberAndBegin(Long userId,
-                                                                                        String scooterSerialNumber,
-                                                                                        LocalDateTime begin);
+    Optional<RentalSession> retrieveRentalSessionByUserIdAndScooterSerialNumberAndBeginDateAndBeginTime(Long userId,
+                                                                                                        String scooterSerialNumber,
+                                                                                                        LocalDate beginDate, LocalTime beginTime);
 
     void deleteById(Long id);
 }

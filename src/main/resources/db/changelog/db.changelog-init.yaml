@@ -254,10 +254,16 @@ databaseChangeLog:
                   name: user_id
                   type: NUMERIC
               - column:
-                  name: begin
+                  name: begin_date
                   type: DATE
               - column:
-                  name: end
+                  name: begin_time
+                  type: DATE
+              - column:
+                  name: end_date
+                  type: DATE
+              - column:
+                  name: end_time
                   type: DATE
               - column:
                   name: scooter_serial_number

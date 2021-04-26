@@ -29,11 +29,17 @@ public class RentalSessionRequestMapper extends AbstractMapper<RentalSession, Re
     @Override
     public RentalSession toEntity(RentalSessionRequestDTO dto) {
         RentalSession rentalSession = super.toEntity(dto);
+
         userService.retrieveUserById(dto.getUserId()).ifPresent(rentalSession::setUser);
         scooterService.retrieveScooterBySerialNumber(dto.getScooterSerialNumber()).ifPresent(rentalSession::setScooter);
 
-        seasonTicketService.retrieveSeasonTicketsById(dto.getSeasonTicketId()).ifPresent(rentalSession::setSeasonTicket);
-        promoCodService.retrievePromoCodByName(dto.getPromoCodName()).ifPresent(rentalSession::setPromoCod);
+        if (dto.getSeasonTicketId() != null) {
+            seasonTicketService.retrieveSeasonTicketsById(dto.getSeasonTicketId()).ifPresent(rentalSession::setSeasonTicket);
+        }
+
+        if (dto.getPromoCodName() != null) {
+            promoCodService.retrievePromoCodByName(dto.getPromoCodName()).ifPresent(rentalSession::setPromoCod);
+        }
 
         return rentalSession;
     }

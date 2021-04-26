@@ -7,7 +7,6 @@ import com.senla.srs.mapper.RentalSessionResponseMapper;
 import com.senla.srs.model.*;
 import com.senla.srs.service.RentalSessionService;
 import com.senla.srs.service.RentalSessionValidator;
-import com.senla.srs.service.ScooterService;
 import com.senla.srs.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -39,7 +38,6 @@ public class RentalSessionController extends AbstractRestController {
     private final RentalSessionValidator rentalSessionValidator;
     private final RentalSessionRequestMapper rentalSessionRequestMapper;
     private final RentalSessionResponseMapper rentalSessionResponseMapper;
-    private final ScooterService scooterService;
 
     private static final String RENTAL_SESSION_NOT_FOUND = "A rental session with this id was not found";
 
@@ -47,54 +45,12 @@ public class RentalSessionController extends AbstractRestController {
                                    RentalSessionService rentalSessionService,
                                    RentalSessionValidator rentalSessionValidator,
                                    RentalSessionRequestMapper rentalSessionRequestMapper,
-                                   RentalSessionResponseMapper rentalSessionResponseMapper, ScooterService scooterService) {
+                                   RentalSessionResponseMapper rentalSessionResponseMapper) {
         super(userService);
         this.rentalSessionService = rentalSessionService;
         this.rentalSessionValidator = rentalSessionValidator;
         this.rentalSessionRequestMapper = rentalSessionRequestMapper;
         this.rentalSessionResponseMapper = rentalSessionResponseMapper;
-        this.scooterService = scooterService;
-    }
-
-    //ToDo Ошибка маппинг LocalDateTime
-
-    /**
-     * Создавая сессию получаем ошибку синтаксиса "рядом с end", я так понимаю, что это связано с DateLocalTime,
-     * хотя с JPA 2.2 все должно поддерживаться автоматически, пробовал добавить конверторы (com.senla.srs.test.ConverterLDT),
-     * они отрабатывают, но в процессе сохранения не участвуют
-     **/
-    @GetMapping("/test/")
-    public ResponseEntity<?> test() {
-        Optional<User> user = userService.retrieveUserById(1L);
-        Optional<Scooter> scooter = scooterService.retrieveScooterBySerialNumber("0001X");
-        LocalDateTime begin = LocalDateTime.of(2020, 1, 1, 10, 0, 0);
-        LocalDateTime end = LocalDateTime.of(2021, 4, 1, 10, 1, 0);
-
-        /**
-         Создаем новую сессию
-         **/
-
-//        RentalSession rentalSession = new RentalSession(
-//                null,
-//                user.get(),
-//                scooter.get(),
-//                10,
-//                begin,
-//                end,
-//                null, null
-//        );
-
-        /**
-         Меняем дату окончания в существующей
-         **/
-
-        RentalSession rentalSession = rentalSessionService.retrieveRentalSessionById(1L).get();
-        rentalSession.setEnd(end);
-
-        System.out.println("\n\n\n\n\n rentalSession = " + rentalSession + "\n\n\n\n\n");
-
-        RentalSession created = rentalSessionService.save(rentalSession);
-        return ResponseEntity.ok(created);
     }
 
 
@@ -148,9 +104,8 @@ public class RentalSessionController extends AbstractRestController {
 
     @Operation(operationId = "createOrUpdate", summary = "Create or update Rental session",
             description = "If the Rental session exists - then the fields are updated, if not - created new Rental session")
-    @Parameter(in = ParameterIn.PATH, name = "id", description = "Rental session id")
     @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = RentalSessionResponseDTO.class)))
+            schema = @Schema(implementation = RentalSessionRequestDTO.class)))
     @ApiResponse(responseCode = "400", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
@@ -159,22 +114,28 @@ public class RentalSessionController extends AbstractRestController {
     @PreAuthorize("hasAuthority('rentalSessions:read')")
     public ResponseEntity<?> createOrUpdate(@AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity,
                                             @RequestBody RentalSessionRequestDTO rentalSessionRequestDTO) {
-        if (rentalSessionValidator.isValid(rentalSessionRequestDTO)) {
-            Optional<RentalSession> optionalRentalSession =
-                    rentalSessionService.retrieveRentalSessionByUserIdAndScooterSerialNumberAndBegin(rentalSessionRequestDTO.getUserId(),
-                            rentalSessionRequestDTO.getScooterSerialNumber(),
-                            rentalSessionRequestDTO.getBegin());
-            if (optionalRentalSession.isEmpty()) {
-                return save(rentalSessionRequestDTO);
-            } else if (optionalRentalSession.get().getEnd() != null &&
-                    (isAdmin(userSecurity) || isThisUserById(userSecurity, rentalSessionRequestDTO.getUserId()))) {
-                return save(rentalSessionRequestDTO);
-            } else {
-                return new ResponseEntity<>("Completed rental session is not available for editing", HttpStatus.FORBIDDEN);
-            }
-        } else {
-            return new ResponseEntity<>("Rental session is not valid", HttpStatus.FORBIDDEN);
-        }
+
+        RentalSession rentalSession = rentalSessionRequestMapper.toEntity(rentalSessionRequestDTO);
+
+        return ResponseEntity.ok(rentalSessionResponseMapper.toDto(rentalSessionService.save(rentalSession)));
+
+//        if (rentalSessionValidator.isValid(rentalSessionRequestDTO)) {
+//            Optional<RentalSession> optionalRentalSession =
+//                    rentalSessionService.retrieveRentalSessionByUserIdAndScooterSerialNumberAndBeginDateAndBeginTime(rentalSessionRequestDTO.getUserId(),
+//                            rentalSessionRequestDTO.getScooterSerialNumber(),
+//                            rentalSessionRequestDTO.getBeginDate(),
+//                            rentalSessionRequestDTO.getBeginTime());
+//            if (optionalRentalSession.isEmpty()) {
+//                return save(rentalSessionRequestDTO);
+//            } else if (optionalRentalSession.get().getEndDate() != null &&
+//                    (isAdmin(userSecurity) || isThisUserById(userSecurity, rentalSessionRequestDTO.getUserId()))) {
+//                return save(rentalSessionRequestDTO);
+//            } else {
+//                return new ResponseEntity<>("Completed rental session is not available for editing", HttpStatus.FORBIDDEN);
+//            }
+//        } else {
+//            return new ResponseEntity<>("Rental session is not valid", HttpStatus.FORBIDDEN);
+//        }
     }
 
 
@@ -192,7 +153,7 @@ public class RentalSessionController extends AbstractRestController {
         Optional<RentalSession> optionalRentalSession = rentalSessionService.retrieveRentalSessionById(id);
 
         if (optionalRentalSession.isPresent()) {
-            if (optionalRentalSession.get().getEnd() == null) {
+            if (optionalRentalSession.get().getEndDate() == null) {
                 try {
                     rentalSessionService.deleteById(id);
                     return new ResponseEntity<>("Rental session with this id was deleted", HttpStatus.ACCEPTED);
@@ -231,7 +192,7 @@ public class RentalSessionController extends AbstractRestController {
         SeasonTicket seasonTicket = rentalSession.getSeasonTicket();
         User user = rentalSession.getUser();
 
-        if (rentalSession.getEnd() == null) {
+        if (rentalSession.getEndDate() == null) {
             scooter.setStatus(ScooterStatus.USED);
 
             if (seasonTicket != null) {
@@ -243,7 +204,7 @@ public class RentalSessionController extends AbstractRestController {
 
             scooter.setStatus(ScooterStatus.AVAILABLE);
 
-            int usageTime = (int) (Duration.between(rentalSession.getBegin(), rentalSession.getEnd()).getSeconds() / 60);
+            int usageTime = (int) (Duration.between(rentalSession.getBeginDate(), rentalSession.getEndDate()).getSeconds() / 60);
             scooter.setTimeMillage(scooter.getTimeMillage() + usageTime);
 
             if (seasonTicket != null && seasonTicket.getRemainingTime() > 0) {
@@ -254,8 +215,8 @@ public class RentalSessionController extends AbstractRestController {
     }
 
     private int calculateRate(RentalSession rentalSession) {
-        LocalDateTime begin = rentalSession.getBegin();
-        LocalDateTime end = rentalSession.getEnd();
+        LocalDateTime begin = LocalDateTime.of(rentalSession.getBeginDate(), rentalSession.getBeginTime());
+        LocalDateTime end = LocalDateTime.of(rentalSession.getEndDate(), rentalSession.getBeginTime());
         int usageTime = (int) (Duration.between(begin, end).getSeconds() / 60);
 
         int pricePerMinute = rentalSession.getScooter().getType().getPricePerMinute();
@@ -306,3 +267,4 @@ public class RentalSessionController extends AbstractRestController {
         return rate * (1 - discountPercentage / 100);
     }
 }
+
