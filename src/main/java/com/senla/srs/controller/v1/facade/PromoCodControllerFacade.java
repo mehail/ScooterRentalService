@@ -49,7 +49,7 @@ public class PromoCodControllerFacade extends AbstractFacade implements
     @Override
     public ResponseEntity<?> createOrUpdate(PromoCodDTO promoCodDTO, User userSecurity) {
         return isValidDate(promoCodDTO)
-                ? create(promoCodDTO)
+                ? save(promoCodDTO)
                 : new ResponseEntity<>("The start and end dates of the PromoCod are not correct", HttpStatus.BAD_REQUEST);
     }
 
@@ -71,7 +71,7 @@ public class PromoCodControllerFacade extends AbstractFacade implements
         return expiredDate == null || startDate.isBefore(expiredDate);
     }
 
-    private ResponseEntity<?> create(PromoCodDTO promoCodDTO) {
+    private ResponseEntity<?> save(PromoCodDTO promoCodDTO) {
         PromoCod promoCod = promoCodService.save(promoCodMapper.toEntity(promoCodDTO));
         return ResponseEntity.ok(promoCodMapper.toDto(promoCod));
     }
