@@ -1,5 +1,6 @@
 package com.senla.srs.controller.v1.facade;
 
+import com.senla.srs.dto.db.MakerDTO;
 import com.senla.srs.dto.scooter.type.ScooterTypeDTO;
 import com.senla.srs.dto.scooter.type.ScooterTypeRequestDTO;
 import com.senla.srs.dto.scooter.type.ScooterTypeResponseDTO;
@@ -29,7 +30,11 @@ public class ScooterTypeControllerFacade extends AbstractFacade implements
     private final ScooterTypeRequestMapper scooterTypeRequestMapper;
     private final ScooterTypeResponseMapper scooterTypeResponseMapper;
 
-    public ScooterTypeControllerFacade(UserService userService, ScooterTypeService scooterTypeService, MakerDtoService makerDtoService, ScooterTypeRequestMapper scooterTypeRequestMapper, ScooterTypeResponseMapper scooterTypeResponseMapper) {
+    public ScooterTypeControllerFacade(UserService userService,
+                                       ScooterTypeService scooterTypeService,
+                                       MakerDtoService makerDtoService,
+                                       ScooterTypeRequestMapper scooterTypeRequestMapper,
+                                       ScooterTypeResponseMapper scooterTypeResponseMapper) {
         super(userService);
         this.scooterTypeService = scooterTypeService;
         this.makerDtoService = makerDtoService;
@@ -50,12 +55,10 @@ public class ScooterTypeControllerFacade extends AbstractFacade implements
     }
 
     @Override
-    public ResponseEntity<?> createOrUpdate(ScooterTypeRequestDTO requestDTO, User userSecurity) {
-        if (makerDtoService.retrieveMakerDtoById(requestDTO.getMakerId()).isEmpty()) {
-            return new ResponseEntity<>("The maker is not correct", HttpStatus.FORBIDDEN);
-        }
+    public ResponseEntity<?> createOrUpdate(ScooterTypeRequestDTO requestDTO, User userSecurity) throws NotFoundEntityException {
+        MakerDTO makerDTO = makerDtoService.retrieveMakerDtoById(requestDTO.getMakerId()).orElseThrow(() -> new NotFoundEntityException("Maker"));
 
-        ScooterType scooterType = scooterTypeService.save(scooterTypeRequestMapper.toEntity(requestDTO));
+        ScooterType scooterType = scooterTypeService.save(scooterTypeRequestMapper.toEntity(requestDTO, makerDTO));
 
         return ResponseEntity.ok(scooterTypeResponseMapper.toDto(scooterType));
     }

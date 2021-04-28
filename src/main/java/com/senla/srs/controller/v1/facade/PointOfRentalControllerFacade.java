@@ -1,5 +1,6 @@
 package com.senla.srs.controller.v1.facade;
 
+import com.senla.srs.dto.db.AddressDTO;
 import com.senla.srs.dto.pointofrental.PointOfRentalDTO;
 import com.senla.srs.dto.pointofrental.PointOfRentalRequestDTO;
 import com.senla.srs.dto.pointofrental.PointOfRentalResponseDTO;
@@ -50,12 +51,17 @@ public class PointOfRentalControllerFacade extends AbstractFacade implements
     }
 
     @Override
-    public ResponseEntity<?> createOrUpdate(PointOfRentalRequestDTO pointOfRentalRequestDTO, User userSecurity) {
+    public ResponseEntity<?> createOrUpdate(PointOfRentalRequestDTO pointOfRentalRequestDTO, User userSecurity)
+            throws NotFoundEntityException {
+
         if (addressDtoService.retrieveAddressDtoById(pointOfRentalRequestDTO.getAddressId()).isEmpty()) {
             return new ResponseEntity<>("The address is not correct", HttpStatus.FORBIDDEN);
         }
 
-        PointOfRental pointOfRental = pointOfRentalService.save(pointOfRentalRequestMapper.toEntity(pointOfRentalRequestDTO));
+        AddressDTO addressDTO = addressDtoService.retrieveAddressDtoById(pointOfRentalRequestDTO.getAddressId())
+                .orElseThrow(() -> new NotFoundEntityException("Address"));
+
+        PointOfRental pointOfRental = pointOfRentalService.save(pointOfRentalRequestMapper.toEntity(pointOfRentalRequestDTO, addressDTO));
 
         return ResponseEntity.ok(pointOfRentalResponseMapper.toDto(pointOfRental));
     }

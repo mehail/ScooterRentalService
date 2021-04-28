@@ -7,6 +7,7 @@ import com.senla.srs.exception.NotFoundEntityException;
 import com.senla.srs.mapper.ScooterRequestMapper;
 import com.senla.srs.mapper.ScooterResponseMapper;
 import com.senla.srs.model.Scooter;
+import com.senla.srs.model.ScooterType;
 import com.senla.srs.service.ScooterService;
 import com.senla.srs.service.ScooterTypeService;
 import com.senla.srs.service.UserService;
@@ -54,12 +55,11 @@ public class ScooterControllerFacade extends AbstractFacade implements
     }
 
     @Override
-    public ResponseEntity<?> createOrUpdate(ScooterRequestDTO scooterDTO, User userSecurity) {
-        if (scooterTypeService.retrieveScooterTypeById(scooterDTO.getTypeId()).isEmpty()) {
-            return new ResponseEntity<>("The scooter type is not correct", HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<?> createOrUpdate(ScooterRequestDTO scooterDTO, User userSecurity) throws NotFoundEntityException {
+        ScooterType scooterType =  scooterTypeService.retrieveScooterTypeById(scooterDTO.getPointOfRentalId())
+                .orElseThrow(() -> new NotFoundEntityException("Scooter type"));
 
-        Scooter scooter = scooterService.save(scooterRequestMapper.toEntity(scooterDTO));
+        Scooter scooter = scooterService.save(scooterRequestMapper.toEntity(scooterDTO, scooterType));
 
         return ResponseEntity.ok(scooterResponseMapper.toDto(scooter));
     }

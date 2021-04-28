@@ -1,23 +1,21 @@
 package com.senla.srs.mapper;
 
+import com.senla.srs.dto.db.AddressDTO;
 import com.senla.srs.dto.pointofrental.PointOfRentalRequestDTO;
 import com.senla.srs.model.PointOfRental;
-import com.senla.srs.service.AddressDtoService;
 import org.springframework.stereotype.Component;
 
 @Component
 public class PointOfRentalRequestMapper extends AbstractMapper<PointOfRental, PointOfRentalRequestDTO> {
-    private final AddressDtoService addressDtoService;
-
-    public PointOfRentalRequestMapper(AddressDtoService addressDtoService) {
+    public PointOfRentalRequestMapper() {
         super(PointOfRental.class, PointOfRentalRequestDTO.class);
-        this.addressDtoService = addressDtoService;
     }
 
-    @Override
-    public PointOfRental toEntity(PointOfRentalRequestDTO dto) {
+    public PointOfRental toEntity(PointOfRentalRequestDTO dto, AddressDTO addressDTO) {
         PointOfRental pointOfRental = super.toEntity(dto);
-        addressDtoService.retrieveAddressDtoById(dto.getAddressId()).ifPresent(pointOfRental::setAddress);
+
+        pointOfRental.setAddress(addressDTO);
+
         return pointOfRental;
     }
 }
