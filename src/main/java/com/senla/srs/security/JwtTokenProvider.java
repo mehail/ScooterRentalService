@@ -1,5 +1,6 @@
 package com.senla.srs.security;
 
+import com.senla.srs.exception.JwtAuthenticationException;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;

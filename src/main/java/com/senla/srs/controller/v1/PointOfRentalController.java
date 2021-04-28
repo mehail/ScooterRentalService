@@ -4,6 +4,7 @@ import com.senla.srs.dto.pointofrental.PointOfRentalDTO;
 import com.senla.srs.dto.pointofrental.PointOfRentalRequestDTO;
 import com.senla.srs.dto.pointofrental.PointOfRentalResponseDTO;
 import com.senla.srs.controller.v1.facade.EntityControllerFacade;
+import com.senla.srs.exception.NotFoundEntityException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -11,7 +12,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import javassist.NotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
@@ -69,7 +69,8 @@ public class PointOfRentalController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('pointOfRentals:write')")
-    public ResponseEntity<?> createOrUpdate(@RequestBody PointOfRentalRequestDTO pointOfRentalRequestDTO) throws NotFoundException {
+    public ResponseEntity<?> createOrUpdate(@RequestBody PointOfRentalRequestDTO pointOfRentalRequestDTO)
+            throws NotFoundEntityException {
         return entityControllerFacade.createOrUpdate(pointOfRentalRequestDTO, null);
     }
 

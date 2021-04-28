@@ -3,6 +3,7 @@ package com.senla.srs.controller.v1.facade;
 import com.senla.srs.dto.seasonticket.SeasonTicketDTO;
 import com.senla.srs.dto.seasonticket.SeasonTicketFullResponseDTO;
 import com.senla.srs.dto.seasonticket.SeasonTicketRequestDTO;
+import com.senla.srs.exception.NotFoundEntityException;
 import com.senla.srs.mapper.SeasonTicketFullResponseMapper;
 import com.senla.srs.mapper.SeasonTicketRequestMapper;
 import com.senla.srs.model.ScooterType;
@@ -10,7 +11,6 @@ import com.senla.srs.model.SeasonTicket;
 import com.senla.srs.service.ScooterTypeService;
 import com.senla.srs.service.SeasonTicketService;
 import com.senla.srs.service.UserService;
-import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -76,7 +76,7 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
     }
 
     @Override
-    public ResponseEntity<?> createOrUpdate(SeasonTicketRequestDTO seasonTicketRequestDTO, User userSecurity) throws NotFoundException {
+    public ResponseEntity<?> createOrUpdate(SeasonTicketRequestDTO seasonTicketRequestDTO, User userSecurity) throws NotFoundEntityException {
         Optional<com.senla.srs.model.User> optionalUser = userService.retrieveUserById(seasonTicketRequestDTO.getUserId());
         Optional<ScooterType> optionalScooterType =
                 scooterTypeService.retrieveScooterTypeById(seasonTicketRequestDTO.getScooterTypeId());
@@ -135,7 +135,7 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
 
     private ResponseEntity<?> save(SeasonTicketRequestDTO seasonTicketRequestDTO,
                                    Optional<com.senla.srs.model.User> optionalUser,
-                                   Optional<ScooterType> optionalScooterType) throws NotFoundException {
+                                   Optional<ScooterType> optionalScooterType) throws NotFoundEntityException {
 
         int remainingTime = 0;
 
@@ -146,7 +146,7 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
         optionalUser.ifPresent(user -> user.setBalance(user.getBalance() - seasonTicketRequestDTO.getPrice()));
 
         ScooterType scooterType = scooterTypeService.retrieveScooterTypeById(seasonTicketRequestDTO.getScooterTypeId())
-                .orElseThrow(() -> new NotFoundException("ScooterType with this id not found"));
+                .orElseThrow(() -> new NotFoundEntityException("ScooterType"));
 
         SeasonTicket seasonTicket = seasonTicketService.save(
                 seasonTicketRequestMapper.toConsistencySeasonTicket(seasonTicketRequestDTO, scooterType, remainingTime, duration));

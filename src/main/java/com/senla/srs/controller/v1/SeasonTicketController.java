@@ -4,6 +4,7 @@ import com.senla.srs.dto.seasonticket.SeasonTicketDTO;
 import com.senla.srs.dto.seasonticket.SeasonTicketFullResponseDTO;
 import com.senla.srs.dto.seasonticket.SeasonTicketRequestDTO;
 import com.senla.srs.controller.v1.facade.EntityControllerFacade;
+import com.senla.srs.exception.NotFoundEntityException;
 import com.senla.srs.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -12,7 +13,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.data.domain.Page;
@@ -78,7 +78,7 @@ public class SeasonTicketController extends AbstractRestController {
     @PostMapping
     @PreAuthorize("hasAuthority('seasonTickets:read')")
     public ResponseEntity<?> createOrUpdate(@RequestBody SeasonTicketRequestDTO seasonTicketRequestDTO,
-                                            @AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) throws NotFoundException {
+                                            @AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) throws NotFoundEntityException {
         return entityControllerFacade.createOrUpdate(seasonTicketRequestDTO, userSecurity);
     }
 

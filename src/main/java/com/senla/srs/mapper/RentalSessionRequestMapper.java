@@ -11,26 +11,18 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class RentalSessionRequestMapper extends AbstractMapper<RentalSession, RentalSessionRequestDTO> {
-    private final UserService userService;
-    private final ScooterService scooterService;
-    private final SeasonTicketService seasonTicketService;
-    private final PromoCodService promoCodService;
-
-    public RentalSessionRequestMapper(UserService userService,
-                                      ScooterService scooterService,
-                                      SeasonTicketService seasonTicketService,
-                                      PromoCodService promoCodService) {
+    public RentalSessionRequestMapper() {
         super(RentalSession.class, RentalSessionRequestDTO.class);
-        this.userService = userService;
-        this.scooterService = scooterService;
-        this.seasonTicketService = seasonTicketService;
-        this.promoCodService = promoCodService;
     }
 
-    public RentalSession toEntity(RentalSessionRequestDTO dto, User user, Scooter scooter, SeasonTicket seasonTicket, PromoCod promoCod) throws NotFoundException {
+    //ToDo Refactor to builder
+    public RentalSession toEntity(RentalSessionRequestDTO dto, User user, Scooter scooter, SeasonTicket seasonTicket, PromoCod promoCod) {
         RentalSession rentalSession = super.toEntity(dto);
 
-
+        rentalSession.setUser(user);
+        rentalSession.setScooter(scooter);
+        rentalSession.setSeasonTicket(seasonTicket);
+        rentalSession.setPromoCod(promoCod);
 
         return rentalSession;
     }

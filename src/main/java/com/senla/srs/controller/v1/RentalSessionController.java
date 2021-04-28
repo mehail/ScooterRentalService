@@ -4,6 +4,7 @@ import com.senla.srs.controller.v1.facade.EntityControllerFacade;
 import com.senla.srs.dto.rentalsession.RentalSessionDTO;
 import com.senla.srs.dto.rentalsession.RentalSessionRequestDTO;
 import com.senla.srs.dto.rentalsession.RentalSessionResponseDTO;
+import com.senla.srs.exception.NotFoundEntityException;
 import com.senla.srs.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -12,7 +13,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.data.domain.Page;
@@ -82,7 +82,7 @@ public class RentalSessionController extends AbstractRestController {
     @PreAuthorize("hasAuthority('rentalSessions:read')")
     public ResponseEntity<?> createOrUpdate(@RequestBody RentalSessionRequestDTO rentalSessionRequestDTO,
                                             @AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity)
-            throws NotFoundException {
+            throws NotFoundEntityException {
 
         return entityControllerFacade.createOrUpdate(rentalSessionRequestDTO, userSecurity);
     }
