@@ -55,7 +55,7 @@ public class PromoCodController extends AbstractRestController {
 
     @GetMapping("/{name}")
     @PreAuthorize("hasAuthority('promoCods:read')")
-    public ResponseEntity<?> getByName(@PathVariable String name) {
+    public ResponseEntity<?> getByName(@PathVariable String name) throws NotFoundEntityException {
         return entityControllerFacade.getById(name, null);
     }
 

@@ -54,7 +54,7 @@ public class PointOfRentalController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('pointOfRentals:read')")
-    public ResponseEntity<?> getById(@PathVariable Long id) {
+    public ResponseEntity<?> getById(@PathVariable Long id) throws NotFoundEntityException {
         return entityControllerFacade.getById(id, null);
     }
 

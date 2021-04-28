@@ -62,7 +62,9 @@ public class SeasonTicketController extends AbstractRestController {
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('seasonTickets:read')")
     public ResponseEntity<?> getById(@PathVariable Long id,
-                                     @AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
+                                     @AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity)
+            throws NotFoundEntityException {
+
         return entityControllerFacade.getById(id, userSecurity);
     }
 

@@ -43,8 +43,10 @@ public class AuthenticationController {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(),
                     request.getPassword()));
+
             User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() ->
                     new UsernameNotFoundException("User doesn't exists"));
+
             String token = jwtTokenProvider.createToken(request.getEmail(), user.getRole().name());
 
             return ResponseEntity.ok(new AuthenticationResponseDTO(user.getId(), user.getEmail(), user.getRole(), token));

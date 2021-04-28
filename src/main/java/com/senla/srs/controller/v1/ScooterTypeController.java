@@ -53,7 +53,7 @@ public class ScooterTypeController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('scooterTypes:read')")
-    public ResponseEntity<?> getById(@PathVariable Long id) {
+    public ResponseEntity<?> getById(@PathVariable Long id) throws NotFoundEntityException {
         return entityControllerFacade.getById(id, null);
     }
 

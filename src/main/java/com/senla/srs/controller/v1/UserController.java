@@ -1,9 +1,9 @@
 package com.senla.srs.controller.v1;
 
+import com.senla.srs.controller.v1.facade.EntityControllerFacade;
 import com.senla.srs.dto.user.UserDTO;
 import com.senla.srs.dto.user.UserFullResponseDTO;
 import com.senla.srs.dto.user.UserRequestDTO;
-import com.senla.srs.controller.v1.facade.EntityControllerFacade;
 import com.senla.srs.exception.NotFoundEntityException;
 import com.senla.srs.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -62,7 +62,8 @@ class UserController extends AbstractRestController {
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('users:read')")
     public ResponseEntity<?> getById(@PathVariable Long id,
-                                     @AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
+                                     @AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity)
+            throws NotFoundEntityException {
 
         return entityControllerFacade.getById(id, userSecurity);
     }

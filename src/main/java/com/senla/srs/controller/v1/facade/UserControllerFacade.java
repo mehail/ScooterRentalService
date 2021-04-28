@@ -3,6 +3,7 @@ package com.senla.srs.controller.v1.facade;
 import com.senla.srs.dto.user.UserDTO;
 import com.senla.srs.dto.user.UserFullResponseDTO;
 import com.senla.srs.dto.user.UserRequestDTO;
+import com.senla.srs.exception.NotFoundEntityException;
 import com.senla.srs.mapper.UserFullResponseMapper;
 import com.senla.srs.mapper.UserRequestMapper;
 import com.senla.srs.model.UserStatus;
@@ -23,14 +24,13 @@ import java.util.Optional;
 public class UserControllerFacade extends AbstractFacade implements
         EntityControllerFacade<UserDTO, UserRequestDTO, UserFullResponseDTO, Long> {
 
-    private final UserFullResponseMapper userFullResponseMapper;
-    private final UserRequestMapper userRequestMapper;
-
     private static final String USER_NOT_FOUND = "A User with this id not found";
     private static final String ACCESS_FORBIDDEN = "Access forbidden";
     private static final String RE_AUTH = "To change this User reAuthorize";
     private static final String CHANGE_DEFAULT_FIELD = "To top up your balance, obtain administrator rights or " +
             "deactivate a profile, contact the administrator";
+    private final UserFullResponseMapper userFullResponseMapper;
+    private final UserRequestMapper userRequestMapper;
 
     public UserControllerFacade(UserService userService, UserFullResponseMapper userFullResponseMapper, UserRequestMapper userRequestMapper) {
         super(userService);
@@ -48,16 +48,16 @@ public class UserControllerFacade extends AbstractFacade implements
     }
 
     @Override
-    public ResponseEntity<?> getById(Long id, User userSecurity) {
-        if (isThisUserById(userSecurity, id) || isAdmin(userSecurity)) {
-            Optional<com.senla.srs.model.User> optionalUser = userService.retrieveUserById(id);
+    public ResponseEntity<?> getById(Long id, User userSecurity) throws NotFoundEntityException {
 
-            return optionalUser.isPresent()
-                    ? ResponseEntity.ok(userFullResponseMapper.toDto(optionalUser.get()))
-                    : new ResponseEntity<>(USER_NOT_FOUND, HttpStatus.NOT_FOUND);
+        if (isThisUserById(userSecurity, id) || isAdmin(userSecurity)) {
+            return new ResponseEntity<>(userService.retrieveUserById(id)
+                    .map(userFullResponseMapper::toDto)
+                    .orElseThrow(() -> new NotFoundEntityException("User")), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(ACCESS_FORBIDDEN, HttpStatus.FORBIDDEN);
         }
+
     }
 
     @Override
