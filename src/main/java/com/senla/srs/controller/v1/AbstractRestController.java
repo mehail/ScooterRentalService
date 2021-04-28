@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Controller;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Data
@@ -18,13 +19,13 @@ public abstract class AbstractRestController {
     protected boolean isAdmin(org.springframework.security.core.userdetails.User userSecurity) {
         Optional<User> optionalUser = userService.retrieveUserByEmail(userSecurity.getUsername());
 
-        return optionalUser.isPresent() && optionalUser.get().getRole() == Role.ADMIN;
+        return optionalUser.map(User::getRole).orElse(null) == Role.ADMIN;
     }
 
     protected boolean isThisUserById(org.springframework.security.core.userdetails.User userSecurity, Long id) {
         Optional<User> optionalUser = userService.retrieveUserByEmail(userSecurity.getUsername());
 
-        return optionalUser.isPresent() && optionalUser.get().getId().equals(id);
+        return Objects.equals(optionalUser.map(User::getId).orElse(null), id);
     }
 
     protected boolean isThisUserByEmail(org.springframework.security.core.userdetails.User userSecurity, String email) {
@@ -32,6 +33,6 @@ public abstract class AbstractRestController {
     }
 
     protected Long getAuthUserId(org.springframework.security.core.userdetails.User userSecurity) {
-        return userService.retrieveUserByEmail(userSecurity.getUsername()).map(User::getId).orElse(0L);
+        return userService.retrieveUserByEmail(userSecurity.getUsername()).map(User::getId).orElse(null);
     }
 }
