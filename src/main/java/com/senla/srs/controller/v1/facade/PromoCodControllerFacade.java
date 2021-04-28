@@ -1,6 +1,7 @@
 package com.senla.srs.controller.v1.facade;
 
 import com.senla.srs.dto.promocod.PromoCodDTO;
+import com.senla.srs.exception.NotFoundEntityException;
 import com.senla.srs.mapper.PromoCodMapper;
 import com.senla.srs.model.PromoCod;
 import com.senla.srs.service.PromoCodService;
@@ -14,17 +15,15 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 @Slf4j
 @Controller
 public class PromoCodControllerFacade extends AbstractFacade implements
         EntityControllerFacade<PromoCodDTO, PromoCodDTO, PromoCodDTO, String> {
 
+    private static final String PROMO_COD_NOT_FOUND = "No PromoCod with this name found";
     private final PromoCodService promoCodService;
     private final PromoCodMapper promoCodMapper;
-
-    private static final String PROMO_COD_NOT_FOUND = "No PromoCod with this name found";
 
     public PromoCodControllerFacade(UserService userService, PromoCodService promoCodService, PromoCodMapper promoCodMapper) {
         super(userService);
@@ -38,12 +37,10 @@ public class PromoCodControllerFacade extends AbstractFacade implements
     }
 
     @Override
-    public ResponseEntity<?> getById(String name, User userSecurity) {
-        Optional<PromoCod> optionalPromoCod = promoCodService.retrievePromoCodByName(name);
-
-        return optionalPromoCod.isPresent()
-                ? ResponseEntity.ok(promoCodMapper.toDto(optionalPromoCod.get()))
-                : new ResponseEntity<>(PROMO_COD_NOT_FOUND, HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> getById(String name, User userSecurity) throws NotFoundEntityException {
+        return new ResponseEntity<>(promoCodService.retrievePromoCodByName(name)
+                .map(promoCodMapper::toDto)
+                .orElseThrow(() -> new NotFoundEntityException("PromoCod")), HttpStatus.OK);
     }
 
     @Override

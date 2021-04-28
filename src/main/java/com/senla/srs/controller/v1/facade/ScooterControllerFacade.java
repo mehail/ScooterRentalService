@@ -3,6 +3,7 @@ package com.senla.srs.controller.v1.facade;
 import com.senla.srs.dto.scooter.ScooterDTO;
 import com.senla.srs.dto.scooter.ScooterRequestDTO;
 import com.senla.srs.dto.scooter.ScooterResponseDTO;
+import com.senla.srs.exception.NotFoundEntityException;
 import com.senla.srs.mapper.ScooterRequestMapper;
 import com.senla.srs.mapper.ScooterResponseMapper;
 import com.senla.srs.model.Scooter;
@@ -17,19 +18,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 
-import java.util.Optional;
-
 @Slf4j
 @Controller
 public class ScooterControllerFacade extends AbstractFacade implements
-        EntityControllerFacade<ScooterDTO, ScooterRequestDTO, ScooterResponseDTO, String>{
+        EntityControllerFacade<ScooterDTO, ScooterRequestDTO, ScooterResponseDTO, String> {
 
+    private static final String SCOOTER_NOT_FOUND = "A scooter with this serial number was not found";
     private final ScooterService scooterService;
     private final ScooterTypeService scooterTypeService;
     private final ScooterRequestMapper scooterRequestMapper;
     private final ScooterResponseMapper scooterResponseMapper;
-
-    private static final String SCOOTER_NOT_FOUND = "A scooter with this serial number was not found";
 
     public ScooterControllerFacade(UserService userService,
                                    ScooterService scooterService,
@@ -49,12 +47,10 @@ public class ScooterControllerFacade extends AbstractFacade implements
     }
 
     @Override
-    public ResponseEntity<?> getById(String serialNumber, User userSecurity) {
-        Optional<Scooter> optionalScooter = scooterService.retrieveScooterBySerialNumber(serialNumber);
-
-        return optionalScooter.isPresent()
-                ? ResponseEntity.ok(scooterResponseMapper.toDto(optionalScooter.get()))
-                : new ResponseEntity<>(SCOOTER_NOT_FOUND, HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> getById(String serialNumber, User userSecurity) throws NotFoundEntityException {
+        return new ResponseEntity<>(scooterService.retrieveScooterBySerialNumber(serialNumber)
+                .map(scooterResponseMapper::toDto)
+                .orElseThrow(() -> new NotFoundEntityException("Scooter")), HttpStatus.OK);
     }
 
     @Override

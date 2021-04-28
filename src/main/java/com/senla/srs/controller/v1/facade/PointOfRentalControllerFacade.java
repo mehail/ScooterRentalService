@@ -3,6 +3,7 @@ package com.senla.srs.controller.v1.facade;
 import com.senla.srs.dto.pointofrental.PointOfRentalDTO;
 import com.senla.srs.dto.pointofrental.PointOfRentalRequestDTO;
 import com.senla.srs.dto.pointofrental.PointOfRentalResponseDTO;
+import com.senla.srs.exception.NotFoundEntityException;
 import com.senla.srs.mapper.PointOfRentalRequestMapper;
 import com.senla.srs.mapper.PointOfRentalResponseMapper;
 import com.senla.srs.model.PointOfRental;
@@ -17,19 +18,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 
-import java.util.Optional;
-
 @Slf4j
 @Controller
 public class PointOfRentalControllerFacade extends AbstractFacade implements
         EntityControllerFacade<PointOfRentalDTO, PointOfRentalRequestDTO, PointOfRentalResponseDTO, Long> {
 
+    private static final String POINT_OF_RENTAL_NOT_FOUND = "A Point of rental with this id was not found";
     private final AddressDtoService addressDtoService;
     private final PointOfRentalService pointOfRentalService;
     private final PointOfRentalRequestMapper pointOfRentalRequestMapper;
     private final PointOfRentalResponseMapper pointOfRentalResponseMapper;
-
-    private static final String POINT_OF_RENTAL_NOT_FOUND = "A Point of rental with this id was not found";
 
     public PointOfRentalControllerFacade(UserService userService, AddressDtoService addressDtoService, PointOfRentalService pointOfRentalService, PointOfRentalRequestMapper pointOfRentalRequestMapper, PointOfRentalResponseMapper pointOfRentalResponseMapper) {
         super(userService);
@@ -45,12 +43,10 @@ public class PointOfRentalControllerFacade extends AbstractFacade implements
     }
 
     @Override
-    public ResponseEntity<?> getById(Long id, User userSecurity) {
-        Optional<PointOfRental> optionalPointOfRental = pointOfRentalService.retrievePointOfRentalById(id);
-
-        return optionalPointOfRental.isPresent()
-                ? ResponseEntity.ok(pointOfRentalResponseMapper.toDto(optionalPointOfRental.get()))
-                : new ResponseEntity<>(POINT_OF_RENTAL_NOT_FOUND, HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> getById(Long id, User userSecurity) throws NotFoundEntityException {
+        return new ResponseEntity<>(pointOfRentalService.retrievePointOfRentalById(id)
+                .map(pointOfRentalResponseMapper::toDto)
+                .orElseThrow(() -> new NotFoundEntityException("Point of rental")), HttpStatus.OK);
     }
 
     @Override

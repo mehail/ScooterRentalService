@@ -63,15 +63,13 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
     }
 
     @Override
-    public ResponseEntity<?> getById(Long id, User userSecurity) {
+    public ResponseEntity<?> getById(Long id, User userSecurity) throws NotFoundEntityException {
         Optional<RentalSession> optionalRentalSession = rentalSessionService.retrieveRentalSessionById(id);
 
         if (isAdmin(userSecurity) || isThisUserRentalSession(optionalRentalSession, userSecurity)) {
-
-            return optionalRentalSession.isPresent()
-                    ? ResponseEntity.ok(rentalSessionResponseMapper.toDto(optionalRentalSession.get()))
-                    : new ResponseEntity<>(RENTAL_SESSION_NOT_FOUND, HttpStatus.NOT_FOUND);
-
+            return new ResponseEntity<>(optionalRentalSession
+                    .map(rentalSessionResponseMapper::toDto)
+                    .orElseThrow(() -> new NotFoundEntityException("Rental session")), HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Unauthorized user session requested", HttpStatus.FORBIDDEN);
         }

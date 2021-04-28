@@ -3,6 +3,7 @@ package com.senla.srs.controller.v1.facade;
 import com.senla.srs.dto.scooter.type.ScooterTypeDTO;
 import com.senla.srs.dto.scooter.type.ScooterTypeRequestDTO;
 import com.senla.srs.dto.scooter.type.ScooterTypeResponseDTO;
+import com.senla.srs.exception.NotFoundEntityException;
 import com.senla.srs.mapper.ScooterTypeRequestMapper;
 import com.senla.srs.mapper.ScooterTypeResponseMapper;
 import com.senla.srs.model.ScooterType;
@@ -17,19 +18,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 
-import java.util.Optional;
-
 @Slf4j
 @Controller
 public class ScooterTypeControllerFacade extends AbstractFacade implements
         EntityControllerFacade<ScooterTypeDTO, ScooterTypeRequestDTO, ScooterTypeResponseDTO, Long> {
 
+    private static final String TYPE_NOT_FOUND = "Scooter type with this id not found";
     private final ScooterTypeService scooterTypeService;
     private final MakerDtoService makerDtoService;
     private final ScooterTypeRequestMapper scooterTypeRequestMapper;
     private final ScooterTypeResponseMapper scooterTypeResponseMapper;
-
-    private static final String TYPE_NOT_FOUND = "Scooter type with this id not found";
 
     public ScooterTypeControllerFacade(UserService userService, ScooterTypeService scooterTypeService, MakerDtoService makerDtoService, ScooterTypeRequestMapper scooterTypeRequestMapper, ScooterTypeResponseMapper scooterTypeResponseMapper) {
         super(userService);
@@ -45,12 +43,10 @@ public class ScooterTypeControllerFacade extends AbstractFacade implements
     }
 
     @Override
-    public ResponseEntity<?> getById(Long id, User userSecurity) {
-        Optional<ScooterType> optionalScooterType = scooterTypeService.retrieveScooterTypeById(id);
-
-        return optionalScooterType.isPresent()
-                ? ResponseEntity.ok(scooterTypeResponseMapper.toDto(optionalScooterType.get()))
-                : new ResponseEntity<>(TYPE_NOT_FOUND, HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> getById(Long id, User userSecurity) throws NotFoundEntityException {
+        return new ResponseEntity<>(scooterTypeService.retrieveScooterTypeById(id)
+                .map(scooterTypeResponseMapper::toDto)
+                .orElseThrow(() -> new NotFoundEntityException("Scooter type")), HttpStatus.OK);
     }
 
     @Override

@@ -27,14 +27,13 @@ import java.util.Optional;
 public class SeasonTicketControllerFacade extends AbstractFacade implements
         EntityControllerFacade<SeasonTicketDTO, SeasonTicketRequestDTO, SeasonTicketFullResponseDTO, Long> {
 
+    private static final String NO_SEASON_TICKET_WITH_ID = "A season ticket with this id was not found";
+    private static final String FORBIDDEN_FOR_DELETE = "Season ticket with this id not available for deletion";
     private final SeasonTicketService seasonTicketService;
     private final ScooterTypeService scooterTypeService;
     private final SeasonTicketRequestMapper seasonTicketRequestMapper;
     private final SeasonTicketFullResponseMapper seasonTicketFullResponseMapper;
-
     private final int duration;
-    private static final String NO_SEASON_TICKET_WITH_ID = "A season ticket with this id was not found";
-    private static final String FORBIDDEN_FOR_DELETE = "Season ticket with this id not available for deletion";
 
 
     public SeasonTicketControllerFacade(UserService userService,
@@ -61,15 +60,13 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
     }
 
     @Override
-    public ResponseEntity<?> getById(Long id, User userSecurity) {
+    public ResponseEntity<?> getById(Long id, User userSecurity) throws NotFoundEntityException {
         Optional<SeasonTicket> optionalSeasonTicket = seasonTicketService.retrieveSeasonTicketsById(id);
 
         if (isAdmin(userSecurity) || isThisUserSeasonTicket(optionalSeasonTicket, userSecurity)) {
-
-            return optionalSeasonTicket.isPresent()
-                    ? ResponseEntity.ok(seasonTicketFullResponseMapper.toDto(optionalSeasonTicket.get()))
-                    : new ResponseEntity<>(NO_SEASON_TICKET_WITH_ID, HttpStatus.NOT_FOUND);
-
+            return new ResponseEntity<>(optionalSeasonTicket
+                    .map(seasonTicketFullResponseMapper::toDto)
+                    .orElseThrow(() -> new NotFoundEntityException("Season ticket")), HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Another user's season ticket is requested", HttpStatus.FORBIDDEN);
         }
