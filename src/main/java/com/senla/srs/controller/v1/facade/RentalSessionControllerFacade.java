@@ -6,9 +6,8 @@ import com.senla.srs.dto.rentalsession.RentalSessionResponseDTO;
 import com.senla.srs.mapper.RentalSessionRequestMapper;
 import com.senla.srs.mapper.RentalSessionResponseMapper;
 import com.senla.srs.model.*;
-import com.senla.srs.service.RentalSessionService;
-import com.senla.srs.service.RentalSessionValidator;
-import com.senla.srs.service.UserService;
+import com.senla.srs.service.*;
+import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
@@ -26,19 +25,32 @@ import java.util.Optional;
 public class RentalSessionControllerFacade extends AbstractFacade implements
         EntityControllerFacade<RentalSessionDTO, RentalSessionRequestDTO, RentalSessionResponseDTO, Long> {
 
+    private final PromoCodService promoCodService;
     private final RentalSessionService rentalSessionService;
     private final RentalSessionValidator rentalSessionValidator;
     private final RentalSessionRequestMapper rentalSessionRequestMapper;
     private final RentalSessionResponseMapper rentalSessionResponseMapper;
+    private final ScooterService scooterService;
+    private final SeasonTicketService seasonTicketService;
 
     private static final String RENTAL_SESSION_NOT_FOUND = "A rental session with this id was not found";
 
-    public RentalSessionControllerFacade(UserService userService, RentalSessionService rentalSessionService, RentalSessionValidator rentalSessionValidator, RentalSessionRequestMapper rentalSessionRequestMapper, RentalSessionResponseMapper rentalSessionResponseMapper) {
+    public RentalSessionControllerFacade(PromoCodService promoCodService,
+                                         RentalSessionService rentalSessionService,
+                                         RentalSessionValidator rentalSessionValidator,
+                                         RentalSessionRequestMapper rentalSessionRequestMapper,
+                                         RentalSessionResponseMapper rentalSessionResponseMapper,
+                                         ScooterService scooterService,
+                                         SeasonTicketService seasonTicketService,
+                                         UserService userService) {
         super(userService);
         this.rentalSessionService = rentalSessionService;
         this.rentalSessionValidator = rentalSessionValidator;
         this.rentalSessionRequestMapper = rentalSessionRequestMapper;
         this.rentalSessionResponseMapper = rentalSessionResponseMapper;
+        this.scooterService = scooterService;
+        this.seasonTicketService = seasonTicketService;
+        this.promoCodService = promoCodService;
     }
 
     @Override
@@ -67,8 +79,8 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
 
     //ToDo refactoring!
     @Override
-    public ResponseEntity<?> createOrUpdate(RentalSessionRequestDTO rentalSessionRequestDTO, User userSecurity) {
-        RentalSession rentalSession = rentalSessionRequestMapper.toEntity(rentalSessionRequestDTO);
+    public ResponseEntity<?> createOrUpdate(RentalSessionRequestDTO rentalSessionRequestDTO, User userSecurity) throws NotFoundException {
+        RentalSession rentalSession = toEntity(rentalSessionRequestDTO);
 
         return ResponseEntity.ok(rentalSessionResponseMapper.toDto(rentalSessionService.save(rentalSession)));
 
@@ -89,6 +101,26 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
 //        } else {
 //            return new ResponseEntity<>("Rental session is not valid", HttpStatus.FORBIDDEN);
 //        }
+    }
+
+    private RentalSession toEntity(RentalSessionRequestDTO rentalSessionRequestDTO) throws NotFoundException {
+        com.senla.srs.model.User user = userService.retrieveUserById(rentalSessionRequestDTO.getUserId())
+                .orElseThrow(() -> new NotFoundException("User with this ID not found"));
+
+        Scooter scooter = scooterService.retrieveScooterBySerialNumber(rentalSessionRequestDTO.getScooterSerialNumber())
+                .orElseThrow(() -> new NotFoundException("Scooter with this ID not found"));
+
+        SeasonTicket seasonTicket = rentalSessionRequestDTO.getSeasonTicketId() != null
+                ? seasonTicketService.retrieveSeasonTicketsById(rentalSessionRequestDTO.getSeasonTicketId())
+                .orElseThrow(() -> new NumberFormatException("Season Ticket with this ID not found"))
+                : null;
+
+        PromoCod promoCod = rentalSessionRequestDTO.getPromoCodName() != null
+                ? promoCodService.retrievePromoCodByName(rentalSessionRequestDTO.getPromoCodName())
+                .orElseThrow(() -> new NotFoundException("PromoCod with this ID not found"))
+                : null;
+
+        return rentalSessionRequestMapper.toEntity(rentalSessionRequestDTO, user, scooter, seasonTicket, promoCod);
     }
 
     @Override
@@ -120,8 +152,8 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
                 isThisUserById(userSecurity, optionalRentalSession.get().getUser().getId());
     }
 
-    private ResponseEntity<?> save(RentalSessionRequestDTO rentalSessionRequestDTO) {
-        RentalSession rentalSession = rentalSessionRequestMapper.toEntity(rentalSessionRequestDTO);
+    private ResponseEntity<?> save(RentalSessionRequestDTO rentalSessionRequestDTO) throws NotFoundException {
+        RentalSession rentalSession = toEntity(rentalSessionRequestDTO);
 
         changeEntityState(rentalSession);
 

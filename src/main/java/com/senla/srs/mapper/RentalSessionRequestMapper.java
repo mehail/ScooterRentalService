@@ -1,11 +1,12 @@
 package com.senla.srs.mapper;
 
 import com.senla.srs.dto.rentalsession.RentalSessionRequestDTO;
-import com.senla.srs.model.RentalSession;
+import com.senla.srs.model.*;
 import com.senla.srs.service.PromoCodService;
 import com.senla.srs.service.ScooterService;
 import com.senla.srs.service.SeasonTicketService;
 import com.senla.srs.service.UserService;
+import javassist.NotFoundException;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -26,20 +27,10 @@ public class RentalSessionRequestMapper extends AbstractMapper<RentalSession, Re
         this.promoCodService = promoCodService;
     }
 
-    @Override
-    public RentalSession toEntity(RentalSessionRequestDTO dto) {
+    public RentalSession toEntity(RentalSessionRequestDTO dto, User user, Scooter scooter, SeasonTicket seasonTicket, PromoCod promoCod) throws NotFoundException {
         RentalSession rentalSession = super.toEntity(dto);
 
-        userService.retrieveUserById(dto.getUserId()).ifPresent(rentalSession::setUser);
-        scooterService.retrieveScooterBySerialNumber(dto.getScooterSerialNumber()).ifPresent(rentalSession::setScooter);
 
-        if (dto.getSeasonTicketId() != null) {
-            seasonTicketService.retrieveSeasonTicketsById(dto.getSeasonTicketId()).ifPresent(rentalSession::setSeasonTicket);
-        }
-
-        if (dto.getPromoCodName() != null) {
-            promoCodService.retrievePromoCodByName(dto.getPromoCodName()).ifPresent(rentalSession::setPromoCod);
-        }
 
         return rentalSession;
     }
