@@ -73,7 +73,7 @@ public class PointOfRentalControllerFacade extends AbstractFacade implements
             return new ResponseEntity<>("Point of rental with this id was deleted", HttpStatus.ACCEPTED);
         } catch (EmptyResultDataAccessException e) {
             log.error(e.getMessage(), POINT_OF_RENTAL_NOT_FOUND);
-            return new ResponseEntity<>(POINT_OF_RENTAL_NOT_FOUND, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(e.getMessage() + " Unable to delete", HttpStatus.NOT_FOUND);
         }
     }
 }
