@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.data.domain.Page;
@@ -69,7 +70,7 @@ public class PromoCodController extends AbstractRestController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('promoCods:write')")
-    public ResponseEntity<?> createOrUpdate(@RequestBody PromoCodDTO promoCodDTO) {
+    public ResponseEntity<?> createOrUpdate(@RequestBody PromoCodDTO promoCodDTO) throws NotFoundException {
         return entityControllerFacade.createOrUpdate(promoCodDTO, null);
     }
 

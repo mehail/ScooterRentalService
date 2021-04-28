@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import javassist.NotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
@@ -65,7 +66,7 @@ public class ScooterController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('scooters:write')")
-    public ResponseEntity<?> createOrUpdate(@RequestBody ScooterRequestDTO scooterDTO) {
+    public ResponseEntity<?> createOrUpdate(@RequestBody ScooterRequestDTO scooterDTO) throws NotFoundException {
         return entityControllerFacade.createOrUpdate(scooterDTO, null);
     }
 

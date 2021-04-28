@@ -10,6 +10,7 @@ import com.senla.srs.model.SeasonTicket;
 import com.senla.srs.service.ScooterTypeService;
 import com.senla.srs.service.SeasonTicketService;
 import com.senla.srs.service.UserService;
+import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -25,6 +26,7 @@ import java.util.Optional;
 @Controller
 public class SeasonTicketControllerFacade extends AbstractFacade implements
         EntityControllerFacade<SeasonTicketDTO, SeasonTicketRequestDTO, SeasonTicketFullResponseDTO, Long> {
+
     private final SeasonTicketService seasonTicketService;
     private final ScooterTypeService scooterTypeService;
     private final SeasonTicketRequestMapper seasonTicketRequestMapper;
@@ -74,7 +76,7 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
     }
 
     @Override
-    public ResponseEntity<?> createOrUpdate(SeasonTicketRequestDTO seasonTicketRequestDTO, User userSecurity) {
+    public ResponseEntity<?> createOrUpdate(SeasonTicketRequestDTO seasonTicketRequestDTO, User userSecurity) throws NotFoundException {
         Optional<com.senla.srs.model.User> optionalUser = userService.retrieveUserById(seasonTicketRequestDTO.getUserId());
         Optional<ScooterType> optionalScooterType =
                 scooterTypeService.retrieveScooterTypeById(seasonTicketRequestDTO.getScooterTypeId());
@@ -133,7 +135,7 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
 
     private ResponseEntity<?> save(SeasonTicketRequestDTO seasonTicketRequestDTO,
                                    Optional<com.senla.srs.model.User> optionalUser,
-                                   Optional<ScooterType> optionalScooterType) {
+                                   Optional<ScooterType> optionalScooterType) throws NotFoundException {
 
         int remainingTime = 0;
 
@@ -143,10 +145,11 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
 
         optionalUser.ifPresent(user -> user.setBalance(user.getBalance() - seasonTicketRequestDTO.getPrice()));
 
-        SeasonTicket seasonTicket =
-                seasonTicketService.save(seasonTicketRequestMapper.toConsistencySeasonTicket(seasonTicketRequestDTO,
-                        remainingTime,
-                        duration));
+        ScooterType scooterType = scooterTypeService.retrieveScooterTypeById(seasonTicketRequestDTO.getScooterTypeId())
+                .orElseThrow(() -> new NotFoundException("ScooterType with this id not found"));
+
+        SeasonTicket seasonTicket = seasonTicketService.save(
+                seasonTicketRequestMapper.toConsistencySeasonTicket(seasonTicketRequestDTO, scooterType, remainingTime, duration));
 
         return ResponseEntity.ok(seasonTicketFullResponseMapper.toDto(seasonTicket));
     }
