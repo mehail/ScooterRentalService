@@ -13,7 +13,6 @@ import com.senla.srs.service.SeasonTicketService;
 import com.senla.srs.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +26,6 @@ import java.util.Optional;
 public class SeasonTicketControllerFacade extends AbstractFacade implements
         EntityControllerFacade<SeasonTicketDTO, SeasonTicketRequestDTO, SeasonTicketFullResponseDTO, Long> {
 
-    private static final String NO_SEASON_TICKET_WITH_ID = "A season ticket with this id was not found";
     private static final String FORBIDDEN_FOR_DELETE = "Season ticket with this id not available for deletion";
     private final SeasonTicketService seasonTicketService;
     private final ScooterTypeService scooterTypeService;
@@ -93,12 +91,9 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
     public ResponseEntity<?> delete(Long id) {
         Optional<SeasonTicket> optionalSeasonTicket = seasonTicketService.retrieveSeasonTicketsById(id);
 
-        //ToDo !!!!!!!!!!!!!!!!
-//        optionalSeasonTicket.orElse(false).getAvailableForUse();
-
         if (optionalSeasonTicket.isPresent() && optionalSeasonTicket.get().getAvailableForUse()) {
-                seasonTicketService.deleteById(id);
-                return new ResponseEntity<>("Season ticket with this id was deleted", HttpStatus.ACCEPTED);
+            seasonTicketService.deleteById(id);
+            return new ResponseEntity<>("Season ticket with this id was deleted", HttpStatus.ACCEPTED);
         } else {
             return new ResponseEntity<>(FORBIDDEN_FOR_DELETE, HttpStatus.FORBIDDEN);
         }

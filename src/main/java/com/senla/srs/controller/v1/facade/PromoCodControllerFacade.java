@@ -7,7 +7,6 @@ import com.senla.srs.model.PromoCod;
 import com.senla.srs.service.PromoCodService;
 import com.senla.srs.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +20,6 @@ import java.time.LocalDate;
 public class PromoCodControllerFacade extends AbstractFacade implements
         EntityControllerFacade<PromoCodDTO, PromoCodDTO, PromoCodDTO, String> {
 
-    private static final String PROMO_COD_NOT_FOUND = "No PromoCod with this name found";
     private final PromoCodService promoCodService;
     private final PromoCodMapper promoCodMapper;
 
@@ -52,13 +50,8 @@ public class PromoCodControllerFacade extends AbstractFacade implements
 
     @Override
     public ResponseEntity<?> delete(String name) {
-        try {
-            promoCodService.deleteById(name);
-            return new ResponseEntity<>("PromoCod with this serial number was deleted", HttpStatus.ACCEPTED);
-        } catch (EmptyResultDataAccessException e) {
-            log.error(e.getMessage(), PROMO_COD_NOT_FOUND);
-            return new ResponseEntity<>(PROMO_COD_NOT_FOUND, HttpStatus.FORBIDDEN);
-        }
+        promoCodService.deleteById(name);
+        return new ResponseEntity<>("PromoCod with this serial number was deleted", HttpStatus.ACCEPTED);
     }
 
     private boolean isValidDate(PromoCodDTO promoCodDTO) {

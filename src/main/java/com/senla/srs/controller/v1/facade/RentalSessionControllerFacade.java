@@ -80,25 +80,26 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
     public ResponseEntity<?> createOrUpdate(RentalSessionRequestDTO rentalSessionRequestDTO, User userSecurity) throws NotFoundEntityException {
         RentalSession rentalSession = toEntity(rentalSessionRequestDTO);
 
-        return ResponseEntity.ok(rentalSessionResponseMapper.toDto(rentalSessionService.save(rentalSession)));
+        //ToDoDebug snippet, delete on merge
+//        return ResponseEntity.ok(rentalSessionResponseMapper.toDto(rentalSessionService.save(rentalSession)));
 
-//        if (rentalSessionValidator.isValid(rentalSessionRequestDTO)) {
-//            Optional<RentalSession> optionalRentalSession =
-//                    rentalSessionService.retrieveRentalSessionByUserIdAndScooterSerialNumberAndBeginDateAndBeginTime(rentalSessionRequestDTO.getUserId(),
-//                            rentalSessionRequestDTO.getScooterSerialNumber(),
-//                            rentalSessionRequestDTO.getBeginDate(),
-//                            rentalSessionRequestDTO.getBeginTime());
-//            if (optionalRentalSession.isEmpty()) {
-//                return save(rentalSessionRequestDTO);
-//            } else if (optionalRentalSession.get().getEndDate() != null &&
-//                    (isAdmin(userSecurity) || isThisUserById(userSecurity, rentalSessionRequestDTO.getUserId()))) {
-//                return save(rentalSessionRequestDTO);
-//            } else {
-//                return new ResponseEntity<>("Completed rental session is not available for editing", HttpStatus.FORBIDDEN);
-//            }
-//        } else {
-//            return new ResponseEntity<>("Rental session is not valid", HttpStatus.FORBIDDEN);
-//        }
+        if (rentalSessionValidator.isValid(rentalSessionRequestDTO)) {
+            Optional<RentalSession> optionalRentalSession =
+                    rentalSessionService.retrieveRentalSessionByUserIdAndScooterSerialNumberAndBeginDateAndBeginTime(rentalSessionRequestDTO.getUserId(),
+                            rentalSessionRequestDTO.getScooterSerialNumber(),
+                            rentalSessionRequestDTO.getBeginDate(),
+                            rentalSessionRequestDTO.getBeginTime());
+            if (optionalRentalSession.isEmpty()) {
+                return save(rentalSessionRequestDTO);
+            } else if (optionalRentalSession.get().getEndDate() != null &&
+                    (isAdmin(userSecurity) || isThisUserById(userSecurity, rentalSessionRequestDTO.getUserId()))) {
+                return save(rentalSessionRequestDTO);
+            } else {
+                return new ResponseEntity<>("Completed rental session is not available for editing", HttpStatus.FORBIDDEN);
+            }
+        } else {
+            return new ResponseEntity<>("Rental session is not valid", HttpStatus.FORBIDDEN);
+        }
     }
 
     private RentalSession toEntity(RentalSessionRequestDTO rentalSessionRequestDTO) throws NotFoundEntityException {
@@ -125,21 +126,11 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
     public ResponseEntity<?> delete(Long id) {
         Optional<RentalSession> optionalRentalSession = rentalSessionService.retrieveRentalSessionById(id);
 
-        if (optionalRentalSession.isPresent()) {
-            if (optionalRentalSession.get().getEndDate() == null) {
-                try {
-                    rentalSessionService.deleteById(id);
-                    return new ResponseEntity<>("Rental session with this id was deleted", HttpStatus.ACCEPTED);
-                } catch (EmptyResultDataAccessException e) {
-                    log.error(e.getMessage(), RENTAL_SESSION_NOT_FOUND);
-                    return new ResponseEntity<>(RENTAL_SESSION_NOT_FOUND, HttpStatus.FORBIDDEN);
-                }
-            } else {
-                return new ResponseEntity<>("Rental session closed and cannot be deleted", HttpStatus.FORBIDDEN);
-            }
+        if (optionalRentalSession.isPresent() && optionalRentalSession.get().getEndDate() == null) {
+            rentalSessionService.deleteById(id);
+            return new ResponseEntity<>("Rental session with this id was deleted", HttpStatus.ACCEPTED);
         } else {
-            return new ResponseEntity<>("Rental session with this id not available for deletion",
-                    HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("Rental session closed and cannot be deleted", HttpStatus.FORBIDDEN);
         }
     }
 

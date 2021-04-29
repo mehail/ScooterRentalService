@@ -12,7 +12,6 @@ import com.senla.srs.service.MakerDtoService;
 import com.senla.srs.service.ScooterTypeService;
 import com.senla.srs.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +23,6 @@ import org.springframework.stereotype.Controller;
 public class ScooterTypeControllerFacade extends AbstractFacade implements
         EntityControllerFacade<ScooterTypeDTO, ScooterTypeRequestDTO, ScooterTypeResponseDTO, Long> {
 
-    private static final String TYPE_NOT_FOUND = "Scooter type with this id not found";
     private final ScooterTypeService scooterTypeService;
     private final MakerDtoService makerDtoService;
     private final ScooterTypeRequestMapper scooterTypeRequestMapper;
@@ -55,8 +53,11 @@ public class ScooterTypeControllerFacade extends AbstractFacade implements
     }
 
     @Override
-    public ResponseEntity<?> createOrUpdate(ScooterTypeRequestDTO requestDTO, User userSecurity) throws NotFoundEntityException {
-        MakerDTO makerDTO = makerDtoService.retrieveMakerDtoById(requestDTO.getMakerId()).orElseThrow(() -> new NotFoundEntityException("Maker"));
+    public ResponseEntity<?> createOrUpdate(ScooterTypeRequestDTO requestDTO, User userSecurity)
+            throws NotFoundEntityException {
+
+        MakerDTO makerDTO = makerDtoService.retrieveMakerDtoById(
+                requestDTO.getMakerId()).orElseThrow(() -> new NotFoundEntityException("Maker"));
 
         ScooterType scooterType = scooterTypeService.save(scooterTypeRequestMapper.toEntity(requestDTO, makerDTO));
 
@@ -65,12 +66,7 @@ public class ScooterTypeControllerFacade extends AbstractFacade implements
 
     @Override
     public ResponseEntity<?> delete(Long id) {
-        try {
-            scooterTypeService.deleteById(id);
-            return new ResponseEntity<>("Scooter type with this id was deleted", HttpStatus.ACCEPTED);
-        } catch (EmptyResultDataAccessException e) {
-            log.error(e.getMessage(), TYPE_NOT_FOUND);
-            return new ResponseEntity<>(TYPE_NOT_FOUND, HttpStatus.NOT_FOUND);
-        }
+        scooterTypeService.deleteById(id);
+        return new ResponseEntity<>("Scooter type with this id was deleted", HttpStatus.ACCEPTED);
     }
 }

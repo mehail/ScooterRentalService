@@ -12,7 +12,6 @@ import com.senla.srs.service.AddressDtoService;
 import com.senla.srs.service.PointOfRentalService;
 import com.senla.srs.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +23,6 @@ import org.springframework.stereotype.Controller;
 public class PointOfRentalControllerFacade extends AbstractFacade implements
         EntityControllerFacade<PointOfRentalDTO, PointOfRentalRequestDTO, PointOfRentalResponseDTO, Long> {
 
-    private static final String POINT_OF_RENTAL_NOT_FOUND = "A Point of rental with this id was not found";
     private final AddressDtoService addressDtoService;
     private final PointOfRentalService pointOfRentalService;
     private final PointOfRentalRequestMapper pointOfRentalRequestMapper;
@@ -68,12 +66,7 @@ public class PointOfRentalControllerFacade extends AbstractFacade implements
 
     @Override
     public ResponseEntity<?> delete(Long id) {
-        try {
-            pointOfRentalService.deleteById(id);
-            return new ResponseEntity<>("Point of rental with this id was deleted", HttpStatus.ACCEPTED);
-        } catch (EmptyResultDataAccessException e) {
-            log.error(e.getMessage(), POINT_OF_RENTAL_NOT_FOUND);
-            return new ResponseEntity<>(e.getMessage() + " Unable to delete", HttpStatus.NOT_FOUND);
-        }
+        pointOfRentalService.deleteById(id);
+        return new ResponseEntity<>("Point of rental with this id was deleted", HttpStatus.ACCEPTED);
     }
 }

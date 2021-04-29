@@ -12,7 +12,6 @@ import com.senla.srs.service.ScooterService;
 import com.senla.srs.service.ScooterTypeService;
 import com.senla.srs.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +23,6 @@ import org.springframework.stereotype.Controller;
 public class ScooterControllerFacade extends AbstractFacade implements
         EntityControllerFacade<ScooterDTO, ScooterRequestDTO, ScooterResponseDTO, String> {
 
-    private static final String SCOOTER_NOT_FOUND = "A scooter with this serial number was not found";
     private final ScooterService scooterService;
     private final ScooterTypeService scooterTypeService;
     private final ScooterRequestMapper scooterRequestMapper;
@@ -56,7 +54,7 @@ public class ScooterControllerFacade extends AbstractFacade implements
 
     @Override
     public ResponseEntity<?> createOrUpdate(ScooterRequestDTO scooterDTO, User userSecurity) throws NotFoundEntityException {
-        ScooterType scooterType =  scooterTypeService.retrieveScooterTypeById(scooterDTO.getPointOfRentalId())
+        ScooterType scooterType = scooterTypeService.retrieveScooterTypeById(scooterDTO.getPointOfRentalId())
                 .orElseThrow(() -> new NotFoundEntityException("Scooter type"));
 
         Scooter scooter = scooterService.save(scooterRequestMapper.toEntity(scooterDTO, scooterType));
@@ -66,12 +64,7 @@ public class ScooterControllerFacade extends AbstractFacade implements
 
     @Override
     public ResponseEntity<?> delete(String serialNumber) {
-        try {
-            scooterService.deleteById(serialNumber);
-            return new ResponseEntity<>("Scooter with this serial number was deleted", HttpStatus.ACCEPTED);
-        } catch (EmptyResultDataAccessException e) {
-            log.error(e.getMessage(), SCOOTER_NOT_FOUND);
-            return new ResponseEntity<>(SCOOTER_NOT_FOUND, HttpStatus.NOT_FOUND);
-        }
+        scooterService.deleteById(serialNumber);
+        return new ResponseEntity<>("Scooter with this serial number was deleted", HttpStatus.ACCEPTED);
     }
 }

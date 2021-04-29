@@ -10,7 +10,6 @@ import com.senla.srs.model.UserStatus;
 import com.senla.srs.model.security.Role;
 import com.senla.srs.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +23,6 @@ import java.util.Optional;
 public class UserControllerFacade extends AbstractFacade implements
         EntityControllerFacade<UserDTO, UserRequestDTO, UserFullResponseDTO, Long> {
 
-    private static final String USER_NOT_FOUND = "A User with this id not found";
     private static final String ACCESS_FORBIDDEN = "Access forbidden";
     private static final String RE_AUTH = "To change this User reAuthorize";
     private static final String CHANGE_DEFAULT_FIELD = "To top up your balance, obtain administrator rights or " +
@@ -60,6 +58,7 @@ public class UserControllerFacade extends AbstractFacade implements
 
     }
 
+    //ToDo Выбрасывать исключение с FORBIDDEN
     @Override
     public ResponseEntity<?> createOrUpdate(UserRequestDTO requestDTO, User userSecurity) {
         Optional<com.senla.srs.model.User> optionalExistUser = userService.retrieveUserByEmail(requestDTO.getEmail());
