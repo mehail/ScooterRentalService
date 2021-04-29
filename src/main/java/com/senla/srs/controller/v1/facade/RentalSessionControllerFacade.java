@@ -9,7 +9,6 @@ import com.senla.srs.mapper.RentalSessionResponseMapper;
 import com.senla.srs.model.*;
 import com.senla.srs.service.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,8 +31,6 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
     private final RentalSessionResponseMapper rentalSessionResponseMapper;
     private final ScooterService scooterService;
     private final SeasonTicketService seasonTicketService;
-
-    private static final String RENTAL_SESSION_NOT_FOUND = "A rental session with this id was not found";
 
     public RentalSessionControllerFacade(PromoCodService promoCodService,
                                          RentalSessionService rentalSessionService,
@@ -75,12 +72,12 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
         }
     }
 
-    //ToDo refactoring!
     @Override
     public ResponseEntity<?> createOrUpdate(RentalSessionRequestDTO rentalSessionRequestDTO, User userSecurity) throws NotFoundEntityException {
-        RentalSession rentalSession = toEntity(rentalSessionRequestDTO);
 
-        //ToDoDebug snippet, delete on merge
+
+        //ToDo Debug snippet, delete on merge
+//        RentalSession rentalSession = toEntity(rentalSessionRequestDTO);
 //        return ResponseEntity.ok(rentalSessionResponseMapper.toDto(rentalSessionService.save(rentalSession)));
 
         if (rentalSessionValidator.isValid(rentalSessionRequestDTO)) {
