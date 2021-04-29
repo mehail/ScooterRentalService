@@ -20,6 +20,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @Slf4j
 @Tag(name = "Scooter type REST Controller")
 @AllArgsConstructor
@@ -68,7 +70,9 @@ public class ScooterTypeController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('scooterTypes:write')")
-    public ResponseEntity<?> createOrUpdate(@RequestBody ScooterTypeRequestDTO requestDTO) throws NotFoundEntityException {
+    public ResponseEntity<?> createOrUpdate(@RequestBody @Valid ScooterTypeRequestDTO requestDTO)
+            throws NotFoundEntityException {
+
         return entityControllerFacade.createOrUpdate(requestDTO, null);
     }
 

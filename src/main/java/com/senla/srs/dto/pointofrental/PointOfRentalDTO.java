@@ -5,12 +5,14 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import org.hibernate.validator.constraints.Length;
 
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"name"}, callSuper = false)
 public class PointOfRentalDTO extends AbstractDTO {
     @NonNull
+    @Length(min = 1, max = 64)
     private String name;
     @NonNull
     private Boolean available;

@@ -5,8 +5,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 
 @Data
 @NoArgsConstructor
@@ -16,8 +18,10 @@ import javax.persistence.*;
 public class CityDTO extends AbstractDTO {
     @Id
     @NonNull
+    @Min(1)
     private Long id;
     @NonNull
+    @Length(min = 1, max = 64)
     private String name;
     @NonNull
     @ManyToOne(optional = false)

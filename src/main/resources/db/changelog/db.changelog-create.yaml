@@ -388,9 +388,13 @@ databaseChangeLog:
               - column:
                   name: discount_percentage
                   type: INTEGER
+                  constraints:
+                    nullable: false
               - column:
                   name: bonus_point
                   type: INTEGER
+                  constraints:
+                    nullable: false
               - column:
                   name: available
                   type: BOOLEAN

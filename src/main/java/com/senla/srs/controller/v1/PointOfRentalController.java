@@ -20,6 +20,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @Slf4j
 @Tag(name = "Point of rental REST Controller")
 @AllArgsConstructor
@@ -69,8 +71,9 @@ public class PointOfRentalController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('pointOfRentals:write')")
-    public ResponseEntity<?> createOrUpdate(@RequestBody PointOfRentalRequestDTO pointOfRentalRequestDTO)
+    public ResponseEntity<?> createOrUpdate(@RequestBody  @Valid PointOfRentalRequestDTO pointOfRentalRequestDTO)
             throws NotFoundEntityException {
+
         return entityControllerFacade.createOrUpdate(pointOfRentalRequestDTO, null);
     }
 

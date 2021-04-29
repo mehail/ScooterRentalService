@@ -21,6 +21,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @Slf4j
 @Tag(name = "Rental session REST Controller")
 @RestController
@@ -81,7 +83,7 @@ public class RentalSessionController extends AbstractRestController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('rentalSessions:read')")
-    public ResponseEntity<?> createOrUpdate(@RequestBody RentalSessionRequestDTO rentalSessionRequestDTO,
+    public ResponseEntity<?> createOrUpdate(@RequestBody @Valid RentalSessionRequestDTO rentalSessionRequestDTO,
                                             @AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity)
             throws NotFoundEntityException {
 

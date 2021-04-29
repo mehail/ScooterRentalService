@@ -18,6 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @Slf4j
 @Tag(name = "PromoCod REST Controller")
 @RestController
@@ -70,7 +72,7 @@ public class PromoCodController extends AbstractRestController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('promoCods:write')")
-    public ResponseEntity<?> createOrUpdate(@RequestBody PromoCodDTO promoCodDTO) throws NotFoundEntityException {
+    public ResponseEntity<?> createOrUpdate(@RequestBody @Valid PromoCodDTO promoCodDTO) throws NotFoundEntityException {
         return entityControllerFacade.createOrUpdate(promoCodDTO, null);
     }
 

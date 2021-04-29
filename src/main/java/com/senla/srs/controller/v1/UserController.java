@@ -21,6 +21,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @Slf4j
 @Tag(name = "User REST Controller")
 @RestController
@@ -79,7 +81,7 @@ class UserController extends AbstractRestController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('users:read')")
-    public ResponseEntity<?> createOrUpdate(@RequestBody UserRequestDTO userRequestDTO,
+    public ResponseEntity<?> createOrUpdate(@RequestBody @Valid UserRequestDTO userRequestDTO,
                                             @AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity)
             throws NotFoundEntityException {
 
