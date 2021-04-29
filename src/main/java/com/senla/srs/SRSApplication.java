@@ -4,8 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ScooterRentalServiceApplication {
+public class SRSApplication {
 	public static void main(String[] args) {
-		SpringApplication.run(ScooterRentalServiceApplication.class, args);
+		SpringApplication.run(SRSApplication.class, args);
 	}
 }

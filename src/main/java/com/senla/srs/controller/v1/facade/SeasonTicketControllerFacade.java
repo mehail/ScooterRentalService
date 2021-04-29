@@ -93,16 +93,12 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
     public ResponseEntity<?> delete(Long id) {
         Optional<SeasonTicket> optionalSeasonTicket = seasonTicketService.retrieveSeasonTicketsById(id);
 
-        if (optionalSeasonTicket.isPresent() && optionalSeasonTicket.get().getAvailableForUse()) {
+        //ToDo !!!!!!!!!!!!!!!!
+//        optionalSeasonTicket.orElse(false).getAvailableForUse();
 
-            try {
+        if (optionalSeasonTicket.isPresent() && optionalSeasonTicket.get().getAvailableForUse()) {
                 seasonTicketService.deleteById(id);
                 return new ResponseEntity<>("Season ticket with this id was deleted", HttpStatus.ACCEPTED);
-            } catch (EmptyResultDataAccessException e) {
-                log.error(e.getMessage(), NO_SEASON_TICKET_WITH_ID);
-                return new ResponseEntity<>(NO_SEASON_TICKET_WITH_ID, HttpStatus.FORBIDDEN);
-            }
-
         } else {
             return new ResponseEntity<>(FORBIDDEN_FOR_DELETE, HttpStatus.FORBIDDEN);
         }

@@ -87,13 +87,8 @@ public class UserControllerFacade extends AbstractFacade implements
 
     @Override
     public ResponseEntity<?> delete(Long id) {
-        try {
-            userService.deleteById(id);
-            return new ResponseEntity<>("User with this id was deleted", HttpStatus.ACCEPTED);
-        } catch (EmptyResultDataAccessException e) {
-            log.error(e.getMessage(), USER_NOT_FOUND);
-            return new ResponseEntity<>(USER_NOT_FOUND, HttpStatus.NOT_FOUND);
-        }
+        userService.deleteById(id);
+        return new ResponseEntity<>("User with this id was deleted", HttpStatus.ACCEPTED);
     }
 
     private ResponseEntity<?> constrainCreate(UserRequestDTO userRequestDTO) {
