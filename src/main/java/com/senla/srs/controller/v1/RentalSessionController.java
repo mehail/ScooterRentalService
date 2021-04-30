@@ -19,6 +19,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -65,8 +67,7 @@ public class RentalSessionController extends AbstractRestController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('rentalSessions:read')")
-    public ResponseEntity<?> getById(@PathVariable Long id,
-                                     @AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity)
+    public ResponseEntity<?> getById(@PathVariable Long id, @AuthenticationPrincipal User userSecurity)
             throws NotFoundEntityException {
 
         return entityControllerFacade.getById(id, userSecurity);
@@ -84,10 +85,11 @@ public class RentalSessionController extends AbstractRestController {
     @PostMapping
     @PreAuthorize("hasAuthority('rentalSessions:read')")
     public ResponseEntity<?> createOrUpdate(@RequestBody @Valid RentalSessionRequestDTO rentalSessionRequestDTO,
-                                            @AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity)
+                                            BindingResult bindingResult,
+                                            @AuthenticationPrincipal User userSecurity)
             throws NotFoundEntityException {
 
-        return entityControllerFacade.createOrUpdate(rentalSessionRequestDTO, userSecurity);
+        return entityControllerFacade.createOrUpdate(rentalSessionRequestDTO, bindingResult, userSecurity);
     }
 
 

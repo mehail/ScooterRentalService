@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -73,7 +74,10 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
     }
 
     @Override
-    public ResponseEntity<?> createOrUpdate(RentalSessionRequestDTO rentalSessionRequestDTO, User userSecurity) throws NotFoundEntityException {
+    public ResponseEntity<?> createOrUpdate(RentalSessionRequestDTO rentalSessionRequestDTO,
+                                            BindingResult bindingResult,
+                                            User userSecurity)
+            throws NotFoundEntityException {
 
 
         //ToDo Debug snippet, delete on merge

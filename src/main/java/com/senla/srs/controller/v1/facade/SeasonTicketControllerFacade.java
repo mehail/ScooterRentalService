@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 
 import java.util.Optional;
 
@@ -71,7 +72,11 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
     }
 
     @Override
-    public ResponseEntity<?> createOrUpdate(SeasonTicketRequestDTO seasonTicketRequestDTO, User userSecurity) throws NotFoundEntityException {
+    public ResponseEntity<?> createOrUpdate(SeasonTicketRequestDTO seasonTicketRequestDTO,
+                                            BindingResult bindingResult,
+                                            User userSecurity)
+            throws NotFoundEntityException {
+
         Optional<com.senla.srs.model.User> optionalUser = userService.retrieveUserById(seasonTicketRequestDTO.getUserId());
         Optional<ScooterType> optionalScooterType =
                 scooterTypeService.retrieveScooterTypeById(seasonTicketRequestDTO.getScooterTypeId());
@@ -99,9 +104,7 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
         }
     }
 
-    private boolean isThisUserSeasonTicket(Optional<SeasonTicket> optionalSeasonTicket,
-                                           org.springframework.security.core.userdetails.User userSecurity) {
-
+    private boolean isThisUserSeasonTicket(Optional<SeasonTicket> optionalSeasonTicket, User userSecurity) {
         return optionalSeasonTicket.isPresent() &&
                 isThisUserById(userSecurity, optionalSeasonTicket.get().getUserId());
     }
@@ -115,15 +118,15 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
                 optionalScooterType.isPresent();
     }
 
-    private boolean isCanSave(org.springframework.security.core.userdetails.User userSecurity,
-                              SeasonTicketRequestDTO seasonTicketRequestDTO) {
+    private boolean isCanSave(User userSecurity, SeasonTicketRequestDTO seasonTicketRequestDTO) {
         return getExistOptionalSeasonTicket(seasonTicketRequestDTO).isEmpty() &&
                 (isAdmin(userSecurity) || isThisUserById(userSecurity, seasonTicketRequestDTO.getUserId()));
     }
 
     private ResponseEntity<?> save(SeasonTicketRequestDTO seasonTicketRequestDTO,
                                    Optional<com.senla.srs.model.User> optionalUser,
-                                   Optional<ScooterType> optionalScooterType) throws NotFoundEntityException {
+                                   Optional<ScooterType> optionalScooterType)
+            throws NotFoundEntityException {
 
         int remainingTime = 0;
 

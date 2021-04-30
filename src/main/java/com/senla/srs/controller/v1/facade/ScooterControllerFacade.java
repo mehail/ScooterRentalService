@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 
 @Slf4j
 @Controller
@@ -53,7 +54,11 @@ public class ScooterControllerFacade extends AbstractFacade implements
     }
 
     @Override
-    public ResponseEntity<?> createOrUpdate(ScooterRequestDTO scooterDTO, User userSecurity) throws NotFoundEntityException {
+    public ResponseEntity<?> createOrUpdate(ScooterRequestDTO scooterDTO,
+                                            BindingResult bindingResult,
+                                            User userSecurity)
+            throws NotFoundEntityException {
+
         ScooterType scooterType = scooterTypeService.retrieveScooterTypeById(scooterDTO.getPointOfRentalId())
                 .orElseThrow(() -> new NotFoundEntityException("Scooter type"));
 

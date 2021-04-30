@@ -18,6 +18,7 @@ import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -40,7 +41,9 @@ public class ScooterTypeController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('scooterTypes:read')")
-    public Page<ScooterTypeResponseDTO> getAll(Integer page, Integer size, @RequestParam(defaultValue = "id") String sort) {
+    public Page<ScooterTypeResponseDTO> getAll(Integer page,
+                                               Integer size,
+                                               @RequestParam(defaultValue = "id") String sort) {
         return entityControllerFacade.getAll(page, size, sort, null);
     }
 
@@ -70,10 +73,11 @@ public class ScooterTypeController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('scooterTypes:write')")
-    public ResponseEntity<?> createOrUpdate(@RequestBody @Valid ScooterTypeRequestDTO requestDTO)
+    public ResponseEntity<?> createOrUpdate(@RequestBody @Valid ScooterTypeRequestDTO requestDTO,
+                                            BindingResult bindingResult)
             throws NotFoundEntityException {
 
-        return entityControllerFacade.createOrUpdate(requestDTO, null);
+        return entityControllerFacade.createOrUpdate(requestDTO, bindingResult, null);
     }
 
 

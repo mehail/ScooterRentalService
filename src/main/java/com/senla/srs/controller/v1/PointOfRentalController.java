@@ -18,6 +18,7 @@ import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -40,7 +41,9 @@ public class PointOfRentalController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('pointOfRentals:read')")
-    public Page<PointOfRentalResponseDTO> getAll(Integer page, Integer size, @RequestParam(defaultValue = "id") String sort) {
+    public Page<PointOfRentalResponseDTO> getAll(Integer page,
+                                                 Integer size,
+                                                 @RequestParam(defaultValue = "id") String sort) {
         return entityControllerFacade.getAll(page, size, sort, null);
     }
 
@@ -71,10 +74,11 @@ public class PointOfRentalController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('pointOfRentals:write')")
-    public ResponseEntity<?> createOrUpdate(@RequestBody  @Valid PointOfRentalRequestDTO pointOfRentalRequestDTO)
+    public ResponseEntity<?> createOrUpdate(@RequestBody  @Valid PointOfRentalRequestDTO pointOfRentalRequestDTO,
+                                            BindingResult bindingResult)
             throws NotFoundEntityException {
 
-        return entityControllerFacade.createOrUpdate(pointOfRentalRequestDTO, null);
+        return entityControllerFacade.createOrUpdate(pointOfRentalRequestDTO, bindingResult, null);
     }
 
 

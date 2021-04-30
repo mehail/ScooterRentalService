@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 
 import java.time.LocalDate;
 
@@ -23,7 +24,9 @@ public class PromoCodControllerFacade extends AbstractFacade implements
     private final PromoCodService promoCodService;
     private final PromoCodMapper promoCodMapper;
 
-    public PromoCodControllerFacade(UserService userService, PromoCodService promoCodService, PromoCodMapper promoCodMapper) {
+    public PromoCodControllerFacade(UserService userService,
+                                    PromoCodService promoCodService,
+                                    PromoCodMapper promoCodMapper) {
         super(userService);
         this.promoCodService = promoCodService;
         this.promoCodMapper = promoCodMapper;
@@ -42,7 +45,7 @@ public class PromoCodControllerFacade extends AbstractFacade implements
     }
 
     @Override
-    public ResponseEntity<?> createOrUpdate(PromoCodDTO promoCodDTO, User userSecurity) {
+    public ResponseEntity<?> createOrUpdate(PromoCodDTO promoCodDTO, BindingResult bindingResult, User userSecurity) {
         return isValidDate(promoCodDTO)
                 ? save(promoCodDTO)
                 : new ResponseEntity<>("The start and end dates of the PromoCod are not correct", HttpStatus.BAD_REQUEST);

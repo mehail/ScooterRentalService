@@ -19,6 +19,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -47,8 +49,10 @@ public class SeasonTicketController extends AbstractRestController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('seasonTickets:read')")
-    public Page<SeasonTicketFullResponseDTO> getAll(Integer page, Integer size, @RequestParam(defaultValue = "id") String sort,
-                                                    @AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
+    public Page<SeasonTicketFullResponseDTO> getAll(Integer page,
+                                                    Integer size,
+                                                    @RequestParam(defaultValue = "id") String sort,
+                                                    @AuthenticationPrincipal User userSecurity) {
         return entityControllerFacade.getAll(page, size, sort, userSecurity);
     }
 
@@ -63,8 +67,7 @@ public class SeasonTicketController extends AbstractRestController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('seasonTickets:read')")
-    public ResponseEntity<?> getById(@PathVariable Long id,
-                                     @AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity)
+    public ResponseEntity<?> getById(@PathVariable Long id, @AuthenticationPrincipal User userSecurity)
             throws NotFoundEntityException {
 
         return entityControllerFacade.getById(id, userSecurity);
@@ -82,10 +85,11 @@ public class SeasonTicketController extends AbstractRestController {
     @PostMapping
     @PreAuthorize("hasAuthority('seasonTickets:read')")
     public ResponseEntity<?> createOrUpdate(@RequestBody @Valid SeasonTicketRequestDTO seasonTicketRequestDTO,
-                                            @AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity)
+                                            BindingResult bindingResult,
+                                            @AuthenticationPrincipal User userSecurity)
             throws NotFoundEntityException {
 
-        return entityControllerFacade.createOrUpdate(seasonTicketRequestDTO, userSecurity);
+        return entityControllerFacade.createOrUpdate(seasonTicketRequestDTO, bindingResult, userSecurity);
     }
 
 

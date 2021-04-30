@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 
 @Slf4j
 @Controller
@@ -28,7 +29,11 @@ public class PointOfRentalControllerFacade extends AbstractFacade implements
     private final PointOfRentalRequestMapper pointOfRentalRequestMapper;
     private final PointOfRentalResponseMapper pointOfRentalResponseMapper;
 
-    public PointOfRentalControllerFacade(UserService userService, AddressDtoService addressDtoService, PointOfRentalService pointOfRentalService, PointOfRentalRequestMapper pointOfRentalRequestMapper, PointOfRentalResponseMapper pointOfRentalResponseMapper) {
+    public PointOfRentalControllerFacade(UserService userService,
+                                         AddressDtoService addressDtoService,
+                                         PointOfRentalService pointOfRentalService,
+                                         PointOfRentalRequestMapper pointOfRentalRequestMapper,
+                                         PointOfRentalResponseMapper pointOfRentalResponseMapper) {
         super(userService);
         this.addressDtoService = addressDtoService;
         this.pointOfRentalService = pointOfRentalService;
@@ -49,7 +54,9 @@ public class PointOfRentalControllerFacade extends AbstractFacade implements
     }
 
     @Override
-    public ResponseEntity<?> createOrUpdate(PointOfRentalRequestDTO pointOfRentalRequestDTO, User userSecurity)
+    public ResponseEntity<?> createOrUpdate(PointOfRentalRequestDTO pointOfRentalRequestDTO,
+                                            BindingResult bindingResult,
+                                            User userSecurity)
             throws NotFoundEntityException {
 
         if (addressDtoService.retrieveAddressDtoById(pointOfRentalRequestDTO.getAddressId()).isEmpty()) {

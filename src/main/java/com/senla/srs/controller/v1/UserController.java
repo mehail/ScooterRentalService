@@ -19,6 +19,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -46,8 +48,10 @@ class UserController extends AbstractRestController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('users:read')")
-    public Page<UserFullResponseDTO> getAll(Integer page, Integer size, @RequestParam(defaultValue = "id") String sort,
-                                            @AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity) {
+    public Page<UserFullResponseDTO> getAll(Integer page,
+                                            Integer size,
+                                            @RequestParam(defaultValue = "id") String sort,
+                                            @AuthenticationPrincipal User userSecurity) {
 
         return entityControllerFacade.getAll(page, size, sort, userSecurity);
     }
@@ -63,8 +67,7 @@ class UserController extends AbstractRestController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('users:read')")
-    public ResponseEntity<?> getById(@PathVariable Long id,
-                                     @AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity)
+    public ResponseEntity<?> getById(@PathVariable Long id, @AuthenticationPrincipal User userSecurity)
             throws NotFoundEntityException {
 
         return entityControllerFacade.getById(id, userSecurity);
@@ -82,10 +85,11 @@ class UserController extends AbstractRestController {
     @PostMapping
     @PreAuthorize("hasAuthority('users:read')")
     public ResponseEntity<?> createOrUpdate(@RequestBody @Valid UserRequestDTO userRequestDTO,
-                                            @AuthenticationPrincipal org.springframework.security.core.userdetails.User userSecurity)
+                                            BindingResult bindingResult,
+                                            @AuthenticationPrincipal User userSecurity)
             throws NotFoundEntityException {
 
-        return entityControllerFacade.createOrUpdate(userRequestDTO, userSecurity);
+        return entityControllerFacade.createOrUpdate(userRequestDTO, bindingResult, userSecurity);
     }
 
 

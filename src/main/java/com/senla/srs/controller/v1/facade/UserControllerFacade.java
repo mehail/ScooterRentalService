@@ -6,15 +6,16 @@ import com.senla.srs.dto.user.UserRequestDTO;
 import com.senla.srs.exception.NotFoundEntityException;
 import com.senla.srs.mapper.UserFullResponseMapper;
 import com.senla.srs.mapper.UserRequestMapper;
-import com.senla.srs.model.UserStatus;
-import com.senla.srs.model.security.Role;
 import com.senla.srs.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 
 import java.util.Optional;
 
@@ -29,15 +30,23 @@ public class UserControllerFacade extends AbstractFacade implements
             "deactivate a profile, contact the administrator";
     private final UserFullResponseMapper userFullResponseMapper;
     private final UserRequestMapper userRequestMapper;
+    private final Validator validator;
 
-    public UserControllerFacade(UserService userService, UserFullResponseMapper userFullResponseMapper, UserRequestMapper userRequestMapper) {
+    public UserControllerFacade(UserService userService,
+                                UserFullResponseMapper userFullResponseMapper,
+                                UserRequestMapper userRequestMapper,
+                                @Qualifier("userRequestValidator") Validator validator) {
         super(userService);
         this.userFullResponseMapper = userFullResponseMapper;
         this.userRequestMapper = userRequestMapper;
+        this.validator = validator;
     }
 
     @Override
-    public Page<UserFullResponseDTO> getAll(Integer page, Integer size, String sort, User userSecurity) {
+    public Page<UserFullResponseDTO> getAll(Integer page,
+                                            Integer size,
+                                            String sort,
+                                            org.springframework.security.core.userdetails.User userSecurity) {
         return isAdmin(userSecurity)
                 ? userFullResponseMapper.mapPageToDtoPage(userService.retrieveAllUsers(page, size, sort))
 
@@ -46,7 +55,8 @@ public class UserControllerFacade extends AbstractFacade implements
     }
 
     @Override
-    public ResponseEntity<?> getById(Long id, User userSecurity) throws NotFoundEntityException {
+    public ResponseEntity<?> getById(Long id, org.springframework.security.core.userdetails.User userSecurity)
+            throws NotFoundEntityException {
 
         if (isThisUserById(userSecurity, id) || isAdmin(userSecurity)) {
             return new ResponseEntity<>(userService.retrieveUserById(id)
@@ -59,16 +69,19 @@ public class UserControllerFacade extends AbstractFacade implements
     }
 
     //ToDo Выбрасывать исключение с FORBIDDEN
-    @Override
-    public ResponseEntity<?> createOrUpdate(UserRequestDTO requestDTO, User userSecurity) {
+    public ResponseEntity<?> createOrUpdate(UserRequestDTO requestDTO,
+                                            BindingResult bindingResult,
+                                            org.springframework.security.core.userdetails.User userSecurity) {
         Optional<com.senla.srs.model.User> optionalExistUser = userService.retrieveUserByEmail(requestDTO.getEmail());
 
         if (userSecurity != null) {
             if (isAdmin(userSecurity)) {
-                return save(requestDTO);
+                //ToDo test methods
+                return constrainCreate(requestDTO, bindingResult);
+//                return save(requestDTO);
             } else {
                 if (optionalExistUser.isEmpty()) {
-                    return constrainCreate(requestDTO);
+                    return constrainCreate(requestDTO, bindingResult);
                 } else {
                     if (isThisUserByEmail(userSecurity, requestDTO.getEmail())) {
                         return update(requestDTO, optionalExistUser.get());
@@ -78,7 +91,7 @@ public class UserControllerFacade extends AbstractFacade implements
                 }
             }
         } else if (optionalExistUser.isEmpty()) {
-            return constrainCreate(requestDTO);
+            return constrainCreate(requestDTO, bindingResult);
         } else {
             return new ResponseEntity<>(RE_AUTH, HttpStatus.FORBIDDEN);
         }
@@ -90,17 +103,17 @@ public class UserControllerFacade extends AbstractFacade implements
         return new ResponseEntity<>("User with this id was deleted", HttpStatus.ACCEPTED);
     }
 
-    private ResponseEntity<?> constrainCreate(UserRequestDTO userRequestDTO) {
-        return isValidDtoToConstrainCreate(userRequestDTO)
-                ? save(userRequestDTO)
-                : new ResponseEntity<>(CHANGE_DEFAULT_FIELD, HttpStatus.FORBIDDEN);
+    private ResponseEntity<?> constrainCreate(UserRequestDTO userRequestDTO, BindingResult bindingResult) {
+        validator.validate(userRequestDTO, bindingResult);
+
+        if (!bindingResult.hasErrors()) {
+            return save(userRequestDTO);
+        } else {
+            return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.FORBIDDEN);
+        }
     }
 
-    private boolean isValidDtoToConstrainCreate(UserRequestDTO userRequestDTO) {
-        return userRequestDTO.getStatus() == UserStatus.ACTIVE &&
-                userRequestDTO.getRole() == Role.USER &&
-                userRequestDTO.getBalance() == 0;
-    }
+
 
     private ResponseEntity<?> update(UserRequestDTO userRequestDTO, com.senla.srs.model.User existUser) {
         return isValidDtoToUpdate(userRequestDTO, existUser)
