@@ -16,13 +16,13 @@ import org.hibernate.validator.constraints.Length;
 public class UserDTO extends AbstractDTO {
     @NonNull
     @EmailRFC822
-    @Length(max = 320)
+    @Length(max = 320, message = "Email must be no more than 320 characters")
     private String email;
     @NonNull
-    @Length(min = 1, max = 64)
+    @Length(min = 1, max = 64, message = "First name must be between 1 and 64 characters")
     private String firstName;
     @NonNull
-    @Length(min = 1, max = 64)
+    @Length(min = 1, max = 64, message = "Last name must be between 1 and 64 characters")
     private String lastName;
     @NonNull
     private Role role;

@@ -20,9 +20,9 @@ import javax.validation.constraints.Min;
 public class MakerDTO extends AbstractDTO {
     @Id
     @NonNull
-    @Min(1)
+    @Min(value = 1, message = "ID must be at least 1")
     private Long id;
     @NonNull
-    @Length(min = 1, max = 64)
+    @Length(min = 1, max = 64, message = "Maker must be between 1 and 64 characters")
     private String maker;
 }

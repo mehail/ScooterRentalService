@@ -4,14 +4,13 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-
-import javax.validation.constraints.Min;
+import org.hibernate.validator.constraints.Length;
 
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"password"}, callSuper = false)
 public class UserRequestDTO extends UserDTO {
     @NonNull
-    @Min(3)
+    @Length(min = 3, message = "Password must be at least 3 characters")
     private String password;
 }

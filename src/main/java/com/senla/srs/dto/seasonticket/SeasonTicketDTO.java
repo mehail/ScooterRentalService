@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @EqualsAndHashCode(of = {"userId", "startDate"}, callSuper = false)
 public class SeasonTicketDTO extends AbstractDTO {
     @NonNull
-    @Min(1)
+    @Min(value = 1, message = "User ID must be at least 1")
     private Long userId;
     @NonNull
     private LocalDate startDate;

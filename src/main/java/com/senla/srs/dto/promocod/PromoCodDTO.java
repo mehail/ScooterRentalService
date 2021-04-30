@@ -13,16 +13,16 @@ import java.time.LocalDate;
 @EqualsAndHashCode(of = {"name"}, callSuper = false)
 public class PromoCodDTO extends AbstractDTO {
     @NonNull
-    @Length(min = 1, max = 64)
+    @Length(min = 1, max = 64, message = "Name must be between 1 and 64 characters")
     private String name;
     @NonNull
     private LocalDate startDate;
     private LocalDate expiredDate;
     @NotNull
-    @Min(0)
+    @Min(value = 0, message = "Discount percentage must be positive")
     private Integer discountPercentage;
     @NotNull
-    @Min(0)
+    @Min(value = 0, message = "Bonus point percentage must be positive")
     private Integer bonusPoint;
     @NonNull
     private Boolean available;

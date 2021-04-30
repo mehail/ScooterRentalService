@@ -12,6 +12,6 @@ import javax.validation.constraints.Min;
 @EqualsAndHashCode(of = {"makerId"}, callSuper = false)
 public class ScooterTypeRequestDTO extends ScooterTypeDTO {
     @NonNull
-    @Min(1)
+    @Min(value = 1, message = "Maker ID must be at least 1")
     private Long makerId;
 }

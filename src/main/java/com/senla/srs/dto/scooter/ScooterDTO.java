@@ -15,13 +15,13 @@ import javax.validation.constraints.Min;
 @EqualsAndHashCode(of = {"serialNumber"}, callSuper = false)
 public class ScooterDTO extends AbstractDTO {
     @NonNull
-    @Length(min = 1, max = 64)
+    @Length(min = 1, max = 64, message = "Serial number must be between 1 and 64 characters")
     private String serialNumber;
     @NonNull
-    @Min(1)
+    @Min(value = 1, message = "Point of rental ID must be at least 1")
     private Long pointOfRentalId;
     @NonNull
-    @Min(1)
+    @Min(value = 0, message = "Time millage must be positive")
     private Integer timeMillage;
     @NonNull
     private ScooterStatus status;

@@ -12,7 +12,7 @@ import org.hibernate.validator.constraints.Length;
 @EqualsAndHashCode(of = {"name"}, callSuper = false)
 public class PointOfRentalDTO extends AbstractDTO {
     @NonNull
-    @Length(min = 1, max = 64)
+    @Length(min = 1, max = 64, message = "Name must be between 1 and 64 characters")
     private String name;
     @NonNull
     private Boolean available;
