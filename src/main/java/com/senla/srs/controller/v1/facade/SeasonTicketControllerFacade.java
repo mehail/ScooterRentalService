@@ -6,8 +6,8 @@ import com.senla.srs.dto.seasonticket.SeasonTicketRequestDTO;
 import com.senla.srs.exception.NotFoundEntityException;
 import com.senla.srs.mapper.SeasonTicketFullResponseMapper;
 import com.senla.srs.mapper.SeasonTicketRequestMapper;
-import com.senla.srs.model.ScooterType;
-import com.senla.srs.model.SeasonTicket;
+import com.senla.srs.entity.ScooterType;
+import com.senla.srs.entity.SeasonTicket;
 import com.senla.srs.security.JwtTokenData;
 import com.senla.srs.service.ScooterTypeService;
 import com.senla.srs.service.SeasonTicketService;
@@ -78,7 +78,7 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
                                             String token)
             throws NotFoundEntityException {
 
-        Optional<com.senla.srs.model.User> optionalUser = userService.retrieveUserById(seasonTicketRequestDTO.getUserId());
+        Optional<com.senla.srs.entity.User> optionalUser = userService.retrieveUserById(seasonTicketRequestDTO.getUserId());
         Optional<ScooterType> optionalScooterType =
                 scooterTypeService.retrieveScooterTypeById(seasonTicketRequestDTO.getScooterTypeId());
 
@@ -111,7 +111,7 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
     }
 
     private boolean isValid(SeasonTicketRequestDTO seasonTicketRequestDTO,
-                            Optional<com.senla.srs.model.User> optionalUser,
+                            Optional<com.senla.srs.entity.User> optionalUser,
                             Optional<ScooterType> optionalScooterType) {
 
         return optionalUser.isPresent() &&
@@ -125,7 +125,7 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
     }
 
     private ResponseEntity<?> save(SeasonTicketRequestDTO seasonTicketRequestDTO,
-                                   Optional<com.senla.srs.model.User> optionalUser,
+                                   Optional<com.senla.srs.entity.User> optionalUser,
                                    Optional<ScooterType> optionalScooterType)
             throws NotFoundEntityException {
 

@@ -68,7 +68,7 @@ public class UserControllerFacade extends AbstractFacade implements
 
     //ToDo Выбрасывать исключение с FORBIDDEN
     public ResponseEntity<?> createOrUpdate(UserRequestDTO requestDTO, BindingResult bindingResult, String token) {
-        Optional<com.senla.srs.model.User> optionalExistUser = userService.retrieveUserByEmail(requestDTO.getEmail());
+        Optional<com.senla.srs.entity.User> optionalExistUser = userService.retrieveUserByEmail(requestDTO.getEmail());
 
         //ToDo new algoritm
 //        if (userSecurity == null) {
@@ -118,20 +118,20 @@ public class UserControllerFacade extends AbstractFacade implements
         }
     }
 
-    private ResponseEntity<?> update(UserRequestDTO userRequestDTO, com.senla.srs.model.User existUser) {
+    private ResponseEntity<?> update(UserRequestDTO userRequestDTO, com.senla.srs.entity.User existUser) {
         return isValidDtoToUpdate(userRequestDTO, existUser)
                 ? save(userRequestDTO)
                 : new ResponseEntity<>(CHANGE_DEFAULT_FIELD, HttpStatus.FORBIDDEN);
     }
 
-    private boolean isValidDtoToUpdate(UserRequestDTO userRequestDTO, com.senla.srs.model.User existUser) {
+    private boolean isValidDtoToUpdate(UserRequestDTO userRequestDTO, com.senla.srs.entity.User existUser) {
         return userRequestDTO.getStatus() == existUser.getStatus() &&
                 userRequestDTO.getRole() == existUser.getRole() &&
                 userRequestDTO.getBalance().equals(existUser.getBalance());
     }
 
     private ResponseEntity<?> save(UserRequestDTO userRequestDTO) {
-        com.senla.srs.model.User user = userService.save(userRequestMapper.toEntity(userRequestDTO));
+        com.senla.srs.entity.User user = userService.save(userRequestMapper.toEntity(userRequestDTO));
         return ResponseEntity.ok(userFullResponseMapper.toDto(user));
     }
 }

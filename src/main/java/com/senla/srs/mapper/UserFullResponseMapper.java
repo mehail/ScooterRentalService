@@ -1,7 +1,7 @@
 package com.senla.srs.mapper;
 
 import com.senla.srs.dto.user.UserFullResponseDTO;
-import com.senla.srs.model.User;
+import com.senla.srs.entity.User;
 import org.springframework.stereotype.Component;
 
 @Component

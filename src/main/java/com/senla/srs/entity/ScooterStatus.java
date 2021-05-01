@@ -1,4 +1,4 @@
-package com.senla.srs.model;
+package com.senla.srs.entity;
 
 public enum ScooterStatus {
     AVAILABLE, USED, REPAIRED

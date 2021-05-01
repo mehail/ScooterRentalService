@@ -1,6 +1,6 @@
 package com.senla.srs.service.impl;
 
-import com.senla.srs.model.PromoCod;
+import com.senla.srs.entity.PromoCod;
 import com.senla.srs.repository.PromoCodRepository;
 import com.senla.srs.service.PromoCodService;
 import lombok.AllArgsConstructor;

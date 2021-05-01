@@ -2,8 +2,8 @@ package com.senla.srs.security;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import com.senla.srs.model.UserStatus;
-import com.senla.srs.model.User;
+import com.senla.srs.entity.UserStatus;
+import com.senla.srs.entity.User;
 import lombok.NonNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

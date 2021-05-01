@@ -1,7 +1,7 @@
 package com.senla.srs.mapper;
 
 import com.senla.srs.dto.AbstractDTO;
-import com.senla.srs.model.AbstractEntity;
+import com.senla.srs.entity.AbstractEntity;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

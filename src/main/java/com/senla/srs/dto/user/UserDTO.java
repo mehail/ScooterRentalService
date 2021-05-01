@@ -1,8 +1,8 @@
 package com.senla.srs.dto.user;
 
 import com.senla.srs.dto.AbstractDTO;
-import com.senla.srs.model.UserStatus;
-import com.senla.srs.model.security.Role;
+import com.senla.srs.entity.UserStatus;
+import com.senla.srs.entity.security.Role;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;

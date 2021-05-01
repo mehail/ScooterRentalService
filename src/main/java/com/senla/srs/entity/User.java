@@ -1,6 +1,6 @@
-package com.senla.srs.model;
+package com.senla.srs.entity;
 
-import com.senla.srs.model.security.Role;
+import com.senla.srs.entity.security.Role;
 import lombok.*;
 
 import javax.persistence.*;

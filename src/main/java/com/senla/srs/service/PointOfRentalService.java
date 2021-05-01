@@ -1,6 +1,6 @@
 package com.senla.srs.service;
 
-import com.senla.srs.model.PointOfRental;
+import com.senla.srs.entity.PointOfRental;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 

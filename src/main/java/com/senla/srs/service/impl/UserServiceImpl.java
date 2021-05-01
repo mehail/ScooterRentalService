@@ -1,6 +1,6 @@
 package com.senla.srs.service.impl;
 
-import com.senla.srs.model.User;
+import com.senla.srs.entity.User;
 import com.senla.srs.repository.UserRepository;
 import com.senla.srs.service.UserService;
 import lombok.extern.slf4j.Slf4j;

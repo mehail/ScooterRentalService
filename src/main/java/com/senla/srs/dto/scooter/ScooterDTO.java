@@ -1,7 +1,7 @@
 package com.senla.srs.dto.scooter;
 
 import com.senla.srs.dto.AbstractDTO;
-import com.senla.srs.model.ScooterStatus;
+import com.senla.srs.entity.ScooterStatus;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;

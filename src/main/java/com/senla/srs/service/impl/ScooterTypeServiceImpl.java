@@ -1,6 +1,6 @@
 package com.senla.srs.service.impl;
 
-import com.senla.srs.model.ScooterType;
+import com.senla.srs.entity.ScooterType;
 import com.senla.srs.repository.ScooterTypeRepository;
 import com.senla.srs.service.ScooterTypeService;
 import lombok.AllArgsConstructor;

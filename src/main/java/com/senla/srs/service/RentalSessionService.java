@@ -1,6 +1,6 @@
 package com.senla.srs.service;
 
-import com.senla.srs.model.RentalSession;
+import com.senla.srs.entity.RentalSession;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 

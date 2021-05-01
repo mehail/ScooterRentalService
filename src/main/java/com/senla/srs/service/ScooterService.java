@@ -1,6 +1,6 @@
 package com.senla.srs.service;
 
-import com.senla.srs.model.Scooter;
+import com.senla.srs.entity.Scooter;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 

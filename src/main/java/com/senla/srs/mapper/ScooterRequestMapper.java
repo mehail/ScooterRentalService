@@ -1,8 +1,8 @@
 package com.senla.srs.mapper;
 
 import com.senla.srs.dto.scooter.ScooterRequestDTO;
-import com.senla.srs.model.Scooter;
-import com.senla.srs.model.ScooterType;
+import com.senla.srs.entity.Scooter;
+import com.senla.srs.entity.ScooterType;
 import org.springframework.stereotype.Component;
 
 @Component

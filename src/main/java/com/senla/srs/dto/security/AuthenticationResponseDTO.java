@@ -1,7 +1,7 @@
 package com.senla.srs.dto.security;
 
 import com.senla.srs.dto.AbstractDTO;
-import com.senla.srs.model.security.Role;
+import com.senla.srs.entity.security.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

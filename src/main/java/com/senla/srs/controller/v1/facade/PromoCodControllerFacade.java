@@ -3,7 +3,7 @@ package com.senla.srs.controller.v1.facade;
 import com.senla.srs.dto.promocod.PromoCodDTO;
 import com.senla.srs.exception.NotFoundEntityException;
 import com.senla.srs.mapper.PromoCodMapper;
-import com.senla.srs.model.PromoCod;
+import com.senla.srs.entity.PromoCod;
 import com.senla.srs.security.JwtTokenData;
 import com.senla.srs.service.PromoCodService;
 import com.senla.srs.service.UserService;

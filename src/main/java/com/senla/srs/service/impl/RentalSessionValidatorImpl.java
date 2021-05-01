@@ -1,7 +1,7 @@
 package com.senla.srs.service.impl;
 
 import com.senla.srs.dto.rentalsession.RentalSessionRequestDTO;
-import com.senla.srs.model.*;
+import com.senla.srs.entity.*;
 import com.senla.srs.service.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

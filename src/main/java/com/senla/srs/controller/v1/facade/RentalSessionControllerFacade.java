@@ -6,7 +6,7 @@ import com.senla.srs.dto.rentalsession.RentalSessionResponseDTO;
 import com.senla.srs.exception.NotFoundEntityException;
 import com.senla.srs.mapper.RentalSessionRequestMapper;
 import com.senla.srs.mapper.RentalSessionResponseMapper;
-import com.senla.srs.model.*;
+import com.senla.srs.entity.*;
 import com.senla.srs.security.JwtTokenData;
 import com.senla.srs.service.*;
 import lombok.extern.slf4j.Slf4j;
@@ -105,7 +105,7 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
     }
 
     private RentalSession toEntity(RentalSessionRequestDTO rentalSessionRequestDTO) throws NotFoundEntityException {
-        com.senla.srs.model.User user = userService.retrieveUserById(rentalSessionRequestDTO.getUserId())
+        com.senla.srs.entity.User user = userService.retrieveUserById(rentalSessionRequestDTO.getUserId())
                 .orElseThrow(() -> new NotFoundEntityException("User"));
 
         Scooter scooter = scooterService.retrieveScooterBySerialNumber(rentalSessionRequestDTO.getScooterSerialNumber())
@@ -156,7 +156,7 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
     private void changeEntityState(RentalSession rentalSession) {
         Scooter scooter = rentalSession.getScooter();
         SeasonTicket seasonTicket = rentalSession.getSeasonTicket();
-        com.senla.srs.model.User user = rentalSession.getUser();
+        com.senla.srs.entity.User user = rentalSession.getUser();
 
         if (rentalSession.getEndDate() == null) {
             scooter.setStatus(ScooterStatus.USED);
@@ -214,7 +214,7 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
         return usageTime;
     }
 
-    private int applyPromoCod(int rate, PromoCod promoCod, com.senla.srs.model.User user) {
+    private int applyPromoCod(int rate, PromoCod promoCod, com.senla.srs.entity.User user) {
         int discountPercentage = 0;
 
         if (promoCod != null) {

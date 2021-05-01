@@ -1,7 +1,7 @@
 package com.senla.srs.mapper;
 
 import com.senla.srs.dto.pointofrental.PointOfRentalResponseDTO;
-import com.senla.srs.model.PointOfRental;
+import com.senla.srs.entity.PointOfRental;
 import org.springframework.stereotype.Component;
 
 @Component

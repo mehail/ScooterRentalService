@@ -1,6 +1,6 @@
 package com.senla.srs.service.impl;
 
-import com.senla.srs.model.PointOfRental;
+import com.senla.srs.entity.PointOfRental;
 import com.senla.srs.repository.PointOfRentalRepository;
 import com.senla.srs.service.PointOfRentalService;
 import lombok.AllArgsConstructor;

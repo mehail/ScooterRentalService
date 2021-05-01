@@ -1,4 +1,4 @@
-package com.senla.srs.model.security;
+package com.senla.srs.entity.security;
 
 public enum Permission {
     POINT_OF_RENTALS_READ("pointOfRentals:read"),

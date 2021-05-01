@@ -7,7 +7,7 @@ import com.senla.srs.dto.pointofrental.PointOfRentalResponseDTO;
 import com.senla.srs.exception.NotFoundEntityException;
 import com.senla.srs.mapper.PointOfRentalRequestMapper;
 import com.senla.srs.mapper.PointOfRentalResponseMapper;
-import com.senla.srs.model.PointOfRental;
+import com.senla.srs.entity.PointOfRental;
 import com.senla.srs.security.JwtTokenData;
 import com.senla.srs.service.AddressDtoService;
 import com.senla.srs.service.PointOfRentalService;

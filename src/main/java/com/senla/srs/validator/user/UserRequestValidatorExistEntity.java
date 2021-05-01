@@ -1,8 +1,8 @@
 package com.senla.srs.validator.user;
 
 import com.senla.srs.dto.user.UserRequestDTO;
-import com.senla.srs.model.UserStatus;
-import com.senla.srs.model.security.Role;
+import com.senla.srs.entity.UserStatus;
+import com.senla.srs.entity.security.Role;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;

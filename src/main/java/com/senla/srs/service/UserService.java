@@ -1,6 +1,6 @@
 package com.senla.srs.service;
 
-import com.senla.srs.model.User;
+import com.senla.srs.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 

@@ -2,7 +2,7 @@ package com.senla.srs.controller.v1;
 
 import com.senla.srs.dto.security.AuthenticationRequestDTO;
 import com.senla.srs.dto.security.AuthenticationResponseDTO;
-import com.senla.srs.model.User;
+import com.senla.srs.entity.User;
 import com.senla.srs.repository.UserRepository;
 import com.senla.srs.security.JwtTokenProvider;
 import io.swagger.v3.oas.annotations.Operation;

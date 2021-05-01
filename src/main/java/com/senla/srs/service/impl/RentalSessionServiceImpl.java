@@ -1,6 +1,6 @@
 package com.senla.srs.service.impl;
 
-import com.senla.srs.model.RentalSession;
+import com.senla.srs.entity.RentalSession;
 import com.senla.srs.repository.RentalSessionRepository;
 import com.senla.srs.service.RentalSessionService;
 import lombok.AllArgsConstructor;

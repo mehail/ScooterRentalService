@@ -1,6 +1,6 @@
 package com.senla.srs.service.impl;
 
-import com.senla.srs.model.SeasonTicket;
+import com.senla.srs.entity.SeasonTicket;
 import com.senla.srs.repository.SeasonTicketRepository;
 import com.senla.srs.service.SeasonTicketService;
 import lombok.AllArgsConstructor;

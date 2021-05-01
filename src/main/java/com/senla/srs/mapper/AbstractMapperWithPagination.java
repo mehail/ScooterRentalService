@@ -1,7 +1,7 @@
 package com.senla.srs.mapper;
 
 import com.senla.srs.dto.AbstractDTO;
-import com.senla.srs.model.AbstractEntity;
+import com.senla.srs.entity.AbstractEntity;
 import org.springframework.data.domain.*;
 
 import java.util.List;

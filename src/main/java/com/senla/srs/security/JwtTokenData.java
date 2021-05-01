@@ -1,6 +1,6 @@
 package com.senla.srs.security;
 
-import com.senla.srs.model.security.Role;
+import com.senla.srs.entity.security.Role;
 
 public interface JwtTokenData {
     Long getId(String token);

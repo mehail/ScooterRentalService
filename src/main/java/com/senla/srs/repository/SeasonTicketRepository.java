@@ -1,6 +1,6 @@
 package com.senla.srs.repository;
 
-import com.senla.srs.model.SeasonTicket;
+import com.senla.srs.entity.SeasonTicket;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

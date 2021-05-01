@@ -1,7 +1,7 @@
 package com.senla.srs.mapper;
 
 import com.senla.srs.dto.promocod.PromoCodDTO;
-import com.senla.srs.model.PromoCod;
+import com.senla.srs.entity.PromoCod;
 import org.springframework.stereotype.Component;
 
 @Component

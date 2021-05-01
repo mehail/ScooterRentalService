@@ -7,7 +7,7 @@ import com.senla.srs.dto.scooter.type.ScooterTypeResponseDTO;
 import com.senla.srs.exception.NotFoundEntityException;
 import com.senla.srs.mapper.ScooterTypeRequestMapper;
 import com.senla.srs.mapper.ScooterTypeResponseMapper;
-import com.senla.srs.model.ScooterType;
+import com.senla.srs.entity.ScooterType;
 import com.senla.srs.security.JwtTokenData;
 import com.senla.srs.service.MakerDtoService;
 import com.senla.srs.service.ScooterTypeService;
