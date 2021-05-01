@@ -1,6 +1,7 @@
 package com.senla.srs.security;
 
 import com.senla.srs.exception.JwtAuthenticationException;
+import com.senla.srs.model.security.Role;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +18,7 @@ import java.util.Base64;
 import java.util.Date;
 
 @Component
-public class JwtTokenProvider {
+public class JwtTokenProvider implements JwtTokenData{
     private final UserDetailsService userDetailsService;
     @Value("${jwt.secret}")
     private String secretKey;
@@ -35,9 +36,10 @@ public class JwtTokenProvider {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
-    public String createToken(String email, String role) {
+    public String createToken(Long id, String email, String role) {
         Claims claims = Jwts.claims().setSubject(email);
         claims.put("role", role);
+        claims.put("id", id);
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds * 1000);
 
@@ -64,10 +66,29 @@ public class JwtTokenProvider {
     }
 
     public String getUsername(String token) {
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+        return getBody(token).getSubject();
     }
 
     public String resolveToken(HttpServletRequest request) {
         return request.getHeader(authorizationHeader);
+    }
+
+    private Claims getBody(String token) {
+        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+    }
+
+    @Override
+    public Long getId(String token) {
+        return (getBody(token).get("id", Long.class));
+    }
+
+    @Override
+    public String getEmail(String token) {
+        return getUsername(token);
+    }
+
+    @Override
+    public Role getRole(String token) {
+        return Role.valueOf(getBody(token).get("role", String.class));
     }
 }

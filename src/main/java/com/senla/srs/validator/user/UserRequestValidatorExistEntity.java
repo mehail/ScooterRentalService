@@ -10,7 +10,7 @@ import org.springframework.validation.Validator;
 
 @Slf4j
 @Component
-public class UserRequestCreateValidator extends UserRequestValidator implements Validator {
+public class UserRequestValidatorExistEntity extends UserRequestValidator implements Validator {
     @Override
     public boolean supports(Class<?> aClass) {
         return UserRequestDTO.class.equals(aClass);
@@ -18,6 +18,8 @@ public class UserRequestCreateValidator extends UserRequestValidator implements 
 
     @Override
     public void validate(Object o, Errors errors) {
+        super.validate(o, errors);
+
         UserRequestDTO userRequestDTO = (UserRequestDTO) o;
 
         if (userRequestDTO.getBalance() != 0) {

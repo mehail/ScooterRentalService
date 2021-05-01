@@ -5,6 +5,7 @@ import com.senla.srs.dto.user.UserDTO;
 import com.senla.srs.dto.user.UserFullResponseDTO;
 import com.senla.srs.dto.user.UserRequestDTO;
 import com.senla.srs.exception.NotFoundEntityException;
+import com.senla.srs.security.JwtTokenData;
 import com.senla.srs.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -30,11 +31,14 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api/v1/users")
 class UserController extends AbstractRestController {
+    private final JwtTokenData jwtTokenData;
     private final EntityControllerFacade<UserDTO, UserRequestDTO, UserFullResponseDTO, Long> entityControllerFacade;
 
     public UserController(UserService userService,
+                          JwtTokenData jwtTokenData,
                           EntityControllerFacade<UserDTO, UserRequestDTO, UserFullResponseDTO, Long> entityControllerFacade) {
         super(userService);
+        this.jwtTokenData = jwtTokenData;
         this.entityControllerFacade = entityControllerFacade;
     }
 
@@ -51,7 +55,9 @@ class UserController extends AbstractRestController {
     public Page<UserFullResponseDTO> getAll(Integer page,
                                             Integer size,
                                             @RequestParam(defaultValue = "id") String sort,
-                                            @AuthenticationPrincipal User userSecurity) {
+                                            @AuthenticationPrincipal User userSecurity,
+                                            @Parameter(hidden = true)
+                                                @RequestHeader (name="Authorization", required = false)  String token) {
 
         return entityControllerFacade.getAll(page, size, sort, userSecurity);
     }
