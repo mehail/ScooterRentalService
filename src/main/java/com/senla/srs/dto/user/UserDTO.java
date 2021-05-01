@@ -3,7 +3,6 @@ package com.senla.srs.dto.user;
 import com.senla.srs.dto.AbstractDTO;
 import com.senla.srs.model.UserStatus;
 import com.senla.srs.model.security.Role;
-import com.senla.srs.validator.EmailRFC822;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -15,7 +14,6 @@ import org.hibernate.validator.constraints.Length;
 @EqualsAndHashCode(of = {"email"}, callSuper = false)
 public class UserDTO extends AbstractDTO {
     @NonNull
-    @EmailRFC822
     @Length(max = 320, message = "Email must be no more than 320 characters")
     private String email;
     @NonNull

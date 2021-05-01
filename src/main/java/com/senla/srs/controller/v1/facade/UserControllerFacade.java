@@ -35,7 +35,7 @@ public class UserControllerFacade extends AbstractFacade implements
     public UserControllerFacade(UserService userService,
                                 UserFullResponseMapper userFullResponseMapper,
                                 UserRequestMapper userRequestMapper,
-                                @Qualifier("userRequestValidator") Validator validator) {
+                                @Qualifier("userRequestCreateValidator") Validator validator) {
         super(userService);
         this.userFullResponseMapper = userFullResponseMapper;
         this.userRequestMapper = userRequestMapper;
@@ -43,10 +43,7 @@ public class UserControllerFacade extends AbstractFacade implements
     }
 
     @Override
-    public Page<UserFullResponseDTO> getAll(Integer page,
-                                            Integer size,
-                                            String sort,
-                                            org.springframework.security.core.userdetails.User userSecurity) {
+    public Page<UserFullResponseDTO> getAll(Integer page, Integer size, String sort, User userSecurity) {
         return isAdmin(userSecurity)
                 ? userFullResponseMapper.mapPageToDtoPage(userService.retrieveAllUsers(page, size, sort))
 
@@ -55,7 +52,7 @@ public class UserControllerFacade extends AbstractFacade implements
     }
 
     @Override
-    public ResponseEntity<?> getById(Long id, org.springframework.security.core.userdetails.User userSecurity)
+    public ResponseEntity<?> getById(Long id, User userSecurity)
             throws NotFoundEntityException {
 
         if (isThisUserById(userSecurity, id) || isAdmin(userSecurity)) {
@@ -69,9 +66,7 @@ public class UserControllerFacade extends AbstractFacade implements
     }
 
     //ToDo Выбрасывать исключение с FORBIDDEN
-    public ResponseEntity<?> createOrUpdate(UserRequestDTO requestDTO,
-                                            BindingResult bindingResult,
-                                            org.springframework.security.core.userdetails.User userSecurity) {
+    public ResponseEntity<?> createOrUpdate(UserRequestDTO requestDTO, BindingResult bindingResult, User userSecurity) {
         Optional<com.senla.srs.model.User> optionalExistUser = userService.retrieveUserByEmail(requestDTO.getEmail());
 
         if (userSecurity != null) {
@@ -109,11 +104,9 @@ public class UserControllerFacade extends AbstractFacade implements
         if (!bindingResult.hasErrors()) {
             return save(userRequestDTO);
         } else {
-            return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
     }
-
-
 
     private ResponseEntity<?> update(UserRequestDTO userRequestDTO, com.senla.srs.model.User existUser) {
         return isValidDtoToUpdate(userRequestDTO, existUser)
