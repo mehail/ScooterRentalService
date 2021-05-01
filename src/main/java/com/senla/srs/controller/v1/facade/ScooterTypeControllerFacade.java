@@ -8,6 +8,7 @@ import com.senla.srs.exception.NotFoundEntityException;
 import com.senla.srs.mapper.ScooterTypeRequestMapper;
 import com.senla.srs.mapper.ScooterTypeResponseMapper;
 import com.senla.srs.model.ScooterType;
+import com.senla.srs.security.JwtTokenData;
 import com.senla.srs.service.MakerDtoService;
 import com.senla.srs.service.ScooterTypeService;
 import com.senla.srs.service.UserService;
@@ -15,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 
@@ -29,12 +29,13 @@ public class ScooterTypeControllerFacade extends AbstractFacade implements
     private final ScooterTypeRequestMapper scooterTypeRequestMapper;
     private final ScooterTypeResponseMapper scooterTypeResponseMapper;
 
-    public ScooterTypeControllerFacade(UserService userService,
-                                       ScooterTypeService scooterTypeService,
+    public ScooterTypeControllerFacade(ScooterTypeService scooterTypeService,
                                        MakerDtoService makerDtoService,
                                        ScooterTypeRequestMapper scooterTypeRequestMapper,
-                                       ScooterTypeResponseMapper scooterTypeResponseMapper) {
-        super(userService);
+                                       ScooterTypeResponseMapper scooterTypeResponseMapper,
+                                       UserService userService,
+                                       JwtTokenData jwtTokenData) {
+        super(userService, jwtTokenData);
         this.scooterTypeService = scooterTypeService;
         this.makerDtoService = makerDtoService;
         this.scooterTypeRequestMapper = scooterTypeRequestMapper;
@@ -42,12 +43,12 @@ public class ScooterTypeControllerFacade extends AbstractFacade implements
     }
 
     @Override
-    public Page<ScooterTypeResponseDTO> getAll(Integer page, Integer size, String sort, User userSecurity) {
+    public Page<ScooterTypeResponseDTO> getAll(Integer page, Integer size, String sort, String token) {
         return scooterTypeResponseMapper.mapPageToDtoPage(scooterTypeService.retrieveAllScooterTypes(page, size, sort));
     }
 
     @Override
-    public ResponseEntity<?> getById(Long id, User userSecurity) throws NotFoundEntityException {
+    public ResponseEntity<?> getById(Long id, String token) throws NotFoundEntityException {
         return new ResponseEntity<>(scooterTypeService.retrieveScooterTypeById(id)
                 .map(scooterTypeResponseMapper::toDto)
                 .orElseThrow(() -> new NotFoundEntityException("Scooter type")), HttpStatus.OK);
@@ -56,7 +57,7 @@ public class ScooterTypeControllerFacade extends AbstractFacade implements
     @Override
     public ResponseEntity<?> createOrUpdate(ScooterTypeRequestDTO requestDTO,
                                             BindingResult bindingResult,
-                                            User userSecurity)
+                                            String token)
             throws NotFoundEntityException {
 
         MakerDTO makerDTO = makerDtoService.retrieveMakerDtoById(

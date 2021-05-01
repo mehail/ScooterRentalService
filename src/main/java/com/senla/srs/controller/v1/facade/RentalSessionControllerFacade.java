@@ -7,12 +7,12 @@ import com.senla.srs.exception.NotFoundEntityException;
 import com.senla.srs.mapper.RentalSessionRequestMapper;
 import com.senla.srs.mapper.RentalSessionResponseMapper;
 import com.senla.srs.model.*;
+import com.senla.srs.security.JwtTokenData;
 import com.senla.srs.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 
@@ -40,8 +40,9 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
                                          RentalSessionResponseMapper rentalSessionResponseMapper,
                                          ScooterService scooterService,
                                          SeasonTicketService seasonTicketService,
-                                         UserService userService) {
-        super(userService);
+                                         UserService userService,
+                                         JwtTokenData jwtTokenData) {
+        super(userService, jwtTokenData);
         this.rentalSessionService = rentalSessionService;
         this.rentalSessionValidator = rentalSessionValidator;
         this.rentalSessionRequestMapper = rentalSessionRequestMapper;
@@ -52,19 +53,19 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
     }
 
     @Override
-    public Page<RentalSessionResponseDTO> getAll(Integer page, Integer size, String sort, User userSecurity) {
-        return isAdmin(userSecurity)
+    public Page<RentalSessionResponseDTO> getAll(Integer page, Integer size, String sort, String token) {
+        return isAdmin(token)
                 ? rentalSessionResponseMapper.mapPageToDtoPage(rentalSessionService.retrieveAllRentalSessions(page, size, sort))
 
                 : rentalSessionResponseMapper.mapPageToDtoPage(
-                rentalSessionService.retrieveAllRentalSessionsByUserId(getAuthUserId(userSecurity), page, size, sort));
+                rentalSessionService.retrieveAllRentalSessionsByUserId(getAuthUserId(token), page, size, sort));
     }
 
     @Override
-    public ResponseEntity<?> getById(Long id, User userSecurity) throws NotFoundEntityException {
+    public ResponseEntity<?> getById(Long id, String token) throws NotFoundEntityException {
         Optional<RentalSession> optionalRentalSession = rentalSessionService.retrieveRentalSessionById(id);
 
-        if (isAdmin(userSecurity) || isThisUserRentalSession(optionalRentalSession, userSecurity)) {
+        if (isAdmin(token) || isThisUserRentalSession(optionalRentalSession, token)) {
             return new ResponseEntity<>(optionalRentalSession
                     .map(rentalSessionResponseMapper::toDto)
                     .orElseThrow(() -> new NotFoundEntityException("Rental session")), HttpStatus.OK);
@@ -76,7 +77,7 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
     @Override
     public ResponseEntity<?> createOrUpdate(RentalSessionRequestDTO rentalSessionRequestDTO,
                                             BindingResult bindingResult,
-                                            User userSecurity)
+                                            String token)
             throws NotFoundEntityException {
 
 
@@ -93,7 +94,7 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
             if (optionalRentalSession.isEmpty()) {
                 return save(rentalSessionRequestDTO);
             } else if (optionalRentalSession.get().getEndDate() != null &&
-                    (isAdmin(userSecurity) || isThisUserById(userSecurity, rentalSessionRequestDTO.getUserId()))) {
+                    (isAdmin(token) || isThisUserById(token, rentalSessionRequestDTO.getUserId()))) {
                 return save(rentalSessionRequestDTO);
             } else {
                 return new ResponseEntity<>("Completed rental session is not available for editing", HttpStatus.FORBIDDEN);
@@ -136,10 +137,10 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
     }
 
     private boolean isThisUserRentalSession(Optional<RentalSession> optionalRentalSession,
-                                            org.springframework.security.core.userdetails.User userSecurity) {
+                                            String token) {
 
         return optionalRentalSession.isPresent() &&
-                isThisUserById(userSecurity, optionalRentalSession.get().getUser().getId());
+                isThisUserById(token, optionalRentalSession.get().getUser().getId());
     }
 
     private ResponseEntity<?> save(RentalSessionRequestDTO rentalSessionRequestDTO) throws NotFoundEntityException {

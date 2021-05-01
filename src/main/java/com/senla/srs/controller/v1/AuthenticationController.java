@@ -31,7 +31,6 @@ public class AuthenticationController {
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
-
     @Operation(operationId = "authenticate", summary = "Authenticate", description = "Authenticate with JWT token")
     @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json",
             schema = @Schema(implementation = AuthenticationResponseDTO.class)))

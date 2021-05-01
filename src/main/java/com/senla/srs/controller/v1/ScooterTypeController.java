@@ -32,7 +32,6 @@ public class ScooterTypeController {
     private final EntityControllerFacade<ScooterTypeDTO, ScooterTypeRequestDTO,
             ScooterTypeResponseDTO, Long> entityControllerFacade;
 
-
     @Operation(summary = "Get a list of Scooter types")
     @ApiResponse(responseCode = "200")
     @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))

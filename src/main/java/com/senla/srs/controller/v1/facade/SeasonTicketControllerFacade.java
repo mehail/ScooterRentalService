@@ -8,6 +8,7 @@ import com.senla.srs.mapper.SeasonTicketFullResponseMapper;
 import com.senla.srs.mapper.SeasonTicketRequestMapper;
 import com.senla.srs.model.ScooterType;
 import com.senla.srs.model.SeasonTicket;
+import com.senla.srs.security.JwtTokenData;
 import com.senla.srs.service.ScooterTypeService;
 import com.senla.srs.service.SeasonTicketService;
 import com.senla.srs.service.UserService;
@@ -16,7 +17,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 
@@ -35,13 +35,14 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
     private final int duration;
 
 
-    public SeasonTicketControllerFacade(UserService userService,
-                                        SeasonTicketService seasonTicketService,
+    public SeasonTicketControllerFacade(SeasonTicketService seasonTicketService,
                                         ScooterTypeService scooterTypeService,
                                         SeasonTicketRequestMapper seasonTicketRequestMapper,
                                         SeasonTicketFullResponseMapper seasonTicketFullResponseMapper,
-                                        @Value("${srs.season.duration:365}") int duration) {
-        super(userService);
+                                        @Value("${srs.season.duration:365}") int duration,
+                                        UserService userService,
+                                        JwtTokenData jwtTokenData) {
+        super(userService, jwtTokenData);
         this.seasonTicketService = seasonTicketService;
         this.scooterTypeService = scooterTypeService;
         this.seasonTicketRequestMapper = seasonTicketRequestMapper;
@@ -50,19 +51,19 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
     }
 
     @Override
-    public Page<SeasonTicketFullResponseDTO> getAll(Integer page, Integer size, String sort, User userSecurity) {
-        return isAdmin(userSecurity)
+    public Page<SeasonTicketFullResponseDTO> getAll(Integer page, Integer size, String sort, String token) {
+        return isAdmin(token)
                 ? seasonTicketFullResponseMapper.mapPageToDtoPage(seasonTicketService.retrieveAllSeasonTickets(page, size, sort))
 
                 : seasonTicketFullResponseMapper.mapPageToDtoPage(
-                seasonTicketService.retrieveAllSeasonTicketsByUserId(getAuthUserId(userSecurity), page, size, sort));
+                seasonTicketService.retrieveAllSeasonTicketsByUserId(getAuthUserId(token), page, size, sort));
     }
 
     @Override
-    public ResponseEntity<?> getById(Long id, User userSecurity) throws NotFoundEntityException {
+    public ResponseEntity<?> getById(Long id, String token) throws NotFoundEntityException {
         Optional<SeasonTicket> optionalSeasonTicket = seasonTicketService.retrieveSeasonTicketsById(id);
 
-        if (isAdmin(userSecurity) || isThisUserSeasonTicket(optionalSeasonTicket, userSecurity)) {
+        if (isAdmin(token) || isThisUserSeasonTicket(optionalSeasonTicket, token)) {
             return new ResponseEntity<>(optionalSeasonTicket
                     .map(seasonTicketFullResponseMapper::toDto)
                     .orElseThrow(() -> new NotFoundEntityException("Season ticket")), HttpStatus.OK);
@@ -74,7 +75,7 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
     @Override
     public ResponseEntity<?> createOrUpdate(SeasonTicketRequestDTO seasonTicketRequestDTO,
                                             BindingResult bindingResult,
-                                            User userSecurity)
+                                            String token)
             throws NotFoundEntityException {
 
         Optional<com.senla.srs.model.User> optionalUser = userService.retrieveUserById(seasonTicketRequestDTO.getUserId());
@@ -83,7 +84,7 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
 
         if (isValid(seasonTicketRequestDTO, optionalUser, optionalScooterType)) {
 
-            return isCanSave(userSecurity, seasonTicketRequestDTO)
+            return isCanSave(token, seasonTicketRequestDTO)
                     ? save(seasonTicketRequestDTO, optionalUser, optionalScooterType)
                     : new ResponseEntity<>("Modification of the existing season ticket is prohibited", HttpStatus.FORBIDDEN);
 
@@ -104,9 +105,9 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
         }
     }
 
-    private boolean isThisUserSeasonTicket(Optional<SeasonTicket> optionalSeasonTicket, User userSecurity) {
+    private boolean isThisUserSeasonTicket(Optional<SeasonTicket> optionalSeasonTicket, String token) {
         return optionalSeasonTicket.isPresent() &&
-                isThisUserById(userSecurity, optionalSeasonTicket.get().getUserId());
+                isThisUserById(token, optionalSeasonTicket.get().getUserId());
     }
 
     private boolean isValid(SeasonTicketRequestDTO seasonTicketRequestDTO,
@@ -118,9 +119,9 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
                 optionalScooterType.isPresent();
     }
 
-    private boolean isCanSave(User userSecurity, SeasonTicketRequestDTO seasonTicketRequestDTO) {
+    private boolean isCanSave(String token, SeasonTicketRequestDTO seasonTicketRequestDTO) {
         return getExistOptionalSeasonTicket(seasonTicketRequestDTO).isEmpty() &&
-                (isAdmin(userSecurity) || isThisUserById(userSecurity, seasonTicketRequestDTO.getUserId()));
+                (isAdmin(token) || isThisUserById(token, seasonTicketRequestDTO.getUserId()));
     }
 
     private ResponseEntity<?> save(SeasonTicketRequestDTO seasonTicketRequestDTO,

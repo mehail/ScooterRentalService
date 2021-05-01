@@ -5,8 +5,6 @@ import com.senla.srs.dto.user.UserDTO;
 import com.senla.srs.dto.user.UserFullResponseDTO;
 import com.senla.srs.dto.user.UserRequestDTO;
 import com.senla.srs.exception.NotFoundEntityException;
-import com.senla.srs.security.JwtTokenData;
-import com.senla.srs.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -14,13 +12,12 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,19 +25,11 @@ import javax.validation.Valid;
 
 @Slf4j
 @Tag(name = "User REST Controller")
+@AllArgsConstructor
 @RestController
 @RequestMapping("/api/v1/users")
-class UserController extends AbstractRestController {
-    private final JwtTokenData jwtTokenData;
+public class UserController {
     private final EntityControllerFacade<UserDTO, UserRequestDTO, UserFullResponseDTO, Long> entityControllerFacade;
-
-    public UserController(UserService userService,
-                          JwtTokenData jwtTokenData,
-                          EntityControllerFacade<UserDTO, UserRequestDTO, UserFullResponseDTO, Long> entityControllerFacade) {
-        super(userService);
-        this.jwtTokenData = jwtTokenData;
-        this.entityControllerFacade = entityControllerFacade;
-    }
 
 
     @Operation(summary = "Get a list of Users",
@@ -55,11 +44,10 @@ class UserController extends AbstractRestController {
     public Page<UserFullResponseDTO> getAll(Integer page,
                                             Integer size,
                                             @RequestParam(defaultValue = "id") String sort,
-                                            @AuthenticationPrincipal User userSecurity,
                                             @Parameter(hidden = true)
-                                                @RequestHeader (name="Authorization", required = false)  String token) {
+                                            @RequestHeader(name = "Authorization", required = false) String token) {
 
-        return entityControllerFacade.getAll(page, size, sort, userSecurity);
+        return entityControllerFacade.getAll(page, size, sort, token);
     }
 
 
@@ -73,10 +61,12 @@ class UserController extends AbstractRestController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('users:read')")
-    public ResponseEntity<?> getById(@PathVariable Long id, @AuthenticationPrincipal User userSecurity)
+    public ResponseEntity<?> getById(@PathVariable Long id,
+                                     @Parameter(hidden = true)
+                                     @RequestHeader(name = "Authorization", required = false) String token)
             throws NotFoundEntityException {
 
-        return entityControllerFacade.getById(id, userSecurity);
+        return entityControllerFacade.getById(id, token);
     }
 
 
@@ -92,10 +82,11 @@ class UserController extends AbstractRestController {
     @PreAuthorize("hasAuthority('users:read')")
     public ResponseEntity<?> createOrUpdate(@RequestBody @Valid UserRequestDTO userRequestDTO,
                                             BindingResult bindingResult,
-                                            @AuthenticationPrincipal User userSecurity)
+                                            @Parameter(hidden = true)
+                                            @RequestHeader(name = "Authorization", required = false) String token)
             throws NotFoundEntityException {
 
-        return entityControllerFacade.createOrUpdate(userRequestDTO, bindingResult, userSecurity);
+        return entityControllerFacade.createOrUpdate(userRequestDTO, bindingResult, token);
     }
 
 

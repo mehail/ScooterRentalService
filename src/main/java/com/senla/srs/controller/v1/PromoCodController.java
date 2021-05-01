@@ -1,9 +1,8 @@
 package com.senla.srs.controller.v1;
 
-import com.senla.srs.dto.promocod.PromoCodDTO;
 import com.senla.srs.controller.v1.facade.EntityControllerFacade;
+import com.senla.srs.dto.promocod.PromoCodDTO;
 import com.senla.srs.exception.NotFoundEntityException;
-import com.senla.srs.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -11,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.data.domain.Page;
@@ -23,17 +23,11 @@ import javax.validation.Valid;
 
 @Slf4j
 @Tag(name = "PromoCod REST Controller")
+@AllArgsConstructor
 @RestController
 @RequestMapping("/api/v1/promo_codes")
-public class PromoCodController extends AbstractRestController {
+public class PromoCodController {
     private final EntityControllerFacade<PromoCodDTO, PromoCodDTO, PromoCodDTO, String> entityControllerFacade;
-
-    public PromoCodController(UserService userService,
-                              EntityControllerFacade<PromoCodDTO, PromoCodDTO, PromoCodDTO, String> entityControllerFacade) {
-        super(userService);
-        this.entityControllerFacade = entityControllerFacade;
-    }
-
 
     @Operation(summary = "Get a list of PromoCods")
     @ApiResponse(responseCode = "200")

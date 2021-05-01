@@ -1,9 +1,9 @@
 package com.senla.srs.controller.v1;
 
+import com.senla.srs.controller.v1.facade.EntityControllerFacade;
 import com.senla.srs.dto.scooter.ScooterDTO;
 import com.senla.srs.dto.scooter.ScooterRequestDTO;
 import com.senla.srs.dto.scooter.ScooterResponseDTO;
-import com.senla.srs.controller.v1.facade.EntityControllerFacade;
 import com.senla.srs.exception.NotFoundEntityException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

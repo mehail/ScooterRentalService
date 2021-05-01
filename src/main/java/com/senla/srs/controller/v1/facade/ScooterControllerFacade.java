@@ -8,6 +8,7 @@ import com.senla.srs.mapper.ScooterRequestMapper;
 import com.senla.srs.mapper.ScooterResponseMapper;
 import com.senla.srs.model.Scooter;
 import com.senla.srs.model.ScooterType;
+import com.senla.srs.security.JwtTokenData;
 import com.senla.srs.service.ScooterService;
 import com.senla.srs.service.ScooterTypeService;
 import com.senla.srs.service.UserService;
@@ -15,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 
@@ -29,12 +29,13 @@ public class ScooterControllerFacade extends AbstractFacade implements
     private final ScooterRequestMapper scooterRequestMapper;
     private final ScooterResponseMapper scooterResponseMapper;
 
-    public ScooterControllerFacade(UserService userService,
-                                   ScooterService scooterService,
+    public ScooterControllerFacade(ScooterService scooterService,
                                    ScooterTypeService scooterTypeService,
                                    ScooterRequestMapper scooterRequestMapper,
-                                   ScooterResponseMapper scooterResponseMapper) {
-        super(userService);
+                                   ScooterResponseMapper scooterResponseMapper,
+                                   UserService userService,
+                                   JwtTokenData jwtTokenData) {
+        super(userService, jwtTokenData);
         this.scooterService = scooterService;
         this.scooterTypeService = scooterTypeService;
         this.scooterRequestMapper = scooterRequestMapper;
@@ -42,12 +43,12 @@ public class ScooterControllerFacade extends AbstractFacade implements
     }
 
     @Override
-    public Page<ScooterResponseDTO> getAll(Integer page, Integer size, String sort, User userSecurity) {
+    public Page<ScooterResponseDTO> getAll(Integer page, Integer size, String sort, String token) {
         return scooterResponseMapper.mapPageToDtoPage(scooterService.retrieveAllScooters(page, size, sort));
     }
 
     @Override
-    public ResponseEntity<?> getById(String serialNumber, User userSecurity) throws NotFoundEntityException {
+    public ResponseEntity<?> getById(String serialNumber, String token) throws NotFoundEntityException {
         return new ResponseEntity<>(scooterService.retrieveScooterBySerialNumber(serialNumber)
                 .map(scooterResponseMapper::toDto)
                 .orElseThrow(() -> new NotFoundEntityException("Scooter")), HttpStatus.OK);
@@ -56,7 +57,7 @@ public class ScooterControllerFacade extends AbstractFacade implements
     @Override
     public ResponseEntity<?> createOrUpdate(ScooterRequestDTO scooterDTO,
                                             BindingResult bindingResult,
-                                            User userSecurity)
+                                            String token)
             throws NotFoundEntityException {
 
         ScooterType scooterType = scooterTypeService.retrieveScooterTypeById(scooterDTO.getPointOfRentalId())

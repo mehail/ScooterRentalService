@@ -8,6 +8,7 @@ import com.senla.srs.exception.NotFoundEntityException;
 import com.senla.srs.mapper.PointOfRentalRequestMapper;
 import com.senla.srs.mapper.PointOfRentalResponseMapper;
 import com.senla.srs.model.PointOfRental;
+import com.senla.srs.security.JwtTokenData;
 import com.senla.srs.service.AddressDtoService;
 import com.senla.srs.service.PointOfRentalService;
 import com.senla.srs.service.UserService;
@@ -15,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 
@@ -29,25 +29,27 @@ public class PointOfRentalControllerFacade extends AbstractFacade implements
     private final PointOfRentalRequestMapper pointOfRentalRequestMapper;
     private final PointOfRentalResponseMapper pointOfRentalResponseMapper;
 
-    public PointOfRentalControllerFacade(UserService userService,
-                                         AddressDtoService addressDtoService,
+    public PointOfRentalControllerFacade(AddressDtoService addressDtoService,
                                          PointOfRentalService pointOfRentalService,
                                          PointOfRentalRequestMapper pointOfRentalRequestMapper,
-                                         PointOfRentalResponseMapper pointOfRentalResponseMapper) {
-        super(userService);
+                                         PointOfRentalResponseMapper pointOfRentalResponseMapper,
+                                         UserService userService,
+                                         JwtTokenData jwtTokenData) {
+        super(userService, jwtTokenData);
         this.addressDtoService = addressDtoService;
         this.pointOfRentalService = pointOfRentalService;
         this.pointOfRentalRequestMapper = pointOfRentalRequestMapper;
         this.pointOfRentalResponseMapper = pointOfRentalResponseMapper;
     }
 
+
     @Override
-    public Page<PointOfRentalResponseDTO> getAll(Integer page, Integer size, String sort, User userSecurity) {
+    public Page<PointOfRentalResponseDTO> getAll(Integer page, Integer size, String sort, String token) {
         return pointOfRentalResponseMapper.mapPageToDtoPage(pointOfRentalService.retrieveAllPointOfRentals(page, size, sort));
     }
 
     @Override
-    public ResponseEntity<?> getById(Long id, User userSecurity) throws NotFoundEntityException {
+    public ResponseEntity<?> getById(Long id, String token) throws NotFoundEntityException {
         return new ResponseEntity<>(pointOfRentalService.retrievePointOfRentalById(id)
                 .map(pointOfRentalResponseMapper::toDto)
                 .orElseThrow(() -> new NotFoundEntityException("Point of rental")), HttpStatus.OK);
@@ -56,7 +58,7 @@ public class PointOfRentalControllerFacade extends AbstractFacade implements
     @Override
     public ResponseEntity<?> createOrUpdate(PointOfRentalRequestDTO pointOfRentalRequestDTO,
                                             BindingResult bindingResult,
-                                            User userSecurity)
+                                            String token)
             throws NotFoundEntityException {
 
         if (addressDtoService.retrieveAddressDtoById(pointOfRentalRequestDTO.getAddressId()).isEmpty()) {

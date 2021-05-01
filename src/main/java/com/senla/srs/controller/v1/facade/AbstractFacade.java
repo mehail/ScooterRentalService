@@ -1,37 +1,41 @@
 package com.senla.srs.controller.v1.facade;
 
-import com.senla.srs.model.User;
 import com.senla.srs.model.security.Role;
+import com.senla.srs.security.JwtTokenData;
 import com.senla.srs.service.UserService;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import org.springframework.stereotype.Controller;
 
-import java.util.Optional;
-
-@Data
-@AllArgsConstructor
 @Controller
 public abstract class AbstractFacade {
     protected final UserService userService;
+    protected final JwtTokenData jwtTokenData;
 
-    protected boolean isAdmin(org.springframework.security.core.userdetails.User userSecurity) {
-        Optional<User> optionalUser = userService.retrieveUserByEmail(userSecurity.getUsername());
-
-        return optionalUser.isPresent() && optionalUser.get().getRole() == Role.ADMIN;
+    protected AbstractFacade(UserService userService, JwtTokenData jwtTokenData) {
+        this.userService = userService;
+        this.jwtTokenData = jwtTokenData;
     }
 
-    protected boolean isThisUserById(org.springframework.security.core.userdetails.User userSecurity, Long id) {
-        Optional<User> optionalUser = userService.retrieveUserByEmail(userSecurity.getUsername());
-
-        return optionalUser.isPresent() && optionalUser.get().getId().equals(id);
+    protected boolean isAdmin(String token) {
+        return jwtTokenData.getRole(token) == Role.ADMIN;
     }
 
-    protected boolean isThisUserByEmail(org.springframework.security.core.userdetails.User userSecurity, String email) {
-        return userSecurity.getUsername().equals(email);
+    protected boolean isThisUserById(String token, Long id) {
+        return jwtTokenData.getId(token).equals(id);
     }
 
-    protected Long getAuthUserId(org.springframework.security.core.userdetails.User userSecurity) {
-        return userService.retrieveUserByEmail(userSecurity.getUsername()).map(User::getId).orElse(0L);
+    protected boolean isThisUserByEmail(String token, String email) {
+        return jwtTokenData.getEmail(token).equals(email);
+    }
+
+    protected Long getAuthUserId(String token) {
+        return jwtTokenData.getId(token);
+    }
+
+    protected String getAuthUserEmail(String token) {
+        return jwtTokenData.getEmail(token);
+    }
+
+    protected Role getAuthUserRole(String token) {
+        return jwtTokenData.getRole(token);
     }
 }

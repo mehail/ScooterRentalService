@@ -1,9 +1,9 @@
 package com.senla.srs.controller.v1;
 
+import com.senla.srs.controller.v1.facade.EntityControllerFacade;
 import com.senla.srs.dto.pointofrental.PointOfRentalDTO;
 import com.senla.srs.dto.pointofrental.PointOfRentalRequestDTO;
 import com.senla.srs.dto.pointofrental.PointOfRentalResponseDTO;
-import com.senla.srs.controller.v1.facade.EntityControllerFacade;
 import com.senla.srs.exception.NotFoundEntityException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -31,7 +31,6 @@ import javax.validation.Valid;
 public class PointOfRentalController {
     private final EntityControllerFacade<PointOfRentalDTO, PointOfRentalRequestDTO,
             PointOfRentalResponseDTO, Long> entityControllerFacade;
-
 
     @Operation(summary = "Get a list of Point of rentals")
     @ApiResponse(responseCode = "200")
