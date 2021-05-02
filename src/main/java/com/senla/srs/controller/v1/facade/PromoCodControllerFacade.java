@@ -6,7 +6,7 @@ import com.senla.srs.exception.NotFoundEntityException;
 import com.senla.srs.mapper.PromoCodMapper;
 import com.senla.srs.security.JwtTokenData;
 import com.senla.srs.service.PromoCodService;
-import com.senla.srs.validator.PromoCodDtoValidator;
+import com.senla.srs.validator.PromoCodValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -21,16 +21,16 @@ public class PromoCodControllerFacade extends AbstractFacade implements
 
     private final PromoCodService promoCodService;
     private final PromoCodMapper promoCodMapper;
-    private final PromoCodDtoValidator promoCodDtoValidator;
+    private final PromoCodValidator promoCodValidator;
 
     public PromoCodControllerFacade(PromoCodService promoCodService,
                                     PromoCodMapper promoCodMapper,
-                                    PromoCodDtoValidator promoCodDtoValidator,
+                                    PromoCodValidator promoCodValidator,
                                     JwtTokenData jwtTokenData) {
         super(jwtTokenData);
         this.promoCodService = promoCodService;
         this.promoCodMapper = promoCodMapper;
-        this.promoCodDtoValidator = promoCodDtoValidator;
+        this.promoCodValidator = promoCodValidator;
     }
 
     @Override
@@ -47,7 +47,7 @@ public class PromoCodControllerFacade extends AbstractFacade implements
 
     @Override
     public ResponseEntity<?> createOrUpdate(PromoCodDTO promoCodDTO, BindingResult bindingResult, String token) {
-        PromoCodDTO validatePromoCodDTO = promoCodDtoValidator.validate(promoCodDTO, bindingResult);
+        PromoCodDTO validatePromoCodDTO = promoCodValidator.validate(promoCodDTO, bindingResult);
 
         return save(validatePromoCodDTO, bindingResult);
     }
