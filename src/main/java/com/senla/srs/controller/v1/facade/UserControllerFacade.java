@@ -3,19 +3,19 @@ package com.senla.srs.controller.v1.facade;
 import com.senla.srs.dto.user.UserDTO;
 import com.senla.srs.dto.user.UserFullResponseDTO;
 import com.senla.srs.dto.user.UserRequestDTO;
+import com.senla.srs.entity.User;
 import com.senla.srs.exception.NotFoundEntityException;
 import com.senla.srs.mapper.UserFullResponseMapper;
 import com.senla.srs.mapper.UserRequestMapper;
 import com.senla.srs.security.JwtTokenData;
 import com.senla.srs.service.UserService;
+import com.senla.srs.validator.DtoValidator;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Validator;
 
 import java.util.Optional;
 
@@ -30,17 +30,17 @@ public class UserControllerFacade extends AbstractFacade implements
             "deactivate a profile, contact the administrator";
     private final UserFullResponseMapper userFullResponseMapper;
     private final UserRequestMapper userRequestMapper;
-    private final Validator validatorNewEntity;
+    private final DtoValidator<User, UserRequestDTO> dtoValidator;
 
     public UserControllerFacade(UserFullResponseMapper userFullResponseMapper,
                                 UserRequestMapper userRequestMapper,
-                                @Qualifier("userRequestValidatorNewEntity") Validator validatorNewEntity,
                                 UserService userService,
-                                JwtTokenData jwtTokenData) {
+                                JwtTokenData jwtTokenData,
+                                DtoValidator<User, UserRequestDTO> dtoValidator) {
         super(userService, jwtTokenData);
         this.userFullResponseMapper = userFullResponseMapper;
         this.userRequestMapper = userRequestMapper;
-        this.validatorNewEntity = validatorNewEntity;
+        this.dtoValidator = dtoValidator;
     }
 
     @Override
@@ -66,39 +66,25 @@ public class UserControllerFacade extends AbstractFacade implements
 
     }
 
-    //ToDo Выбрасывать исключение с FORBIDDEN
+    @Override
     public ResponseEntity<?> createOrUpdate(UserRequestDTO requestDTO, BindingResult bindingResult, String token) {
         Optional<com.senla.srs.entity.User> optionalExistUser = userService.retrieveUserByEmail(requestDTO.getEmail());
 
-        //ToDo new algoritm
-//        if (userSecurity == null) {
-//            validatorNewEntity.validate(requestDTO, bindingResult);
-//            return save(requestDTO);
-//        }
-
-
-
-
-        if (token != null) {
+        if (token == null || token.isEmpty()) {
+            dtoValidator.validateNewDto(requestDTO, bindingResult);
+            return getSaveResponse(requestDTO, bindingResult);
+        } else {
             if (isAdmin(token)) {
-                //ToDo test methods
-                return constrainCreate(requestDTO, bindingResult);
-//                return save(requestDTO);
+                dtoValidator.validateDtoFromAdmin(requestDTO, bindingResult);
+                return getSaveResponse(requestDTO, bindingResult);
             } else {
-                if (optionalExistUser.isEmpty()) {
-                    return constrainCreate(requestDTO, bindingResult);
+                if (isThisUserByEmail(token, requestDTO.getEmail())) {
+                    dtoValidator.validateExistDto(requestDTO, bindingResult, optionalExistUser);
+                    return getSaveResponse(requestDTO, bindingResult);
                 } else {
-                    if (isThisUserByEmail(token, requestDTO.getEmail())) {
-                        return update(requestDTO, optionalExistUser.get());
-                    } else {
-                        return new ResponseEntity<>(RE_AUTH, HttpStatus.FORBIDDEN);
-                    }
+                    return new ResponseEntity<>(RE_AUTH, HttpStatus.FORBIDDEN);
                 }
             }
-        } else if (optionalExistUser.isEmpty()) {
-            return constrainCreate(requestDTO, bindingResult);
-        } else {
-            return new ResponseEntity<>(RE_AUTH, HttpStatus.FORBIDDEN);
         }
     }
 
@@ -108,26 +94,12 @@ public class UserControllerFacade extends AbstractFacade implements
         return new ResponseEntity<>("User with this id was deleted", HttpStatus.ACCEPTED);
     }
 
-    private ResponseEntity<?> constrainCreate(UserRequestDTO userRequestDTO, BindingResult bindingResult) {
-        validatorNewEntity.validate(userRequestDTO, bindingResult);
-
+    private ResponseEntity<?> getSaveResponse(UserRequestDTO userRequestDTO, BindingResult bindingResult) {
         if (!bindingResult.hasErrors()) {
             return save(userRequestDTO);
         } else {
             return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
-    }
-
-    private ResponseEntity<?> update(UserRequestDTO userRequestDTO, com.senla.srs.entity.User existUser) {
-        return isValidDtoToUpdate(userRequestDTO, existUser)
-                ? save(userRequestDTO)
-                : new ResponseEntity<>(CHANGE_DEFAULT_FIELD, HttpStatus.FORBIDDEN);
-    }
-
-    private boolean isValidDtoToUpdate(UserRequestDTO userRequestDTO, com.senla.srs.entity.User existUser) {
-        return userRequestDTO.getStatus() == existUser.getStatus() &&
-                userRequestDTO.getRole() == existUser.getRole() &&
-                userRequestDTO.getBalance().equals(existUser.getBalance());
     }
 
     private ResponseEntity<?> save(UserRequestDTO userRequestDTO) {
