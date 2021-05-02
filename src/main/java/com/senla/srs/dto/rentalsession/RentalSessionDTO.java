@@ -1,22 +1,22 @@
 package com.senla.srs.dto.rentalsession;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.senla.srs.dto.AbstractDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(of = {"beginDate", "beginTime"}, callSuper = false)
+@EqualsAndHashCode(of = {"begin", "end"}, callSuper = false)
 public class RentalSessionDTO extends AbstractDTO {
     @NonNull
-    private LocalDate beginDate;
-    @NonNull
-    private LocalTime beginTime;
-    private LocalDate endDate;
-    private LocalTime endTime;
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    LocalDateTime begin;
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    LocalDateTime end;
 }

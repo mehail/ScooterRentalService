@@ -7,8 +7,6 @@ import lombok.NonNull;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Min;
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 @Data
 @NoArgsConstructor
@@ -23,10 +21,4 @@ public class RentalSessionRequestDTO extends RentalSessionDTO {
     @Min(value = 1, message = "Season ticket ID must be at least 1")
     private Long seasonTicketId;
     private String promoCodName;
-    @NonNull
-    private LocalDate beginDate;
-    @NonNull
-    private LocalTime beginTime;
-    private LocalDate endDate;
-    private LocalTime endTime;
 }

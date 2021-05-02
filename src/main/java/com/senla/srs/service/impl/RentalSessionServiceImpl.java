@@ -46,7 +46,8 @@ public class RentalSessionServiceImpl implements RentalSessionService {
     @Override
     public Optional<RentalSession> retrieveRentalSessionByUserIdAndScooterSerialNumberAndBeginDateAndBeginTime(Long userId,
                                                                                                                String scooterSerialNumber,
-                                                                                                               LocalDate beginDate, LocalTime beginTime) {
+                                                                                                               LocalDate beginDate,
+                                                                                                               LocalTime beginTime) {
 
         return  rentalSessionRepository.findByUserIdAndScooterSerialNumberAndBeginDateAndBeginTime(userId,
                 scooterSerialNumber, beginDate, beginTime);

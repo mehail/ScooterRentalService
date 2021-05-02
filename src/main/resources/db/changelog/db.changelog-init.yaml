@@ -264,7 +264,6 @@ databaseChangeLog:
                   type: DATE
               - column:
                   name: end_time
-                  type: DATE
               - column:
                   name: scooter_serial_number
                   type: STRING

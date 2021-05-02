@@ -16,6 +16,5 @@ public interface RentalSessionRepository extends JpaRepository<RentalSession, Lo
 
     Optional<RentalSession> findByUserIdAndScooterSerialNumberAndBeginDateAndBeginTime(Long userId,
                                                                                        String scooterSerialNumber,
-                                                                                       LocalDate beginDate,
-                                                                                       LocalTime beginTime);
+                                                                                       LocalDate beginDate, LocalTime beginTime);
 }
