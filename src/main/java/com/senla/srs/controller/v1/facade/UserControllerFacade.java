@@ -9,7 +9,7 @@ import com.senla.srs.mapper.UserFullResponseMapper;
 import com.senla.srs.mapper.UserRequestMapper;
 import com.senla.srs.security.JwtTokenData;
 import com.senla.srs.service.UserService;
-import com.senla.srs.validator.DtoValidator;
+import com.senla.srs.validator.Validator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -26,21 +26,19 @@ public class UserControllerFacade extends AbstractFacade implements
 
     private static final String ACCESS_FORBIDDEN = "Access forbidden";
     private static final String RE_AUTH = "To change this User reAuthorize";
-    private static final String CHANGE_DEFAULT_FIELD = "To top up your balance, obtain administrator rights or " +
-            "deactivate a profile, contact the administrator";
     private final UserFullResponseMapper userFullResponseMapper;
     private final UserRequestMapper userRequestMapper;
-    private final DtoValidator<User, UserRequestDTO> dtoValidator;
+    private final Validator<User, UserRequestDTO> validator;
 
     public UserControllerFacade(UserFullResponseMapper userFullResponseMapper,
                                 UserRequestMapper userRequestMapper,
                                 UserService userService,
                                 JwtTokenData jwtTokenData,
-                                DtoValidator<User, UserRequestDTO> dtoValidator) {
+                                Validator<User, UserRequestDTO> validator) {
         super(userService, jwtTokenData);
         this.userFullResponseMapper = userFullResponseMapper;
         this.userRequestMapper = userRequestMapper;
-        this.dtoValidator = dtoValidator;
+        this.validator = validator;
     }
 
     @Override
@@ -71,16 +69,13 @@ public class UserControllerFacade extends AbstractFacade implements
         Optional<com.senla.srs.entity.User> optionalExistUser = userService.retrieveUserByEmail(requestDTO.getEmail());
 
         if (token == null || token.isEmpty()) {
-            dtoValidator.validateNewDto(requestDTO, bindingResult);
-            return getSaveResponse(requestDTO, bindingResult);
+            return save(validator.validateNewDto(requestDTO, bindingResult), bindingResult);
         } else {
             if (isAdmin(token)) {
-                dtoValidator.validateDtoFromAdmin(requestDTO, bindingResult);
-                return getSaveResponse(requestDTO, bindingResult);
+                return save(validator.validateDtoFromAdmin(requestDTO, bindingResult), bindingResult);
             } else {
                 if (isThisUserByEmail(token, requestDTO.getEmail())) {
-                    dtoValidator.validateExistDto(requestDTO, bindingResult, optionalExistUser);
-                    return getSaveResponse(requestDTO, bindingResult);
+                    return save(validator.validateExistDto(requestDTO, bindingResult, optionalExistUser), bindingResult);
                 } else {
                     return new ResponseEntity<>(RE_AUTH, HttpStatus.FORBIDDEN);
                 }
@@ -94,16 +89,12 @@ public class UserControllerFacade extends AbstractFacade implements
         return new ResponseEntity<>("User with this id was deleted", HttpStatus.ACCEPTED);
     }
 
-    private ResponseEntity<?> getSaveResponse(UserRequestDTO userRequestDTO, BindingResult bindingResult) {
+    private ResponseEntity<?> save(UserRequestDTO userRequestDTO, BindingResult bindingResult) {
         if (!bindingResult.hasErrors()) {
-            return save(userRequestDTO);
+            User user = userService.save(userRequestMapper.toEntity(userRequestDTO));
+            return ResponseEntity.ok(userFullResponseMapper.toDto(user));
         } else {
             return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
-    }
-
-    private ResponseEntity<?> save(UserRequestDTO userRequestDTO) {
-        com.senla.srs.entity.User user = userService.save(userRequestMapper.toEntity(userRequestDTO));
-        return ResponseEntity.ok(userFullResponseMapper.toDto(user));
     }
 }
