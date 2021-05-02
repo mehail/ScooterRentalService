@@ -6,14 +6,13 @@ import com.senla.srs.exception.NotFoundEntityException;
 import com.senla.srs.mapper.PromoCodMapper;
 import com.senla.srs.security.JwtTokenData;
 import com.senla.srs.service.PromoCodService;
+import com.senla.srs.validator.PromoCodDtoValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-
-import java.time.LocalDate;
 
 @Slf4j
 @Controller
@@ -22,13 +21,16 @@ public class PromoCodControllerFacade extends AbstractFacade implements
 
     private final PromoCodService promoCodService;
     private final PromoCodMapper promoCodMapper;
+    private final PromoCodDtoValidator promoCodDtoValidator;
 
     public PromoCodControllerFacade(PromoCodService promoCodService,
                                     PromoCodMapper promoCodMapper,
+                                    PromoCodDtoValidator promoCodDtoValidator,
                                     JwtTokenData jwtTokenData) {
         super(jwtTokenData);
         this.promoCodService = promoCodService;
         this.promoCodMapper = promoCodMapper;
+        this.promoCodDtoValidator = promoCodDtoValidator;
     }
 
     @Override
@@ -45,9 +47,9 @@ public class PromoCodControllerFacade extends AbstractFacade implements
 
     @Override
     public ResponseEntity<?> createOrUpdate(PromoCodDTO promoCodDTO, BindingResult bindingResult, String token) {
-        return isValidDate(promoCodDTO)
-                ? save(promoCodDTO)
-                : new ResponseEntity<>("The start and end dates of the PromoCod are not correct", HttpStatus.BAD_REQUEST);
+        PromoCodDTO validatePromoCodDTO = promoCodDtoValidator.validate(promoCodDTO, bindingResult);
+
+        return save(validatePromoCodDTO, bindingResult);
     }
 
     @Override
@@ -56,15 +58,14 @@ public class PromoCodControllerFacade extends AbstractFacade implements
         return new ResponseEntity<>("PromoCod with this serial number was deleted", HttpStatus.ACCEPTED);
     }
 
-    private boolean isValidDate(PromoCodDTO promoCodDTO) {
-        LocalDate startDate = promoCodDTO.getStartDate();
-        LocalDate expiredDate = promoCodDTO.getExpiredDate();
+    private ResponseEntity<?> save(PromoCodDTO promoCodDTO, BindingResult bindingResult) {
 
-        return expiredDate == null || startDate.isBefore(expiredDate);
-    }
+        if (!bindingResult.hasErrors()) {
+            PromoCod promoCod = promoCodService.save(promoCodMapper.toEntity(promoCodDTO));
+            return ResponseEntity.ok(promoCodMapper.toDto(promoCod));
+        } else {
+            return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
+        }
 
-    private ResponseEntity<?> save(PromoCodDTO promoCodDTO) {
-        PromoCod promoCod = promoCodService.save(promoCodMapper.toEntity(promoCodDTO));
-        return ResponseEntity.ok(promoCodMapper.toDto(promoCod));
     }
 }

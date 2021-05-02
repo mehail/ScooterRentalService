@@ -3,6 +3,7 @@ package com.senla.srs.dto.promocod;
 import com.senla.srs.dto.AbstractDTO;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -19,7 +20,7 @@ public class PromoCodDTO extends AbstractDTO {
     private LocalDate startDate;
     private LocalDate expiredDate;
     @NotNull
-    @Min(value = 0, message = "Discount percentage must be positive")
+    @Range(min = 0, max = 100, message = "Discount percentage must be between 0 and 100")
     private Integer discountPercentage;
     @NotNull
     @Min(value = 0, message = "Bonus point percentage must be positive")
