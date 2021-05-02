@@ -127,12 +127,13 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
 
             changeUserBalance(optionalUser, seasonTicketRequestDTO);
 
-            SeasonTicket seasonTicket = seasonTicketRequestMapper.toEntity(seasonTicketRequestDTO,
+            SeasonTicket seasonTicket = seasonTicketService.save(seasonTicketRequestMapper
+                    .toEntity(seasonTicketRequestDTO,
                             optionalScooterType.get(),
                             calculateRemainingTime(seasonTicketRequestDTO, optionalScooterType.get()),
-                            duration);
+                            duration));
 
-            return ResponseEntity.ok(seasonTicketFullResponseMapper.toDto(seasonTicketService.save(seasonTicket)));
+            return ResponseEntity.ok(seasonTicketFullResponseMapper.toDto(seasonTicket));
         } else {
             return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
         }

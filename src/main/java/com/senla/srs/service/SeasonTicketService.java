@@ -2,12 +2,10 @@ package com.senla.srs.service;
 
 import com.senla.srs.entity.SeasonTicket;
 import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.Optional;
 
-@Service
 public interface SeasonTicketService {
     SeasonTicket save(SeasonTicket seasonTicket);
     Page<SeasonTicket> retrieveAllSeasonTickets(Integer pageNo, Integer pageSize, String sortBy);

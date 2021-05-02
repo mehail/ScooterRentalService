@@ -11,12 +11,15 @@ import com.senla.srs.mapper.ScooterTypeResponseMapper;
 import com.senla.srs.security.JwtTokenData;
 import com.senla.srs.service.MakerDtoService;
 import com.senla.srs.service.ScooterTypeService;
+import com.senla.srs.validator.ScooterTypeRequestValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+
+import java.util.Optional;
 
 @Slf4j
 @Controller
@@ -27,17 +30,20 @@ public class ScooterTypeControllerFacade extends AbstractFacade implements
     private final MakerDtoService makerDtoService;
     private final ScooterTypeRequestMapper scooterTypeRequestMapper;
     private final ScooterTypeResponseMapper scooterTypeResponseMapper;
+    private final ScooterTypeRequestValidator scooterTypeRequestValidator;
 
     public ScooterTypeControllerFacade(ScooterTypeService scooterTypeService,
                                        MakerDtoService makerDtoService,
                                        ScooterTypeRequestMapper scooterTypeRequestMapper,
                                        ScooterTypeResponseMapper scooterTypeResponseMapper,
+                                       ScooterTypeRequestValidator scooterTypeRequestValidator,
                                        JwtTokenData jwtTokenData) {
         super(jwtTokenData);
         this.scooterTypeService = scooterTypeService;
         this.makerDtoService = makerDtoService;
         this.scooterTypeRequestMapper = scooterTypeRequestMapper;
         this.scooterTypeResponseMapper = scooterTypeResponseMapper;
+        this.scooterTypeRequestValidator = scooterTypeRequestValidator;
     }
 
     @Override
@@ -53,22 +59,37 @@ public class ScooterTypeControllerFacade extends AbstractFacade implements
     }
 
     @Override
-    public ResponseEntity<?> createOrUpdate(ScooterTypeRequestDTO requestDTO,
+    public ResponseEntity<?> createOrUpdate(ScooterTypeRequestDTO scooterTypeRequestDTO,
                                             BindingResult bindingResult,
                                             String token)
             throws NotFoundEntityException {
 
-        MakerDTO makerDTO = makerDtoService.retrieveMakerDtoById(
-                requestDTO.getMakerId()).orElseThrow(() -> new NotFoundEntityException("Maker"));
+        Optional<MakerDTO> optionalMakerDTO = makerDtoService.retrieveMakerDtoById(scooterTypeRequestDTO.getMakerId());
 
-        ScooterType scooterType = scooterTypeService.save(scooterTypeRequestMapper.toEntity(requestDTO, makerDTO));
+        ScooterTypeRequestDTO validScooterTypeRequestDTO =
+                scooterTypeRequestValidator.validate(scooterTypeRequestDTO, optionalMakerDTO, bindingResult);
 
-        return ResponseEntity.ok(scooterTypeResponseMapper.toDto(scooterType));
+        return save(validScooterTypeRequestDTO, optionalMakerDTO, bindingResult);
     }
 
     @Override
     public ResponseEntity<?> delete(Long id) {
         scooterTypeService.deleteById(id);
         return new ResponseEntity<>("Scooter type with this id was deleted", HttpStatus.ACCEPTED);
+    }
+
+    private ResponseEntity<?> save(ScooterTypeRequestDTO scooterTypeRequestDTO,
+                                   Optional<MakerDTO> optionalMakerDTO,
+                                   BindingResult bindingResult) {
+
+        if (!bindingResult.hasErrors() && optionalMakerDTO.isPresent()) {
+            ScooterType scooterType = scooterTypeService.save(scooterTypeRequestMapper
+                    .toEntity(scooterTypeRequestDTO, optionalMakerDTO.get()));
+
+            return ResponseEntity.ok(scooterTypeResponseMapper.toDto(scooterType));
+        } else {
+            return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
+        }
+
     }
 }

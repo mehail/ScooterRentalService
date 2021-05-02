@@ -2,13 +2,11 @@ package com.senla.srs.service;
 
 import com.senla.srs.entity.RentalSession;
 import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Optional;
 
-@Service
 public interface RentalSessionService {
     RentalSession save(RentalSession rentalSession);
     Page<RentalSession> retrieveAllRentalSessions(Integer pageNo, Integer pageSize, String sortBy);
