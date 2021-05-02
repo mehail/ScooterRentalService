@@ -3,15 +3,17 @@ package com.senla.srs.controller.v1.facade;
 import com.senla.srs.dto.seasonticket.SeasonTicketDTO;
 import com.senla.srs.dto.seasonticket.SeasonTicketFullResponseDTO;
 import com.senla.srs.dto.seasonticket.SeasonTicketRequestDTO;
+import com.senla.srs.entity.ScooterType;
+import com.senla.srs.entity.SeasonTicket;
+import com.senla.srs.entity.User;
 import com.senla.srs.exception.NotFoundEntityException;
 import com.senla.srs.mapper.SeasonTicketFullResponseMapper;
 import com.senla.srs.mapper.SeasonTicketRequestMapper;
-import com.senla.srs.entity.ScooterType;
-import com.senla.srs.entity.SeasonTicket;
 import com.senla.srs.security.JwtTokenData;
 import com.senla.srs.service.ScooterTypeService;
 import com.senla.srs.service.SeasonTicketService;
 import com.senla.srs.service.UserService;
+import com.senla.srs.validator.SeasonTicketRequestValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -30,8 +32,10 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
     private static final String FORBIDDEN_FOR_DELETE = "Season ticket with this id not available for deletion";
     private final SeasonTicketService seasonTicketService;
     private final ScooterTypeService scooterTypeService;
+    private final UserService userService;
     private final SeasonTicketRequestMapper seasonTicketRequestMapper;
     private final SeasonTicketFullResponseMapper seasonTicketFullResponseMapper;
+    private final SeasonTicketRequestValidator seasonTicketRequestValidator;
     private final int duration;
 
 
@@ -39,15 +43,17 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
                                         ScooterTypeService scooterTypeService,
                                         SeasonTicketRequestMapper seasonTicketRequestMapper,
                                         SeasonTicketFullResponseMapper seasonTicketFullResponseMapper,
+                                        SeasonTicketRequestValidator seasonTicketRequestValidator,
                                         @Value("${srs.season.duration:365}") int duration,
-                                        UserService userService,
-                                        JwtTokenData jwtTokenData) {
-        super(userService, jwtTokenData);
+                                        JwtTokenData jwtTokenData, UserService userService) {
+        super(jwtTokenData);
         this.seasonTicketService = seasonTicketService;
         this.scooterTypeService = scooterTypeService;
         this.seasonTicketRequestMapper = seasonTicketRequestMapper;
         this.seasonTicketFullResponseMapper = seasonTicketFullResponseMapper;
         this.duration = duration;
+        this.seasonTicketRequestValidator = seasonTicketRequestValidator;
+        this.userService = userService;
     }
 
     @Override
@@ -78,19 +84,21 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
                                             String token)
             throws NotFoundEntityException {
 
-        Optional<com.senla.srs.entity.User> optionalUser = userService.retrieveUserById(seasonTicketRequestDTO.getUserId());
+        Optional<SeasonTicket> optionalSeasonTicket =
+                seasonTicketService.retrieveSeasonTicketByUserIdAndScooterTypeIdAndStartDate(seasonTicketRequestDTO.getUserId(),
+                        seasonTicketRequestDTO.getScooterTypeId(),
+                        seasonTicketRequestDTO.getStartDate());
+        Optional<User> optionalUser = userService.retrieveUserById(seasonTicketRequestDTO.getUserId());
         Optional<ScooterType> optionalScooterType =
                 scooterTypeService.retrieveScooterTypeById(seasonTicketRequestDTO.getScooterTypeId());
 
-        if (isValid(seasonTicketRequestDTO, optionalUser, optionalScooterType)) {
+        SeasonTicketRequestDTO validSeasonTicketRequestDTO = seasonTicketRequestValidator.validate(seasonTicketRequestDTO,
+                optionalSeasonTicket,
+                optionalUser,
+                optionalScooterType,
+                bindingResult);
 
-            return isCanSave(token, seasonTicketRequestDTO)
-                    ? save(seasonTicketRequestDTO, optionalUser, optionalScooterType)
-                    : new ResponseEntity<>("Modification of the existing season ticket is prohibited", HttpStatus.FORBIDDEN);
-
-        } else {
-            return new ResponseEntity<>("Season ticket is not valid", HttpStatus.FORBIDDEN);
-        }
+        return save(validSeasonTicketRequestDTO, optionalUser, optionalScooterType, bindingResult);
     }
 
     @Override
@@ -110,54 +118,35 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
                 isThisUserById(token, optionalSeasonTicket.get().getUserId());
     }
 
-    private boolean isValid(SeasonTicketRequestDTO seasonTicketRequestDTO,
-                            Optional<com.senla.srs.entity.User> optionalUser,
-                            Optional<ScooterType> optionalScooterType) {
-
-        return optionalUser.isPresent() &&
-                optionalUser.get().getBalance() >= seasonTicketRequestDTO.getPrice() &&
-                optionalScooterType.isPresent();
-    }
-
-    private boolean isCanSave(String token, SeasonTicketRequestDTO seasonTicketRequestDTO) {
-        return getExistOptionalSeasonTicket(seasonTicketRequestDTO).isEmpty() &&
-                (isAdmin(token) || isThisUserById(token, seasonTicketRequestDTO.getUserId()));
-    }
-
     private ResponseEntity<?> save(SeasonTicketRequestDTO seasonTicketRequestDTO,
-                                   Optional<com.senla.srs.entity.User> optionalUser,
-                                   Optional<ScooterType> optionalScooterType)
-            throws NotFoundEntityException {
+                                   Optional<User> optionalUser,
+                                   Optional<ScooterType> optionalScooterType,
+                                   BindingResult bindingResult) {
 
-        int remainingTime = 0;
+        if (!bindingResult.hasErrors() && optionalScooterType.isPresent()) {
 
-        if (optionalScooterType.isPresent()) {
-            remainingTime = calculateRemainingTime(seasonTicketRequestDTO, optionalScooterType.get());
+            changeUserBalance(optionalUser, seasonTicketRequestDTO);
+
+            SeasonTicket seasonTicket = seasonTicketRequestMapper.toEntity(seasonTicketRequestDTO,
+                            optionalScooterType.get(),
+                            calculateRemainingTime(seasonTicketRequestDTO, optionalScooterType.get()),
+                            duration);
+
+            return ResponseEntity.ok(seasonTicketFullResponseMapper.toDto(seasonTicketService.save(seasonTicket)));
+        } else {
+            return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
 
-        optionalUser.ifPresent(user -> user.setBalance(user.getBalance() - seasonTicketRequestDTO.getPrice()));
-
-        ScooterType scooterType = scooterTypeService.retrieveScooterTypeById(seasonTicketRequestDTO.getScooterTypeId())
-                .orElseThrow(() -> new NotFoundEntityException("ScooterType"));
-
-        SeasonTicket seasonTicket = seasonTicketService.save(
-                seasonTicketRequestMapper.toConsistencySeasonTicket(seasonTicketRequestDTO, scooterType, remainingTime, duration));
-
-        return ResponseEntity.ok(seasonTicketFullResponseMapper.toDto(seasonTicket));
     }
 
-    private Optional<SeasonTicket> getExistOptionalSeasonTicket(SeasonTicketRequestDTO seasonTicketRequestDTO) {
-        return seasonTicketService.retrieveSeasonTicketByUserIdAndScooterTypeIdAndStartDate(
-                seasonTicketRequestDTO.getUserId(),
-                seasonTicketRequestDTO.getScooterTypeId(),
-                seasonTicketRequestDTO.getStartDate()
-        );
+    private void changeUserBalance(Optional<User> optionalUser, SeasonTicketRequestDTO seasonTicketRequestDTO) {
+        optionalUser.ifPresent(user -> user.setBalance(user.getBalance() - seasonTicketRequestDTO.getPrice()));
     }
 
     private int calculateRemainingTime(SeasonTicketRequestDTO seasonTicketRequestDTO, ScooterType scooterType) {
         int pricePerMinute = scooterType.getPricePerMinute();
         int price = seasonTicketRequestDTO.getPrice();
 
-        return pricePerMinute * price;
+        return price / pricePerMinute;
     }
 }

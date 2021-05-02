@@ -79,7 +79,6 @@ public class UserController {
     @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
 
     @PostMapping
-    @PreAuthorize("hasAuthority('users:read')")
     public ResponseEntity<?> createOrUpdate(@RequestBody @Valid UserRequestDTO userRequestDTO,
                                             BindingResult bindingResult,
                                             @Parameter(hidden = true)

@@ -2,16 +2,13 @@ package com.senla.srs.controller.v1.facade;
 
 import com.senla.srs.entity.security.Role;
 import com.senla.srs.security.JwtTokenData;
-import com.senla.srs.service.UserService;
 import org.springframework.stereotype.Controller;
 
 @Controller
 public abstract class AbstractFacade {
-    protected final UserService userService;
     protected final JwtTokenData jwtTokenData;
 
-    protected AbstractFacade(UserService userService, JwtTokenData jwtTokenData) {
-        this.userService = userService;
+    protected AbstractFacade(JwtTokenData jwtTokenData) {
         this.jwtTokenData = jwtTokenData;
     }
 

@@ -4,14 +4,13 @@ import com.senla.srs.dto.db.AddressDTO;
 import com.senla.srs.dto.pointofrental.PointOfRentalDTO;
 import com.senla.srs.dto.pointofrental.PointOfRentalRequestDTO;
 import com.senla.srs.dto.pointofrental.PointOfRentalResponseDTO;
+import com.senla.srs.entity.PointOfRental;
 import com.senla.srs.exception.NotFoundEntityException;
 import com.senla.srs.mapper.PointOfRentalRequestMapper;
 import com.senla.srs.mapper.PointOfRentalResponseMapper;
-import com.senla.srs.entity.PointOfRental;
 import com.senla.srs.security.JwtTokenData;
 import com.senla.srs.service.AddressDtoService;
 import com.senla.srs.service.PointOfRentalService;
-import com.senla.srs.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -33,9 +32,8 @@ public class PointOfRentalControllerFacade extends AbstractFacade implements
                                          PointOfRentalService pointOfRentalService,
                                          PointOfRentalRequestMapper pointOfRentalRequestMapper,
                                          PointOfRentalResponseMapper pointOfRentalResponseMapper,
-                                         UserService userService,
                                          JwtTokenData jwtTokenData) {
-        super(userService, jwtTokenData);
+        super(jwtTokenData);
         this.addressDtoService = addressDtoService;
         this.pointOfRentalService = pointOfRentalService;
         this.pointOfRentalRequestMapper = pointOfRentalRequestMapper;

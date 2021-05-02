@@ -9,7 +9,7 @@ import com.senla.srs.mapper.UserFullResponseMapper;
 import com.senla.srs.mapper.UserRequestMapper;
 import com.senla.srs.security.JwtTokenData;
 import com.senla.srs.service.UserService;
-import com.senla.srs.validator.Validator;
+import com.senla.srs.validator.UserRequestValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -26,19 +26,20 @@ public class UserControllerFacade extends AbstractFacade implements
 
     private static final String ACCESS_FORBIDDEN = "Access forbidden";
     private static final String RE_AUTH = "To change this User reAuthorize";
+    private final UserService userService;
     private final UserFullResponseMapper userFullResponseMapper;
     private final UserRequestMapper userRequestMapper;
-    private final Validator<User, UserRequestDTO> validator;
+    private final UserRequestValidator userRequestValidator;
 
     public UserControllerFacade(UserFullResponseMapper userFullResponseMapper,
                                 UserRequestMapper userRequestMapper,
-                                UserService userService,
-                                JwtTokenData jwtTokenData,
-                                Validator<User, UserRequestDTO> validator) {
-        super(userService, jwtTokenData);
+                                UserRequestValidator userRequestValidator,
+                                JwtTokenData jwtTokenData, UserService userService) {
+        super(jwtTokenData);
         this.userFullResponseMapper = userFullResponseMapper;
         this.userRequestMapper = userRequestMapper;
-        this.validator = validator;
+        this.userRequestValidator = userRequestValidator;
+        this.userService = userService;
     }
 
     @Override
@@ -69,13 +70,13 @@ public class UserControllerFacade extends AbstractFacade implements
         Optional<com.senla.srs.entity.User> optionalExistUser = userService.retrieveUserByEmail(requestDTO.getEmail());
 
         if (token == null || token.isEmpty()) {
-            return save(validator.validateNewDto(requestDTO, bindingResult), bindingResult);
+            return save(userRequestValidator.validateNewDto(requestDTO, bindingResult), bindingResult);
         } else {
             if (isAdmin(token)) {
-                return save(validator.validateDtoFromAdmin(requestDTO, bindingResult), bindingResult);
+                return save(userRequestValidator.validateDtoFromAdmin(requestDTO, bindingResult), bindingResult);
             } else {
                 if (isThisUserByEmail(token, requestDTO.getEmail())) {
-                    return save(validator.validateExistDto(requestDTO, bindingResult, optionalExistUser), bindingResult);
+                    return save(userRequestValidator.validateExistDto(requestDTO, bindingResult, optionalExistUser), bindingResult);
                 } else {
                     return new ResponseEntity<>(RE_AUTH, HttpStatus.FORBIDDEN);
                 }

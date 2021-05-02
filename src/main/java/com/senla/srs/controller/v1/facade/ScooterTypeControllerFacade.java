@@ -4,14 +4,13 @@ import com.senla.srs.dto.db.MakerDTO;
 import com.senla.srs.dto.scooter.type.ScooterTypeDTO;
 import com.senla.srs.dto.scooter.type.ScooterTypeRequestDTO;
 import com.senla.srs.dto.scooter.type.ScooterTypeResponseDTO;
+import com.senla.srs.entity.ScooterType;
 import com.senla.srs.exception.NotFoundEntityException;
 import com.senla.srs.mapper.ScooterTypeRequestMapper;
 import com.senla.srs.mapper.ScooterTypeResponseMapper;
-import com.senla.srs.entity.ScooterType;
 import com.senla.srs.security.JwtTokenData;
 import com.senla.srs.service.MakerDtoService;
 import com.senla.srs.service.ScooterTypeService;
-import com.senla.srs.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -33,9 +32,8 @@ public class ScooterTypeControllerFacade extends AbstractFacade implements
                                        MakerDtoService makerDtoService,
                                        ScooterTypeRequestMapper scooterTypeRequestMapper,
                                        ScooterTypeResponseMapper scooterTypeResponseMapper,
-                                       UserService userService,
                                        JwtTokenData jwtTokenData) {
-        super(userService, jwtTokenData);
+        super(jwtTokenData);
         this.scooterTypeService = scooterTypeService;
         this.makerDtoService = makerDtoService;
         this.scooterTypeRequestMapper = scooterTypeRequestMapper;

@@ -32,6 +32,7 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
     private final RentalSessionResponseMapper rentalSessionResponseMapper;
     private final ScooterService scooterService;
     private final SeasonTicketService seasonTicketService;
+    private final UserService userService;
 
     public RentalSessionControllerFacade(PromoCodService promoCodService,
                                          RentalSessionService rentalSessionService,
@@ -40,9 +41,8 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
                                          RentalSessionResponseMapper rentalSessionResponseMapper,
                                          ScooterService scooterService,
                                          SeasonTicketService seasonTicketService,
-                                         UserService userService,
-                                         JwtTokenData jwtTokenData) {
-        super(userService, jwtTokenData);
+                                         JwtTokenData jwtTokenData, UserService userService) {
+        super(jwtTokenData);
         this.rentalSessionService = rentalSessionService;
         this.rentalSessionValidator = rentalSessionValidator;
         this.rentalSessionRequestMapper = rentalSessionRequestMapper;
@@ -50,6 +50,7 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
         this.scooterService = scooterService;
         this.seasonTicketService = seasonTicketService;
         this.promoCodService = promoCodService;
+        this.userService = userService;
     }
 
     @Override
@@ -79,11 +80,6 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
                                             BindingResult bindingResult,
                                             String token)
             throws NotFoundEntityException {
-
-
-        //ToDo Debug snippet, delete on merge
-//        RentalSession rentalSession = toEntity(rentalSessionRequestDTO);
-//        return ResponseEntity.ok(rentalSessionResponseMapper.toDto(rentalSessionService.save(rentalSession)));
 
         if (rentalSessionValidator.isValid(rentalSessionRequestDTO)) {
             Optional<RentalSession> optionalRentalSession =

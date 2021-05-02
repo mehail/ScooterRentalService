@@ -1,12 +1,11 @@
 package com.senla.srs.controller.v1.facade;
 
 import com.senla.srs.dto.promocod.PromoCodDTO;
+import com.senla.srs.entity.PromoCod;
 import com.senla.srs.exception.NotFoundEntityException;
 import com.senla.srs.mapper.PromoCodMapper;
-import com.senla.srs.entity.PromoCod;
 import com.senla.srs.security.JwtTokenData;
 import com.senla.srs.service.PromoCodService;
-import com.senla.srs.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -26,9 +25,8 @@ public class PromoCodControllerFacade extends AbstractFacade implements
 
     public PromoCodControllerFacade(PromoCodService promoCodService,
                                     PromoCodMapper promoCodMapper,
-                                    UserService userService,
                                     JwtTokenData jwtTokenData) {
-        super(userService, jwtTokenData);
+        super(jwtTokenData);
         this.promoCodService = promoCodService;
         this.promoCodMapper = promoCodMapper;
     }

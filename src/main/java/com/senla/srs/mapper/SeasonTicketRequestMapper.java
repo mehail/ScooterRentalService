@@ -11,8 +11,10 @@ public class SeasonTicketRequestMapper extends AbstractMapper<SeasonTicket, Seas
         super(SeasonTicket.class, SeasonTicketRequestDTO.class);
     }
 
-    public SeasonTicket toConsistencySeasonTicket(SeasonTicketRequestDTO seasonTicketRequestDTO, ScooterType scooterType, int remainingTime,
-                                                  int duration) {
+    public SeasonTicket toEntity(SeasonTicketRequestDTO seasonTicketRequestDTO,
+                                 ScooterType scooterType,
+                                 int remainingTime,
+                                 int duration) {
 
         SeasonTicket seasonTicket = toEntity(seasonTicketRequestDTO);
 
