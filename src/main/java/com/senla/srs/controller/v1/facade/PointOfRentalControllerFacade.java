@@ -11,12 +11,15 @@ import com.senla.srs.mapper.PointOfRentalResponseMapper;
 import com.senla.srs.security.JwtTokenData;
 import com.senla.srs.service.AddressDtoService;
 import com.senla.srs.service.PointOfRentalService;
+import com.senla.srs.validator.PointOfRentalRequestValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+
+import java.util.Optional;
 
 @Slf4j
 @Controller
@@ -27,17 +30,20 @@ public class PointOfRentalControllerFacade extends AbstractFacade implements
     private final PointOfRentalService pointOfRentalService;
     private final PointOfRentalRequestMapper pointOfRentalRequestMapper;
     private final PointOfRentalResponseMapper pointOfRentalResponseMapper;
+    private final PointOfRentalRequestValidator pointOfRentalRequestValidator;
 
     public PointOfRentalControllerFacade(AddressDtoService addressDtoService,
                                          PointOfRentalService pointOfRentalService,
                                          PointOfRentalRequestMapper pointOfRentalRequestMapper,
                                          PointOfRentalResponseMapper pointOfRentalResponseMapper,
+                                         PointOfRentalRequestValidator pointOfRentalRequestValidator,
                                          JwtTokenData jwtTokenData) {
         super(jwtTokenData);
         this.addressDtoService = addressDtoService;
         this.pointOfRentalService = pointOfRentalService;
         this.pointOfRentalRequestMapper = pointOfRentalRequestMapper;
         this.pointOfRentalResponseMapper = pointOfRentalResponseMapper;
+        this.pointOfRentalRequestValidator = pointOfRentalRequestValidator;
     }
 
 
@@ -59,16 +65,13 @@ public class PointOfRentalControllerFacade extends AbstractFacade implements
                                             String token)
             throws NotFoundEntityException {
 
-        if (addressDtoService.retrieveAddressDtoById(pointOfRentalRequestDTO.getAddressId()).isEmpty()) {
-            return new ResponseEntity<>("The address is not correct", HttpStatus.FORBIDDEN);
-        }
+        Optional<AddressDTO> optionalAddressDTO =
+                addressDtoService.retrieveAddressDtoById(pointOfRentalRequestDTO.getAddressId());
 
-        AddressDTO addressDTO = addressDtoService.retrieveAddressDtoById(pointOfRentalRequestDTO.getAddressId())
-                .orElseThrow(() -> new NotFoundEntityException("Address"));
+        PointOfRentalRequestDTO validPointOfRentalRequestDTO =
+                pointOfRentalRequestValidator.validate(pointOfRentalRequestDTO, optionalAddressDTO, bindingResult);
 
-        PointOfRental pointOfRental = pointOfRentalService.save(pointOfRentalRequestMapper.toEntity(pointOfRentalRequestDTO, addressDTO));
-
-        return ResponseEntity.ok(pointOfRentalResponseMapper.toDto(pointOfRental));
+        return save(validPointOfRentalRequestDTO, optionalAddressDTO, bindingResult);
     }
 
     @Override
@@ -76,4 +79,20 @@ public class PointOfRentalControllerFacade extends AbstractFacade implements
         pointOfRentalService.deleteById(id);
         return new ResponseEntity<>("Point of rental with this id was deleted", HttpStatus.ACCEPTED);
     }
+
+    private ResponseEntity<?> save(PointOfRentalRequestDTO pointOfRentalRequestDTO,
+                                   Optional<AddressDTO> optionalAddressDTO,
+                                   BindingResult bindingResult) {
+
+        if (!bindingResult.hasErrors() && optionalAddressDTO.isPresent()) {
+            PointOfRental pointOfRental = pointOfRentalService.save(pointOfRentalRequestMapper
+                            .toEntity(pointOfRentalRequestDTO, optionalAddressDTO.get()));
+
+            return ResponseEntity.ok(pointOfRentalResponseMapper.toDto(pointOfRental));
+        } else {
+            return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
 }
