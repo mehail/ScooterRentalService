@@ -6,10 +6,15 @@ import com.senla.srs.validator.RentalSessionRequestValidator;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
 public class RentalSessionRequestValidatorImpl implements RentalSessionRequestValidator {
+    private static final String SEASON_TICKET_ID = "seasonTicketId";
+    private static final String PROMO_COD_NAME = "promoCodName";
+
     @Override
     public RentalSessionRequestDTO validate(RentalSessionRequestDTO rentalSessionRequestDTO,
                                             Optional<RentalSession> optionalRentalSession,
@@ -21,7 +26,6 @@ public class RentalSessionRequestValidatorImpl implements RentalSessionRequestVa
 
         return optionalRentalSession.isPresent()
                 ? validateNewEntity(rentalSessionRequestDTO,
-                optionalRentalSession,
                 optionalUser,
                 optionalScooter,
                 optionalSeasonTicket,
@@ -30,65 +34,146 @@ public class RentalSessionRequestValidatorImpl implements RentalSessionRequestVa
 
                 : validateExistEntity(rentalSessionRequestDTO,
                 optionalRentalSession,
-                optionalUser,
-                optionalScooter,
-                optionalSeasonTicket,
-                optionalPromoCod,
                 errors);
     }
 
-    //ToDo else соответствие всех полей полей rentalSessionDto.end != null
-
     private RentalSessionRequestDTO validateNewEntity(RentalSessionRequestDTO rentalSessionRequestDTO,
-                                                      Optional<RentalSession> optionalRentalSession,
                                                       Optional<User> optionalUser,
                                                       Optional<Scooter> optionalScooter,
                                                       Optional<SeasonTicket> optionalSeasonTicket,
                                                       Optional<PromoCod> optionalPromoCod,
                                                       Errors errors) {
+
+        validateUser(optionalUser, errors);
+        validateScooter(optionalScooter, errors);
+        validateSeasonTicket(rentalSessionRequestDTO, optionalSeasonTicket, optionalScooter, errors);
+        validatePromoCod(rentalSessionRequestDTO, optionalPromoCod, errors);
+        validateBeginAndEnd(rentalSessionRequestDTO.getBegin(), rentalSessionRequestDTO.getEnd(), errors);
+
+        return rentalSessionRequestDTO;
+    }
+
+    private void validateBeginAndEnd(LocalDateTime begin, LocalDateTime end, Errors errors) {
+        if (end != null && !end.isAfter(begin)) {
+            errors.reject("end", "The session end time must be later than the begin");
+        }
+    }
+
+    private void validatePromoCod(RentalSessionRequestDTO rentalSessionRequestDTO, Optional<PromoCod> optionalPromoCod, Errors errors) {
+        if (rentalSessionRequestDTO.getPromoCodName() != null) {
+
+            if (optionalPromoCod.isEmpty()) {
+                errors.reject(PROMO_COD_NAME, "PromoCod with this name does not exist");
+            } else {
+                PromoCod promoCod = optionalPromoCod.get();
+
+                if (!promoCod.getAvailable()) {
+                    errors.reject(PROMO_COD_NAME, "PromoCod with this name not available for use");
+                }
+
+                LocalDate sessionBegin = rentalSessionRequestDTO.getBegin().toLocalDate();
+                LocalDate promoCodStart = promoCod.getStartDate();
+                LocalDate promoCodExpired = promoCod.getExpiredDate();
+                if (!sessionBegin.isBefore(promoCodStart) && sessionBegin.isBefore(promoCodExpired)) {
+                    errors.reject(PROMO_COD_NAME, "The start of the rental session does not match the PromoCod");
+                }
+
+            }
+
+        }
+    }
+
+    private void validateSeasonTicket(RentalSessionRequestDTO rentalSessionRequestDTO, Optional<SeasonTicket> optionalSeasonTicket, Optional<Scooter> optionalScooter, Errors errors) {
+        if (rentalSessionRequestDTO.getSeasonTicketId() != null) {
+
+            if (optionalSeasonTicket.isEmpty()) {
+                errors.reject(SEASON_TICKET_ID, "Season ticket with this ID does not exist");
+            } else {
+                SeasonTicket seasonTicket = optionalSeasonTicket.get();
+
+                if (!seasonTicket.getAvailableForUse()) {
+                    errors.reject(SEASON_TICKET_ID, "Season ticket with this ID not available for use");
+                }
+
+                LocalDate sessionBegin = rentalSessionRequestDTO.getBegin().toLocalDate();
+                LocalDate seasonStart = seasonTicket.getStartDate();
+                LocalDate seasonExpired = seasonTicket.getExpiredDate();
+                if (!sessionBegin.isBefore(seasonStart) && sessionBegin.isBefore(seasonExpired)) {
+                    errors.reject(SEASON_TICKET_ID, "The start of the rental session does not match the season ticket");
+                }
+
+                if (optionalScooter.isPresent() && optionalScooter.get().getType() == seasonTicket.getScooterType()) {
+                    errors.reject(SEASON_TICKET_ID, "Season ticket with this ID does not match the type of scooter");
+                }
+
+            }
+
+        }
+    }
+
+    private void validateScooter(Optional<Scooter> optionalScooter, Errors errors) {
         if (optionalScooter.isEmpty()) {
             errors.reject("scooterSerialNumber", "Scooter with this serial number does not exist");
         } else if (optionalScooter.get().getStatus() != ScooterStatus.AVAILABLE) {
             errors.reject("scooterSerialNumber", "Scooter with this serial number not available for use");
         }
+    }
 
+    private void validateUser(Optional<User> optionalUser, Errors errors) {
+        if (optionalUser.isEmpty()) {
+            errors.reject("userId", "User with this ID does not exist");
+        } else if (optionalUser.get().getBalance() <= 0) {
+            errors.reject("userId", "User balance must be greater than 0");
+        }
+    }
 
-        if (rentalSessionRequestDTO.getSeasonTicketId() != null) {
-            if (optionalSeasonTicket.isEmpty()) {
-                errors.reject("seasonTicketId", "Season ticket with this ID does not exist");
-            } else if (!optionalSeasonTicket.get().getAvailableForUse()) {
-                errors.reject("seasonTicketId", "Season ticket with this ID not available for use");
-            } else if (!rentalSessionRequestDTO.getBegin().toLocalDate().isBefore(optionalSeasonTicket.get().getStartDate())
-            && rentalSessionRequestDTO.getBegin().toLocalDate().isBefore(optionalSeasonTicket.get().getExpiredDate())) {
+    private RentalSessionRequestDTO validateExistEntity(RentalSessionRequestDTO rentalSessionRequestDTO,
+                                                        Optional<RentalSession> optionalExistRentalSession,
+                                                        Errors errors) {
 
+        if (optionalExistRentalSession.isPresent()) {
+            RentalSession existRentalSession = optionalExistRentalSession.get();
+
+            if (existRentalSession.getEndDate() != null || existRentalSession.getEndTime() != null) {
+                errors.reject("this", "Completed rental session is not available for editing");
+            } else {
+
+                validateMatchExistRentalSession(rentalSessionRequestDTO, existRentalSession, errors);
+
+                validateBeginAndEnd(LocalDateTime.of(existRentalSession.getBeginDate(), existRentalSession.getBeginTime()),
+                        rentalSessionRequestDTO.getEnd(), errors);
             }
         }
-
-
-
-        //ToDo else if проверка на попадание диапазона абонемента в начало сессии
-
-        //ToDo scooter.scooterType == seasonTicket.scooterType
-
-        if (rentalSessionRequestDTO.getPromoCodName() != null
-                && optionalPromoCod.isEmpty()) {
-            errors.reject("promoCodName", "PromoCod with this name does not exist");
-        }
-        //ToDo else if проверка на попадание диапазона абонемента в начало сессии, доступность
 
         return rentalSessionRequestDTO;
     }
 
-    private RentalSessionRequestDTO validateExistEntity(RentalSessionRequestDTO rentalSessionRequestDTO,
-                                                        Optional<RentalSession> optionalRentalSession,
-                                                        Optional<User> optionalUser,
-                                                        Optional<Scooter> optionalScooter,
-                                                        Optional<SeasonTicket> optionalSeasonTicket,
-                                                        Optional<PromoCod> optionalPromoCod,
-                                                        Errors errors) {
+    private void validateMatchExistRentalSession(RentalSessionRequestDTO rentalSessionRequestDTO,
+                                                 RentalSession existRentalSession,
+                                                 Errors errors) {
 
+        boolean isMatchUserId = rentalSessionRequestDTO.getUserId().equals(existRentalSession.getUser().getId());
+        boolean isMatchBeginDate =
+                rentalSessionRequestDTO.getBegin().toLocalDate().equals(existRentalSession.getBeginDate());
+        boolean isMatchBeginTime =
+                rentalSessionRequestDTO.getBegin().toLocalTime().equals(existRentalSession.getBeginTime());
+        boolean isMatchScooterSerialNumber =
+                rentalSessionRequestDTO.getScooterSerialNumber().equals(existRentalSession.getScooter().getSerialNumber());
+        boolean isMatchSeasonTicketId =
+                rentalSessionRequestDTO.getSeasonTicketId().equals(existRentalSession.getSeasonTicket().getId());
+        boolean isMatchPromoCodName =
+                rentalSessionRequestDTO.getPromoCodName().equals(existRentalSession.getPromoCod().getName());
 
-        return rentalSessionRequestDTO;
+        boolean resultMatch = isMatchUserId
+                && isMatchBeginDate
+                && isMatchBeginTime
+                && isMatchScooterSerialNumber
+                && isMatchSeasonTicketId
+                && isMatchPromoCodName;
+
+        if (!resultMatch) {
+            errors.reject("this", "In an open rental session, only the end can be changed");
+        }
     }
 
 }
