@@ -54,12 +54,17 @@ public class RentalSessionRequestValidatorImpl implements RentalSessionRequestVa
     }
 
     private void validateBeginAndEnd(LocalDateTime begin, LocalDateTime end, Errors errors) {
+
         if (end != null && !end.isAfter(begin)) {
             errors.reject("end", "The session end time must be later than the begin");
         }
+
     }
 
-    private void validatePromoCod(RentalSessionRequestDTO rentalSessionRequestDTO, Optional<PromoCod> optionalPromoCod, Errors errors) {
+    private void validatePromoCod(RentalSessionRequestDTO rentalSessionRequestDTO,
+                                  Optional<PromoCod> optionalPromoCod,
+                                  Errors errors) {
+
         if (rentalSessionRequestDTO.getPromoCodName() != null) {
 
             if (optionalPromoCod.isEmpty()) {
@@ -83,7 +88,11 @@ public class RentalSessionRequestValidatorImpl implements RentalSessionRequestVa
         }
     }
 
-    private void validateSeasonTicket(RentalSessionRequestDTO rentalSessionRequestDTO, Optional<SeasonTicket> optionalSeasonTicket, Optional<Scooter> optionalScooter, Errors errors) {
+    private void validateSeasonTicket(RentalSessionRequestDTO rentalSessionRequestDTO,
+                                      Optional<SeasonTicket> optionalSeasonTicket,
+                                      Optional<Scooter> optionalScooter,
+                                      Errors errors) {
+
         if (rentalSessionRequestDTO.getSeasonTicketId() != null) {
 
             if (optionalSeasonTicket.isEmpty()) {
@@ -109,22 +118,27 @@ public class RentalSessionRequestValidatorImpl implements RentalSessionRequestVa
             }
 
         }
+
     }
 
     private void validateScooter(Optional<Scooter> optionalScooter, Errors errors) {
+
         if (optionalScooter.isEmpty()) {
             errors.reject("scooterSerialNumber", "Scooter with this serial number does not exist");
         } else if (optionalScooter.get().getStatus() != ScooterStatus.AVAILABLE) {
             errors.reject("scooterSerialNumber", "Scooter with this serial number not available for use");
         }
+
     }
 
     private void validateUser(Optional<User> optionalUser, Errors errors) {
+
         if (optionalUser.isEmpty()) {
             errors.reject("userId", "User with this ID does not exist");
         } else if (optionalUser.get().getBalance() <= 0) {
             errors.reject("userId", "User balance must be greater than 0");
         }
+
     }
 
     private RentalSessionRequestDTO validateExistEntity(RentalSessionRequestDTO rentalSessionRequestDTO,
@@ -143,6 +157,7 @@ public class RentalSessionRequestValidatorImpl implements RentalSessionRequestVa
                 validateBeginAndEnd(LocalDateTime.of(existRentalSession.getBeginDate(), existRentalSession.getBeginTime()),
                         rentalSessionRequestDTO.getEnd(), errors);
             }
+
         }
 
         return rentalSessionRequestDTO;
@@ -174,6 +189,7 @@ public class RentalSessionRequestValidatorImpl implements RentalSessionRequestVa
         if (!resultMatch) {
             errors.reject("this", "In an open rental session, only the end can be changed");
         }
+
     }
 
 }
