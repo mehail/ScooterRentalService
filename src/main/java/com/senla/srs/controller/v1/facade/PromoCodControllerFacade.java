@@ -42,7 +42,7 @@ public class PromoCodControllerFacade extends AbstractFacade implements
     public ResponseEntity<?> getById(String name, String token) throws NotFoundEntityException {
         return new ResponseEntity<>(promoCodService.retrievePromoCodByName(name)
                 .map(promoCodMapper::toDto)
-                .orElseThrow(() -> new NotFoundEntityException("PromoCod")), HttpStatus.OK);
+                .orElseThrow(() -> new NotFoundEntityException(PromoCod.class, name)), HttpStatus.OK);
     }
 
     @Override

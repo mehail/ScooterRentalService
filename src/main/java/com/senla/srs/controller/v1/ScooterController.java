@@ -86,7 +86,7 @@ public class ScooterController {
 
     @DeleteMapping("/{serialNumber}")
     @PreAuthorize("hasAuthority('scooters:write')")
-    public ResponseEntity<?> delete(@PathVariable String serialNumber) {
+    public ResponseEntity<?> delete(@PathVariable String serialNumber) throws NotFoundEntityException {
         return entityControllerFacade.delete(serialNumber);
     }
 }

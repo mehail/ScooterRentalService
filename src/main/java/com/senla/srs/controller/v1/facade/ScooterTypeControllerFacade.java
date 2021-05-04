@@ -55,7 +55,7 @@ public class ScooterTypeControllerFacade extends AbstractFacade implements
     public ResponseEntity<?> getById(Long id, String token) throws NotFoundEntityException {
         return new ResponseEntity<>(scooterTypeService.retrieveScooterTypeById(id)
                 .map(scooterTypeResponseMapper::toDto)
-                .orElseThrow(() -> new NotFoundEntityException("Scooter type")), HttpStatus.OK);
+                .orElseThrow(() -> new NotFoundEntityException(ScooterType.class, id)), HttpStatus.OK);
     }
 
     @Override

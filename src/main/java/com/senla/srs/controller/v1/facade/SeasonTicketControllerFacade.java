@@ -72,7 +72,7 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
         if (isAdmin(token) || isThisUserSeasonTicket(optionalSeasonTicket, token)) {
             return new ResponseEntity<>(optionalSeasonTicket
                     .map(seasonTicketFullResponseMapper::toDto)
-                    .orElseThrow(() -> new NotFoundEntityException("Season ticket")), HttpStatus.OK);
+                    .orElseThrow(() -> new NotFoundEntityException(SeasonTicket.class, id)), HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Another user's season ticket is requested", HttpStatus.FORBIDDEN);
         }
@@ -102,12 +102,16 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
     }
 
     @Override
-    public ResponseEntity<?> delete(Long id) {
+    public ResponseEntity<?> delete(Long id) throws NotFoundEntityException {
         Optional<SeasonTicket> optionalSeasonTicket = seasonTicketService.retrieveSeasonTicketsById(id);
 
-        if (optionalSeasonTicket.isPresent() && optionalSeasonTicket.get().getAvailableForUse()) {
+        if (optionalSeasonTicket
+                .map(SeasonTicket::getAvailableForUse)
+                .orElseThrow(() -> new NotFoundEntityException(SeasonTicket.class, id))) {
+
             seasonTicketService.deleteById(id);
             return new ResponseEntity<>("Season ticket with this id was deleted", HttpStatus.ACCEPTED);
+
         } else {
             return new ResponseEntity<>(FORBIDDEN_FOR_DELETE, HttpStatus.FORBIDDEN);
         }

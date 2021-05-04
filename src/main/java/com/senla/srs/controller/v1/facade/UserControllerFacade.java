@@ -58,7 +58,7 @@ public class UserControllerFacade extends AbstractFacade implements
         if (isThisUserById(token, id) || isAdmin(token)) {
             return new ResponseEntity<>(userService.retrieveUserById(id)
                     .map(userFullResponseMapper::toDto)
-                    .orElseThrow(() -> new NotFoundEntityException("User")), HttpStatus.OK);
+                    .orElseThrow(() -> new NotFoundEntityException(User.class, id)), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(ACCESS_FORBIDDEN, HttpStatus.FORBIDDEN);
         }

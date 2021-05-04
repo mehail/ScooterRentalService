@@ -98,7 +98,7 @@ public class SeasonTicketController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('seasonTickets:write')")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
+    public ResponseEntity<?> delete(@PathVariable Long id) throws NotFoundEntityException {
         return entityControllerFacade.delete(id);
     }
 }

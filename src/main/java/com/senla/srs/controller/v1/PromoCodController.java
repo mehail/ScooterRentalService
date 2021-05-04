@@ -86,7 +86,7 @@ public class PromoCodController {
 
     @DeleteMapping("/{name}")
     @PreAuthorize("hasAuthority('promoCods:write')")
-    public ResponseEntity<?> delete(@PathVariable String name) {
+    public ResponseEntity<?> delete(@PathVariable String name) throws NotFoundEntityException {
        return entityControllerFacade.delete(name);
     }
 }

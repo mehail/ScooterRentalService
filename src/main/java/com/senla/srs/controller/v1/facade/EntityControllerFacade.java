@@ -14,5 +14,5 @@ public interface EntityControllerFacade<D, Q extends D, S extends D, T> {
     ResponseEntity<?> createOrUpdate(Q requestDTO, BindingResult bindingResult, String token)
             throws NotFoundEntityException;
 
-    ResponseEntity<?> delete(T id);
+    ResponseEntity<?> delete(T id) throws NotFoundEntityException;
 }

@@ -56,7 +56,7 @@ public class PointOfRentalControllerFacade extends AbstractFacade implements
     public ResponseEntity<?> getById(Long id, String token) throws NotFoundEntityException {
         return new ResponseEntity<>(pointOfRentalService.retrievePointOfRentalById(id)
                 .map(pointOfRentalResponseMapper::toDto)
-                .orElseThrow(() -> new NotFoundEntityException("Point of rental")), HttpStatus.OK);
+                .orElseThrow(() -> new NotFoundEntityException(PointOfRentalRequestDTO.class, id)), HttpStatus.OK);
     }
 
     @Override

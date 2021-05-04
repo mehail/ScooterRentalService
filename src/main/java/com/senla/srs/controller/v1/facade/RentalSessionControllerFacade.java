@@ -71,7 +71,7 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
         if (isAdmin(token) || isThisUserRentalSession(optionalRentalSession, token)) {
             return new ResponseEntity<>(optionalRentalSession
                     .map(rentalSessionResponseMapper::toDto)
-                    .orElseThrow(() -> new NotFoundEntityException("Rental session")), HttpStatus.NOT_FOUND);
+                    .orElseThrow(() -> new NotFoundEntityException(RentalSession.class, id)), HttpStatus.NOT_FOUND);
         } else {
             return new ResponseEntity<>("Unauthorized user session requested", HttpStatus.FORBIDDEN);
         }
@@ -135,30 +135,32 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
                                    Optional<PromoCod> optionalPromoCod)
             throws NotFoundEntityException {
 
-        User user = optionalUser.orElseThrow(() -> new NotFoundEntityException("User"));
+        User user = optionalUser.orElseThrow(() -> new NotFoundEntityException(User.class));
 
-        Scooter scooter = optionalScooter.orElseThrow(() -> new NotFoundEntityException("Scooter"));
+        Scooter scooter = optionalScooter.orElseThrow(() -> new NotFoundEntityException(Scooter.class));
 
         SeasonTicket seasonTicket = rentalSessionRequestDTO.getSeasonTicketId() != null
-                ? optionalSeasonTicket.orElseThrow(() -> new NotFoundEntityException("Season"))
+                ? optionalSeasonTicket.orElseThrow(() -> new NotFoundEntityException(SeasonTicket.class))
                 : null;
 
         PromoCod promoCod = rentalSessionRequestDTO.getPromoCodName() != null
-                ? optionalPromoCod.orElseThrow(() -> new NotFoundEntityException("PromoCod"))
+                ? optionalPromoCod.orElseThrow(() -> new NotFoundEntityException(PromoCod.class))
                 : null;
 
         return rentalSessionRequestMapper.toEntity(rentalSessionRequestDTO, user, scooter, 0, seasonTicket, promoCod);
     }
 
     @Override
-    public ResponseEntity<?> delete(Long id) {
+    public ResponseEntity<?> delete(Long id) throws NotFoundEntityException {
         Optional<RentalSession> optionalRentalSession = rentalSessionService.retrieveRentalSessionById(id);
 
-        if (optionalRentalSession.isPresent()
-                && optionalRentalSession.get().getEndDate() == null
-        ) {
+        if (optionalRentalSession
+                .map(RentalSession::getEndDate)
+                .orElseThrow(() -> new NotFoundEntityException(RentalSession.class, id)) == null) {
+
             rentalSessionService.deleteById(id);
             return new ResponseEntity<>("Rental session with this id was deleted", HttpStatus.ACCEPTED);
+
         } else {
             return new ResponseEntity<>("Rental session closed and cannot be deleted", HttpStatus.FORBIDDEN);
         }
