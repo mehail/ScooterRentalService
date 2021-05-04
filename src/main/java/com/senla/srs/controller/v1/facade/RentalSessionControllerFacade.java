@@ -83,37 +83,40 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
                                             String token)
             throws NotFoundEntityException {
 
-        Optional<RentalSession> optionalRentalSession =
-                rentalSessionService.retrieveRentalSessionByUserIdAndScooterSerialNumberAndBeginDateAndBeginTime(
-                        rentalSessionRequestDTO.getUserId(),
-                        rentalSessionRequestDTO.getScooterSerialNumber(),
-                        rentalSessionRequestDTO.getBegin().toLocalDate(),
-                        rentalSessionRequestDTO.getBegin().toLocalTime());
-        Optional<User> optionalUser = userService.retrieveUserById(rentalSessionRequestDTO.getUserId());
-        Optional<Scooter> optionalScooter =
-                scooterService.retrieveScooterBySerialNumber(rentalSessionRequestDTO.getScooterSerialNumber());
-        Optional<SeasonTicket> optionalSeasonTicket =
-                seasonTicketService.retrieveSeasonTicketsById(rentalSessionRequestDTO.getSeasonTicketId());
-        Optional<PromoCod> optionalPromoCod =
-                promoCodService.retrievePromoCodByName(rentalSessionRequestDTO.getPromoCodName());
-
-        RentalSessionRequestDTO validRentalSessionDTO = rentalSessionRequestValidator.validate(rentalSessionRequestDTO,
-                optionalRentalSession,
-                optionalUser,
-                optionalScooter,
-                optionalSeasonTicket,
-                optionalPromoCod,
-                bindingResult);
 
         if (isAdmin(token) || isThisUserById(token, rentalSessionRequestDTO.getUserId())) {
-            return save(validRentalSessionDTO,
+
+            Optional<RentalSession> optionalRentalSession =
+                    rentalSessionService.retrieveRentalSessionByUserIdAndScooterSerialNumberAndBeginDateAndBeginTime(
+                            rentalSessionRequestDTO.getUserId(),
+                            rentalSessionRequestDTO.getScooterSerialNumber(),
+                            rentalSessionRequestDTO.getBegin().toLocalDate(),
+                            rentalSessionRequestDTO.getBegin().toLocalTime());
+            Optional<User> optionalUser = userService.retrieveUserById(rentalSessionRequestDTO.getUserId());
+            Optional<Scooter> optionalScooter =
+                    scooterService.retrieveScooterBySerialNumber(rentalSessionRequestDTO.getScooterSerialNumber());
+            Optional<SeasonTicket> optionalSeasonTicket =
+                    seasonTicketService.retrieveSeasonTicketsById(rentalSessionRequestDTO.getSeasonTicketId());
+            Optional<PromoCod> optionalPromoCod =
+                    promoCodService.retrievePromoCodByName(rentalSessionRequestDTO.getPromoCodName());
+
+            RentalSessionRequestDTO validRentalSessionDTO = rentalSessionRequestValidator.validate(rentalSessionRequestDTO,
+                    optionalRentalSession,
                     optionalUser,
                     optionalScooter,
                     optionalSeasonTicket,
                     optionalPromoCod,
-                    //ToDo проверить rate, уточнить в какой момент он должен быть подсчитан
-                    0,
                     bindingResult);
+
+            RentalSession rentalSession =
+                    toEntity(validRentalSessionDTO, optionalUser,optionalScooter,optionalSeasonTicket, optionalPromoCod);
+
+            int rate = calculateRate(rentalSession);
+            rentalSession.setRate(rate);
+
+            changeEntityState(rentalSession, rate);
+
+            return save(rentalSession, bindingResult);
         } else {
             return new ResponseEntity<>("Change someone else's rental session is not available", HttpStatus.FORBIDDEN);
         }
@@ -124,8 +127,7 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
                                    Optional<User> optionalUser,
                                    Optional<Scooter> optionalScooter,
                                    Optional<SeasonTicket> optionalSeasonTicket,
-                                   Optional<PromoCod> optionalPromoCod,
-                                   Integer rate)
+                                   Optional<PromoCod> optionalPromoCod)
             throws NotFoundEntityException {
 
         User user = optionalUser.orElseThrow(() -> new NotFoundEntityException("User"));
@@ -140,7 +142,7 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
                 ? optionalPromoCod.orElseThrow(() -> new NotFoundEntityException("PromoCod"))
                 : null;
 
-        return rentalSessionRequestMapper.toEntity(rentalSessionRequestDTO, user, scooter, rate, seasonTicket, promoCod);
+        return rentalSessionRequestMapper.toEntity(rentalSessionRequestDTO, user, scooter, 0, seasonTicket, promoCod);
     }
 
     @Override
@@ -164,31 +166,20 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
                 isThisUserById(token, optionalRentalSession.get().getUser().getId());
     }
 
-    private ResponseEntity<?> save(RentalSessionRequestDTO rentalSessionRequestDTO,
-                                   Optional<User> optionalUser,
-                                   Optional<Scooter> optionalScooter,
-                                   Optional<SeasonTicket> optionalSeasonTicket,
-                                   Optional<PromoCod> optionalPromoCod,
-                                   Integer rate,
-                                   BindingResult bindingResult)
-            throws NotFoundEntityException {
+    private ResponseEntity<?> save(RentalSession rentalSession,
+                                   BindingResult bindingResult) {
 
         if (!bindingResult.hasErrors()) {
-            RentalSession rentalSession = rentalSessionService.save(toEntity(rentalSessionRequestDTO,
-                    optionalUser, optionalScooter, optionalSeasonTicket, optionalPromoCod, rate));
-
-            changeEntityState(rentalSession);
-
-            return ResponseEntity.ok(rentalSessionResponseMapper.toDto(rentalSession));
+            return ResponseEntity.ok(rentalSessionResponseMapper.toDto(rentalSessionService.save(rentalSession)));
         } else {
             return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
     }
 
-    private void changeEntityState(RentalSession rentalSession) {
+    private void changeEntityState(RentalSession rentalSession, Integer rate) {
         Scooter scooter = rentalSession.getScooter();
         SeasonTicket seasonTicket = rentalSession.getSeasonTicket();
-        com.senla.srs.entity.User user = rentalSession.getUser();
+        User user = rentalSession.getUser();
 
         if (rentalSession.getEndDate() == null) {
             scooter.setStatus(ScooterStatus.USED);
@@ -198,7 +189,7 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
             }
 
         } else {
-            user.setBalance(user.getBalance() - calculateRate(rentalSession));
+            user.setBalance(user.getBalance() - rate);
 
             scooter.setStatus(ScooterStatus.AVAILABLE);
 
@@ -262,6 +253,6 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
             promoCod.setAvailable(false);
         }
 
-        return rate * (1 - discountPercentage / 100);
+        return rate * (100 - discountPercentage) / 100;
     }
 }
