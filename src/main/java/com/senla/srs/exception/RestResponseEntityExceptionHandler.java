@@ -1,5 +1,6 @@
 package com.senla.srs.exception;
 
+import org.postgresql.util.PSQLException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,11 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     @ExceptionHandler(value = { EmptyResultDataAccessException.class })
     protected ResponseEntity<Object> handleEmptyResultDataAccess(EmptyResultDataAccessException ex, WebRequest request) {
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
+
+    @ExceptionHandler(value = { PSQLException.class })
+    protected ResponseEntity<Object> handlePSQLException(PSQLException ex, WebRequest request) {
+        return handleExceptionInternal(ex, "Unable to delete/update, entity is in use", new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
 }

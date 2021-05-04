@@ -91,13 +91,19 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
                             rentalSessionRequestDTO.getScooterSerialNumber(),
                             rentalSessionRequestDTO.getBegin().toLocalDate(),
                             rentalSessionRequestDTO.getBegin().toLocalTime());
+
             Optional<User> optionalUser = userService.retrieveUserById(rentalSessionRequestDTO.getUserId());
+
             Optional<Scooter> optionalScooter =
                     scooterService.retrieveScooterBySerialNumber(rentalSessionRequestDTO.getScooterSerialNumber());
-            Optional<SeasonTicket> optionalSeasonTicket =
-                    seasonTicketService.retrieveSeasonTicketsById(rentalSessionRequestDTO.getSeasonTicketId());
-            Optional<PromoCod> optionalPromoCod =
-                    promoCodService.retrievePromoCodByName(rentalSessionRequestDTO.getPromoCodName());
+
+            Optional<SeasonTicket> optionalSeasonTicket = rentalSessionRequestDTO.getSeasonTicketId() != null
+                    ? seasonTicketService.retrieveSeasonTicketsById(rentalSessionRequestDTO.getSeasonTicketId())
+                    : Optional.empty();
+
+            Optional<PromoCod> optionalPromoCod = rentalSessionRequestDTO.getPromoCodName() != null
+                    ? promoCodService.retrievePromoCodByName(rentalSessionRequestDTO.getPromoCodName())
+                    : Optional.empty();
 
             RentalSessionRequestDTO validRentalSessionDTO = rentalSessionRequestValidator.validate(rentalSessionRequestDTO,
                     optionalRentalSession,

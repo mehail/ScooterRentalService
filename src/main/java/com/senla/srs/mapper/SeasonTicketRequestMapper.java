@@ -13,12 +13,14 @@ public class SeasonTicketRequestMapper extends AbstractMapper<SeasonTicket, Seas
 
     public SeasonTicket toEntity(SeasonTicketRequestDTO seasonTicketRequestDTO,
                                  ScooterType scooterType,
+                                 int price,
                                  int remainingTime,
                                  int duration) {
 
         SeasonTicket seasonTicket = toEntity(seasonTicketRequestDTO);
 
         seasonTicket.setScooterType(scooterType);
+        seasonTicket.setPrice(price);
         seasonTicket.setRemainingTime(remainingTime);
         seasonTicket.setExpiredDate(seasonTicket.getStartDate().plusDays(duration));
         seasonTicket.setAvailableForUse(true);

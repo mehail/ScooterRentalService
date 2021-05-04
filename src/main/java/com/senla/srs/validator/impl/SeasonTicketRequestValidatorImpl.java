@@ -24,22 +24,17 @@ public class SeasonTicketRequestValidatorImpl implements SeasonTicketRequestVali
         if (optionalSeasonTicket.isPresent()) {
             errors.reject("exist season ticket", "The existing season ticket is closed for modification");
         } else {
+
             if (optionalUser.isEmpty()) {
                 errors.reject("userId", "User with this ID does not exist");
-            } else if (seasonTicketRequestDTO.getPrice() <= optionalUser.get().getBalance()) {
+            } else if (seasonTicketRequestDTO.getPrice() >= optionalUser.get().getBalance()) {
                 errors.reject(PRICE, "User balance must be greater than or equal to price");
             }
 
             if (optionalScooterType.isEmpty()) {
                 errors.reject("scooterTypeId", "Scooter type with this ID does not exist");
-            } else {
-                if (seasonTicketRequestDTO.getPrice() >= optionalScooterType.get().getPricePerMinute()) {
-                    errors.reject(PRICE, "The price should be greater than the price per minute of this scooter type");
-                }
-
-                if (seasonTicketRequestDTO.getPrice() % optionalScooterType.get().getPricePerMinute() != 0) {
-                    errors.reject(PRICE, "The price must be a multiple of the price of a minute for a scooter of this type");
-                }
+            } else if (seasonTicketRequestDTO.getPrice() < optionalScooterType.get().getPricePerMinute()) {
+                errors.reject(PRICE, "The price should be greater than the price per minute of this scooter type");
             }
 
         }

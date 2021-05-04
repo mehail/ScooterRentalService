@@ -127,10 +127,13 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
 
             changeUserBalance(optionalUser, seasonTicketRequestDTO);
 
+            int remainingTime = calculateRemainingTime(seasonTicketRequestDTO, optionalScooterType.get());
+
             SeasonTicket seasonTicket = seasonTicketService.save(seasonTicketRequestMapper
                     .toEntity(seasonTicketRequestDTO,
                             optionalScooterType.get(),
-                            calculateRemainingTime(seasonTicketRequestDTO, optionalScooterType.get()),
+                            calculateCorrectPrice(optionalScooterType.get(), remainingTime),
+                            remainingTime,
                             duration));
 
             return ResponseEntity.ok(seasonTicketFullResponseMapper.toDto(seasonTicket));
@@ -145,9 +148,10 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
     }
 
     private int calculateRemainingTime(SeasonTicketRequestDTO seasonTicketRequestDTO, ScooterType scooterType) {
-        int pricePerMinute = scooterType.getPricePerMinute();
-        int price = seasonTicketRequestDTO.getPrice();
+        return seasonTicketRequestDTO.getPrice() / scooterType.getPricePerMinute();
+    }
 
-        return price / pricePerMinute;
+    private int calculateCorrectPrice(ScooterType scooterType, int remainingTime) {
+        return scooterType.getPricePerMinute() * remainingTime;
     }
 }
