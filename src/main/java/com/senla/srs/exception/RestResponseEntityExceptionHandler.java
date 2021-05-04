@@ -25,7 +25,8 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     @ExceptionHandler(value = { PSQLException.class })
     protected ResponseEntity<Object> handlePSQLException(PSQLException ex, WebRequest request) {
-        return handleExceptionInternal(ex, "Unable to delete/update, entity is in use", new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+        return handleExceptionInternal(ex, "Unable to delete/update, entity is in use", new HttpHeaders(),
+                HttpStatus.BAD_REQUEST, request);
     }
-
+    
 }

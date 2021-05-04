@@ -139,12 +139,14 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
 
         Scooter scooter = optionalScooter.orElseThrow(() -> new NotFoundEntityException(Scooter.class));
 
-        SeasonTicket seasonTicket = rentalSessionRequestDTO.getSeasonTicketId() != null
-                ? optionalSeasonTicket.orElseThrow(() -> new NotFoundEntityException(SeasonTicket.class))
+        Long seasonTicketId = rentalSessionRequestDTO.getSeasonTicketId();
+        SeasonTicket seasonTicket = seasonTicketId != null
+                ? optionalSeasonTicket.orElseThrow(() -> new NotFoundEntityException(SeasonTicket.class, seasonTicketId))
                 : null;
 
-        PromoCod promoCod = rentalSessionRequestDTO.getPromoCodName() != null
-                ? optionalPromoCod.orElseThrow(() -> new NotFoundEntityException(PromoCod.class))
+        String promoCodName = rentalSessionRequestDTO.getPromoCodName();
+        PromoCod promoCod = promoCodName != null
+                ? optionalPromoCod.orElseThrow(() -> new NotFoundEntityException(PromoCod.class, promoCodName))
                 : null;
 
         return rentalSessionRequestMapper.toEntity(rentalSessionRequestDTO, user, scooter, 0, seasonTicket, promoCod);
