@@ -18,7 +18,6 @@ public class RentalSessionRequestDTO extends RentalSessionDTO {
     @NonNull
     @Length(min = 1, max = 64, message = "Scooter serial number must be between 1 and 64 characters")
     private String scooterSerialNumber;
-    @Min(value = 1, message = "Season ticket ID must be at least 1")
     private Long seasonTicketId;
     private String promoCodName;
 }
