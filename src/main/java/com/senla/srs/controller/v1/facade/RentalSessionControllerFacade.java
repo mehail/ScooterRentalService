@@ -71,7 +71,7 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
         if (isAdmin(token) || isThisUserRentalSession(optionalRentalSession, token)) {
             return new ResponseEntity<>(optionalRentalSession
                     .map(rentalSessionResponseMapper::toDto)
-                    .orElseThrow(() -> new NotFoundEntityException("Rental session")), HttpStatus.OK);
+                    .orElseThrow(() -> new NotFoundEntityException("Rental session")), HttpStatus.NOT_FOUND);
         } else {
             return new ResponseEntity<>("Unauthorized user session requested", HttpStatus.FORBIDDEN);
         }
@@ -82,7 +82,6 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
                                             BindingResult bindingResult,
                                             String token)
             throws NotFoundEntityException {
-
 
         if (isAdmin(token) || isThisUserById(token, rentalSessionRequestDTO.getUserId())) {
 
@@ -193,8 +192,7 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
 
             scooter.setStatus(ScooterStatus.AVAILABLE);
 
-            int usageTime = (int) (Duration.between(rentalSession.getBeginDate(), rentalSession.getEndDate()).getSeconds() / 60);
-            scooter.setTimeMillage(scooter.getTimeMillage() + usageTime);
+            scooter.setTimeMillage(scooter.getTimeMillage() + getUsageTime(rentalSession));
 
             if (seasonTicket != null && seasonTicket.getRemainingTime() > 0) {
                 seasonTicket.setAvailableForUse(true);
@@ -204,17 +202,20 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
     }
 
     private int calculateRate(RentalSession rentalSession) {
-        LocalDateTime begin = LocalDateTime.of(rentalSession.getBeginDate(), rentalSession.getBeginTime());
-        LocalDateTime end = LocalDateTime.of(rentalSession.getEndDate(), rentalSession.getBeginTime());
-        int usageTime = (int) (Duration.between(begin, end).getSeconds() / 60);
-
         int pricePerMinute = rentalSession.getScooter().getType().getPricePerMinute();
 
-        int billableTime = calculateBillableTime(rentalSession.getSeasonTicket(), usageTime);
+        int billableTime = calculateBillableTime(rentalSession.getSeasonTicket(), getUsageTime(rentalSession));
 
         int priceWithoutPromoCod = billableTime * pricePerMinute;
 
         return applyPromoCod(priceWithoutPromoCod, rentalSession.getPromoCod(), rentalSession.getUser());
+    }
+
+    private int getUsageTime(RentalSession rentalSession) {
+        LocalDateTime begin = LocalDateTime.of(rentalSession.getBeginDate(), rentalSession.getBeginTime());
+        LocalDateTime end = LocalDateTime.of(rentalSession.getEndDate(), rentalSession.getBeginTime());
+
+        return (int) (Duration.between(begin, end).getSeconds() / 60);
     }
 
     private int calculateBillableTime(SeasonTicket seasonTicket, int usageTime) {
