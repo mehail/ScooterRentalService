@@ -3,22 +3,21 @@ package com.senla.srs.service.impl;
 import com.senla.srs.entity.User;
 import com.senla.srs.repository.UserRepository;
 import com.senla.srs.service.UserService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
+import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
-@Slf4j
+@Transactional
+@AllArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     @Override
     public User save(User user) {

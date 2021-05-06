@@ -20,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
 import java.util.Optional;
@@ -78,6 +79,7 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
         }
     }
 
+    @Transactional
     @Override
     public ResponseEntity<?> createOrUpdate(SeasonTicketRequestDTO seasonTicketRequestDTO,
                                             BindingResult bindingResult,

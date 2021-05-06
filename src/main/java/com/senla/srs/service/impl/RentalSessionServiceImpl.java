@@ -9,12 +9,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Optional;
 
 @Service
+@Transactional
 @AllArgsConstructor
 public class RentalSessionServiceImpl implements RentalSessionService {
     private final RentalSessionRepository rentalSessionRepository;

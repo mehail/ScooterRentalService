@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
 import java.time.Duration;
@@ -77,6 +78,7 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
         }
     }
 
+    @Transactional
     @Override
     public ResponseEntity<?> createOrUpdate(RentalSessionRequestDTO rentalSessionRequestDTO,
                                             BindingResult bindingResult,
@@ -113,17 +115,51 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
                     optionalPromoCod,
                     bindingResult);
 
+            return save(validRentalSessionDTO, optionalUser, optionalScooter, optionalSeasonTicket, optionalPromoCod, bindingResult);
+        } else {
+            return new ResponseEntity<>("Change someone else's rental session is not available", HttpStatus.FORBIDDEN);
+        }
+
+    }
+
+    @Override
+    public ResponseEntity<?> delete(Long id) throws NotFoundEntityException {
+        Optional<RentalSession> optionalRentalSession = rentalSessionService.retrieveRentalSessionById(id);
+
+        if (optionalRentalSession.map(RentalSession::getEndDate).isEmpty()) {
+
+            rentalSessionService.deleteById(id);
+            return new ResponseEntity<>("Rental session with this id was deleted", HttpStatus.ACCEPTED);
+
+        } else {
+            return new ResponseEntity<>("Rental session closed and cannot be deleted", HttpStatus.FORBIDDEN);
+        }
+    }
+
+    private ResponseEntity<?> save(RentalSessionRequestDTO rentalSessionRequestDTO,
+                           Optional<User> optionalUser,
+                           Optional<Scooter> optionalScooter,
+                           Optional<SeasonTicket> optionalSeasonTicket,
+                           Optional<PromoCod> optionalPromoCod,
+                           BindingResult bindingResult)
+            throws NotFoundEntityException {
+
+        if (!bindingResult.hasErrors()) {
             RentalSession rentalSession =
-                    toEntity(validRentalSessionDTO, optionalUser,optionalScooter,optionalSeasonTicket, optionalPromoCod);
+                    toEntity(rentalSessionRequestDTO,
+                            optionalUser,
+                            optionalScooter,
+                            optionalSeasonTicket,
+                            optionalPromoCod);
 
             int rate = calculateRate(rentalSession);
             rentalSession.setRate(rate);
 
             changeEntityState(rentalSession, rate);
 
-            return save(rentalSession, bindingResult);
+            return ResponseEntity.ok(rentalSessionResponseMapper.toDto(rentalSessionService.save(rentalSession)));
         } else {
-            return new ResponseEntity<>("Change someone else's rental session is not available", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
 
     }
@@ -152,37 +188,11 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
         return rentalSessionRequestMapper.toEntity(rentalSessionRequestDTO, user, scooter, 0, seasonTicket, promoCod);
     }
 
-    @Override
-    public ResponseEntity<?> delete(Long id) throws NotFoundEntityException {
-        Optional<RentalSession> optionalRentalSession = rentalSessionService.retrieveRentalSessionById(id);
-
-        if (optionalRentalSession
-                .map(RentalSession::getEndDate)
-                .orElseThrow(() -> new NotFoundEntityException(RentalSession.class, id)) == null) {
-
-            rentalSessionService.deleteById(id);
-            return new ResponseEntity<>("Rental session with this id was deleted", HttpStatus.ACCEPTED);
-
-        } else {
-            return new ResponseEntity<>("Rental session closed and cannot be deleted", HttpStatus.FORBIDDEN);
-        }
-    }
-
     private boolean isThisUserRentalSession(Optional<RentalSession> optionalRentalSession,
                                             String token) {
 
         return optionalRentalSession.isPresent() &&
                 isThisUserById(token, optionalRentalSession.get().getUser().getId());
-    }
-
-    private ResponseEntity<?> save(RentalSession rentalSession,
-                                   BindingResult bindingResult) {
-
-        if (!bindingResult.hasErrors()) {
-            return ResponseEntity.ok(rentalSessionResponseMapper.toDto(rentalSessionService.save(rentalSession)));
-        } else {
-            return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
-        }
     }
 
     private void changeEntityState(RentalSession rentalSession, Integer rate) {
@@ -222,10 +232,14 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
     }
 
     private int getUsageTime(RentalSession rentalSession) {
-        LocalDateTime begin = LocalDateTime.of(rentalSession.getBeginDate(), rentalSession.getBeginTime());
-        LocalDateTime end = LocalDateTime.of(rentalSession.getEndDate(), rentalSession.getBeginTime());
+        if (rentalSession.getEndDate() != null && rentalSession.getEndTime() != null) {
+            LocalDateTime begin = LocalDateTime.of(rentalSession.getBeginDate(), rentalSession.getBeginTime());
+            LocalDateTime end = LocalDateTime.of(rentalSession.getEndDate(), rentalSession.getBeginTime());
+            return (int) (Duration.between(begin, end).getSeconds() / 60);
+        } else {
+            return 0;
+        }
 
-        return (int) (Duration.between(begin, end).getSeconds() / 60);
     }
 
     private int calculateBillableTime(SeasonTicket seasonTicket, int usageTime) {

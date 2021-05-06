@@ -21,8 +21,10 @@ public class RentalSessionRequestMapper extends AbstractMapper<RentalSession, Re
         rentalSession.setBeginDate(dto.getBegin().toLocalDate());
         rentalSession.setBeginTime(dto.getBegin().toLocalTime());
 
-        rentalSession.setEndDate(dto.getEnd().toLocalDate());
-        rentalSession.setEndTime(dto.getEnd().toLocalTime());
+        if (dto.getEnd() != null) {
+            rentalSession.setEndDate(dto.getEnd().toLocalDate());
+            rentalSession.setEndTime(dto.getEnd().toLocalTime());
+        }
 
         rentalSession.setRate(rate);
         rentalSession.setUser(user);
