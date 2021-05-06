@@ -89,7 +89,7 @@ public class ScooterTypeControllerFacade extends AbstractFacade implements
 
         if (!bindingResult.hasErrors() && optionalMakerDTO.isPresent()) {
             ScooterType scooterType = scooterTypeService.save(scooterTypeRequestMapper
-                    .toEntity(scooterTypeRequestDTO, optionalMakerDTO.get()));
+                    .toEntity(scooterTypeRequestDTO, optionalMakerDTO.get(), getExistEntityId(scooterTypeRequestDTO)));
 
             return ResponseEntity.ok(scooterTypeResponseMapper.toDto(scooterType));
         } else {

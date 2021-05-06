@@ -17,7 +17,7 @@ public class SeasonTicketRequestMapper extends AbstractMapper<SeasonTicket, Seas
                                  int remainingTime,
                                  int duration) {
 
-        SeasonTicket seasonTicket = toEntity(seasonTicketRequestDTO);
+        SeasonTicket seasonTicket = super.toEntity(seasonTicketRequestDTO);
 
         seasonTicket.setScooterType(scooterType);
         seasonTicket.setPrice(price);
@@ -27,4 +27,18 @@ public class SeasonTicketRequestMapper extends AbstractMapper<SeasonTicket, Seas
 
         return seasonTicket;
     }
+
+    public SeasonTicket toEntity(SeasonTicketRequestDTO seasonTicketRequestDTO,
+                                 ScooterType scooterType,
+                                 int price,
+                                 int remainingTime,
+                                 int duration,
+                                 Long id) {
+
+        SeasonTicket seasonTicket = toEntity(seasonTicketRequestDTO, scooterType, price, remainingTime, duration);
+        seasonTicket.setId(id);
+
+        return null;
+    }
+
 }

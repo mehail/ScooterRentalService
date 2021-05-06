@@ -194,7 +194,8 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
                 ? optionalPromoCod.orElseThrow(() -> new NotFoundEntityException(PromoCod.class, promoCodName))
                 : null;
 
-        return rentalSessionRequestMapper.toEntity(rentalSessionRequestDTO, user, scooter, 0, seasonTicket, promoCod);
+        return rentalSessionRequestMapper.toEntity(rentalSessionRequestDTO, user, scooter, 0, seasonTicket,
+                promoCod, getExistEntityId(rentalSessionRequestDTO));
     }
 
     private boolean isThisUserRentalSession(Optional<RentalSession> optionalRentalSession,

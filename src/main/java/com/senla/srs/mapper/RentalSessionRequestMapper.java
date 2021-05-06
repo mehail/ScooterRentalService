@@ -34,4 +34,18 @@ public class RentalSessionRequestMapper extends AbstractMapper<RentalSession, Re
 
         return rentalSession;
     }
+
+    public RentalSession toEntity(RentalSessionRequestDTO dto,
+                                  User user,
+                                  Scooter scooter,
+                                  Integer rate,
+                                  SeasonTicket seasonTicket,
+                                  PromoCod promoCod,
+                                  Long id) {
+
+        RentalSession rentalSession = toEntity(dto, user, scooter, rate, seasonTicket, promoCod);
+        rentalSession.setId(id);
+
+        return rentalSession;
+    }
 }

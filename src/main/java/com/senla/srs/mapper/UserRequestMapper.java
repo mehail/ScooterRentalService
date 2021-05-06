@@ -15,7 +15,6 @@ public class UserRequestMapper extends AbstractMapper<User, UserRequestDTO> {
         this.encryptionStrength = encryptionStrength;
     }
 
-    //ToDo сделать приватным
     @Override
     public User toEntity(UserRequestDTO dto) {
         dto.setPassword(cryptPassword(dto.getPassword()));
@@ -23,10 +22,8 @@ public class UserRequestMapper extends AbstractMapper<User, UserRequestDTO> {
     }
 
     public User toEntity(UserRequestDTO dto, Long id) {
-        User entity = super.toEntity(dto);
-
+        User entity = toEntity(dto);
         entity.setId(id);
-        entity.setPassword(cryptPassword(dto.getPassword()));
 
         return entity;
     }

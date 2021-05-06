@@ -13,8 +13,14 @@ public class ScooterTypeRequestMapper extends AbstractMapper<ScooterType, Scoote
 
     public ScooterType toEntity(ScooterTypeRequestDTO dto, MakerDTO makerDTO) {
         ScooterType scooterType = super.toEntity(dto);
-
         scooterType.setMaker(makerDTO);
+
+        return scooterType;
+    }
+
+    public ScooterType toEntity(ScooterTypeRequestDTO dto, MakerDTO makerDTO, Long id) {
+        ScooterType scooterType = toEntity(dto, makerDTO);
+        scooterType.setId(id);
 
         return scooterType;
     }
