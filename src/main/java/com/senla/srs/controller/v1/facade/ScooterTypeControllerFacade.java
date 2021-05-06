@@ -76,6 +76,13 @@ public class ScooterTypeControllerFacade extends AbstractFacade implements
         return new ResponseEntity<>("Scooter type with this id was deleted", HttpStatus.ACCEPTED);
     }
 
+    @Override
+    public Long getExistEntityId(ScooterTypeRequestDTO dto) {
+        return scooterTypeService.retrieveScooterTypeByModel(dto.getModel())
+                .map(ScooterType::getId)
+                .orElse(null);
+    }
+
     private ResponseEntity<?> save(ScooterTypeRequestDTO scooterTypeRequestDTO,
                                    Optional<MakerDTO> optionalMakerDTO,
                                    BindingResult bindingResult) {

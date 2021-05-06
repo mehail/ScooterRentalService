@@ -15,10 +15,20 @@ public class UserRequestMapper extends AbstractMapper<User, UserRequestDTO> {
         this.encryptionStrength = encryptionStrength;
     }
 
+    //ToDo сделать приватным
     @Override
     public User toEntity(UserRequestDTO dto) {
         dto.setPassword(cryptPassword(dto.getPassword()));
         return super.toEntity(dto);
+    }
+
+    public User toEntity(UserRequestDTO dto, Long id) {
+        User entity = super.toEntity(dto);
+
+        entity.setId(id);
+        entity.setPassword(cryptPassword(dto.getPassword()));
+
+        return entity;
     }
 
     public String cryptPassword(String rowPassword) {

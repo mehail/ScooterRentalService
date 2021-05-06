@@ -56,6 +56,11 @@ public class PromoCodControllerFacade extends AbstractFacade implements
         return new ResponseEntity<>("PromoCod with this serial number was deleted", HttpStatus.ACCEPTED);
     }
 
+    @Override
+    public String getExistEntityId(PromoCodDTO dto) {
+        return dto.getName();
+    }
+
     private ResponseEntity<?> save(PromoCodDTO promoCodDTO, BindingResult bindingResult) {
 
         if (!bindingResult.hasErrors()) {

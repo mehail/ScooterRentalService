@@ -78,6 +78,13 @@ public class PointOfRentalControllerFacade extends AbstractFacade implements
         return new ResponseEntity<>("Point of rental with this id was deleted", HttpStatus.ACCEPTED);
     }
 
+    @Override
+    public Long getExistEntityId(PointOfRentalRequestDTO dto) {
+        return pointOfRentalService.retrievePointOfRentalByName(dto.getName())
+                .map(PointOfRental::getId)
+                .orElse(null);
+    }
+
     private ResponseEntity<?> save(PointOfRentalRequestDTO pointOfRentalRequestDTO,
                                    Optional<AddressDTO> optionalAddressDTO,
                                    BindingResult bindingResult) {

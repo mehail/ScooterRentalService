@@ -15,4 +15,6 @@ public interface EntityControllerFacade<D, Q extends D, S extends D, T> {
             throws NotFoundEntityException;
 
     ResponseEntity<?> delete(T id) throws NotFoundEntityException;
+
+    T getExistEntityId(Q dto);
 }

@@ -117,6 +117,17 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
         }
     }
 
+    @Override
+    public Long getExistEntityId(SeasonTicketRequestDTO dto) {
+        Optional<SeasonTicket> optionalExistSeasonTicket =
+                seasonTicketService.retrieveSeasonTicketByUserIdAndScooterTypeIdAndStartDate(dto.getUserId(),
+                        dto.getScooterTypeId(), dto.getStartDate());
+
+        return optionalExistSeasonTicket
+                .map(SeasonTicket::getId)
+                .orElse(null);
+    }
+
     private boolean isThisUserSeasonTicket(Optional<SeasonTicket> optionalSeasonTicket, String token) {
         return optionalSeasonTicket.isPresent() &&
                 isThisUserById(token, optionalSeasonTicket.get().getUserId());

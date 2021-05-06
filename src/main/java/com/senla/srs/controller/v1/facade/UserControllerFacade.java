@@ -87,9 +87,16 @@ public class UserControllerFacade extends AbstractFacade implements
         return new ResponseEntity<>("User with this id was deleted", HttpStatus.ACCEPTED);
     }
 
+    @Override
+    public Long getExistEntityId(UserRequestDTO dto) {
+        return userService.retrieveUserByEmail(dto.getEmail())
+                .map(User::getId)
+                .orElse(null);
+    }
+
     private ResponseEntity<?> save(UserRequestDTO userRequestDTO, BindingResult bindingResult) {
         if (!bindingResult.hasErrors()) {
-            User user = userService.save(userRequestMapper.toEntity(userRequestDTO));
+            User user = userService.save(userRequestMapper.toEntity(userRequestDTO, getExistEntityId(userRequestDTO)));
             return ResponseEntity.ok(userFullResponseMapper.toDto(user));
         } else {
             return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);

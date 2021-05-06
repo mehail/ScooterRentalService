@@ -85,6 +85,11 @@ public class ScooterControllerFacade extends AbstractFacade implements
         return new ResponseEntity<>("Scooter with this serial number was deleted", HttpStatus.ACCEPTED);
     }
 
+    @Override
+    public String getExistEntityId(ScooterRequestDTO dto) {
+        return dto.getSerialNumber();
+    }
+
     private ResponseEntity<?> save(ScooterRequestDTO scooterRequestDTO,
                                    Optional<ScooterType> optionalScooterType,
                                    BindingResult bindingResult) {

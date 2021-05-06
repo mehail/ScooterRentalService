@@ -134,6 +134,17 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
         }
     }
 
+    @Override
+    public Long getExistEntityId(RentalSessionRequestDTO dto) {
+        Optional<RentalSession> optionalExistRentalSession =
+                rentalSessionService.retrieveRentalSessionByUserIdAndScooterSerialNumberAndBeginDateAndBeginTime(dto.getUserId(),
+                        dto.getScooterSerialNumber(), dto.getBegin().toLocalDate(), dto.getBegin().toLocalTime());
+
+        return optionalExistRentalSession
+                .map(RentalSession::getId)
+                .orElse(null);
+    }
+
     private ResponseEntity<?> save(RentalSessionRequestDTO rentalSessionRequestDTO,
                            Optional<User> optionalUser,
                            Optional<Scooter> optionalScooter,
