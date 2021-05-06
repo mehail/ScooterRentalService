@@ -24,7 +24,7 @@ public class RentalSessionRequestValidatorImpl implements RentalSessionRequestVa
                                             Optional<PromoCod> optionalPromoCod,
                                             Errors errors) {
 
-        return optionalRentalSession.isPresent()
+        return optionalRentalSession.isEmpty()
                 ? validateNewEntity(rentalSessionRequestDTO,
                 optionalUser,
                 optionalScooter,
@@ -174,22 +174,44 @@ public class RentalSessionRequestValidatorImpl implements RentalSessionRequestVa
                 rentalSessionRequestDTO.getBegin().toLocalTime().equals(existRentalSession.getBeginTime());
         boolean isMatchScooterSerialNumber =
                 rentalSessionRequestDTO.getScooterSerialNumber().equals(existRentalSession.getScooter().getSerialNumber());
-        boolean isMatchSeasonTicketId =
-                rentalSessionRequestDTO.getSeasonTicketId().equals(existRentalSession.getSeasonTicket().getId());
-        boolean isMatchPromoCodName =
-                rentalSessionRequestDTO.getPromoCodName().equals(existRentalSession.getPromoCod().getName());
 
         boolean resultMatch = isMatchUserId
                 && isMatchBeginDate
                 && isMatchBeginTime
                 && isMatchScooterSerialNumber
-                && isMatchSeasonTicketId
-                && isMatchPromoCodName;
+                && isMatchSeasonTicketId(rentalSessionRequestDTO, existRentalSession)
+                && isMatchPromoCodName(rentalSessionRequestDTO, existRentalSession);
 
         if (!resultMatch) {
             errors.reject("this", "In an open rental session, only the end can be changed");
         }
 
+    }
+
+    private boolean isMatchPromoCodName(RentalSessionRequestDTO rentalSessionRequestDTO, RentalSession existRentalSession) {
+        String dtoPromoCodName = rentalSessionRequestDTO.getPromoCodName();
+        PromoCod existPromoCod = existRentalSession.getPromoCod();
+
+        if (dtoPromoCodName == null && existPromoCod == null) {
+            return true;
+        } else if (dtoPromoCodName != null && existPromoCod != null) {
+            return dtoPromoCodName.equals(existPromoCod.getName());
+        }
+
+        return false;
+    }
+
+    private boolean isMatchSeasonTicketId(RentalSessionRequestDTO rentalSessionRequestDTO, RentalSession existRentalSession) {
+        Long dtoSeasonTicketId = rentalSessionRequestDTO.getSeasonTicketId();
+        SeasonTicket existSeasonTicket = existRentalSession.getSeasonTicket();
+
+        if (dtoSeasonTicketId == null && existSeasonTicket == null) {
+            return true;
+        } else if (dtoSeasonTicketId != null && existSeasonTicket != null) {
+            return dtoSeasonTicketId.equals(existSeasonTicket.getId());
+        }
+
+        return false;
     }
 
 }
