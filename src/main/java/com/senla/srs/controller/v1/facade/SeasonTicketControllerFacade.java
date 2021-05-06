@@ -14,7 +14,6 @@ import com.senla.srs.service.ScooterTypeService;
 import com.senla.srs.service.SeasonTicketService;
 import com.senla.srs.service.UserService;
 import com.senla.srs.validator.SeasonTicketRequestValidator;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -25,7 +24,6 @@ import org.springframework.validation.BindingResult;
 
 import java.util.Optional;
 
-@Slf4j
 @Controller
 public class SeasonTicketControllerFacade extends AbstractFacade implements
         EntityControllerFacade<SeasonTicketDTO, SeasonTicketRequestDTO, SeasonTicketFullResponseDTO, Long> {

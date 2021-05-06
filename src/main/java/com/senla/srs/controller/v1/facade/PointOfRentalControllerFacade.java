@@ -12,7 +12,6 @@ import com.senla.srs.security.JwtTokenData;
 import com.senla.srs.service.AddressDtoService;
 import com.senla.srs.service.PointOfRentalService;
 import com.senla.srs.validator.PointOfRentalRequestValidator;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +20,6 @@ import org.springframework.validation.BindingResult;
 
 import java.util.Optional;
 
-@Slf4j
 @Controller
 public class PointOfRentalControllerFacade extends AbstractFacade implements
         EntityControllerFacade<PointOfRentalDTO, PointOfRentalRequestDTO, PointOfRentalResponseDTO, Long> {

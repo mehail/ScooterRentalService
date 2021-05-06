@@ -10,7 +10,6 @@ import com.senla.srs.mapper.UserRequestMapper;
 import com.senla.srs.security.JwtTokenData;
 import com.senla.srs.service.UserService;
 import com.senla.srs.validator.UserRequestValidator;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +18,6 @@ import org.springframework.validation.BindingResult;
 
 import java.util.Optional;
 
-@Slf4j
 @Controller
 public class UserControllerFacade extends AbstractFacade implements
         EntityControllerFacade<UserDTO, UserRequestDTO, UserFullResponseDTO, Long> {
@@ -52,8 +50,7 @@ public class UserControllerFacade extends AbstractFacade implements
     }
 
     @Override
-    public ResponseEntity<?> getById(Long id, String token)
-            throws NotFoundEntityException {
+    public ResponseEntity<?> getById(Long id, String token) throws NotFoundEntityException {
 
         if (isThisUserById(token, id) || isAdmin(token)) {
             return new ResponseEntity<>(userService.retrieveUserById(id)

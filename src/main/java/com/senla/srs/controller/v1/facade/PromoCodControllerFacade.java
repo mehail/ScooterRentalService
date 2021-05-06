@@ -7,14 +7,12 @@ import com.senla.srs.mapper.PromoCodMapper;
 import com.senla.srs.security.JwtTokenData;
 import com.senla.srs.service.PromoCodService;
 import com.senla.srs.validator.PromoCodValidator;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 
-@Slf4j
 @Controller
 public class PromoCodControllerFacade extends AbstractFacade implements
         EntityControllerFacade<PromoCodDTO, PromoCodDTO, PromoCodDTO, String> {

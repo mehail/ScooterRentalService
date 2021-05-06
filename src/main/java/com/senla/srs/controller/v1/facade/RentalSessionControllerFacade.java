@@ -10,7 +10,6 @@ import com.senla.srs.mapper.RentalSessionResponseMapper;
 import com.senla.srs.security.JwtTokenData;
 import com.senla.srs.service.*;
 import com.senla.srs.validator.RentalSessionRequestValidator;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +21,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-@Slf4j
 @Controller
 public class RentalSessionControllerFacade extends AbstractFacade implements
         EntityControllerFacade<RentalSessionDTO, RentalSessionRequestDTO, RentalSessionResponseDTO, Long> {

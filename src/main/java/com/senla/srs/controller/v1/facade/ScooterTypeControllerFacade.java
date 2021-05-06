@@ -12,7 +12,6 @@ import com.senla.srs.security.JwtTokenData;
 import com.senla.srs.service.MakerDtoService;
 import com.senla.srs.service.ScooterTypeService;
 import com.senla.srs.validator.ScooterTypeRequestValidator;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +20,6 @@ import org.springframework.validation.BindingResult;
 
 import java.util.Optional;
 
-@Slf4j
 @Controller
 public class ScooterTypeControllerFacade extends AbstractFacade implements
         EntityControllerFacade<ScooterTypeDTO, ScooterTypeRequestDTO, ScooterTypeResponseDTO, Long> {
