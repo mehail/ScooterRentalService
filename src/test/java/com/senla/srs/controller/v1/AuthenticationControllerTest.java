@@ -13,12 +13,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 class AuthenticationControllerTest {
-    @Autowired
-    private AuthenticationController authenticationController;
     @Value("${auth.login.admin}")
     private String adminLogin;
     @Value("${auth.password.admin}")
     private String adminPassword;
+    @Autowired
+    private AuthenticationController authenticationController;
 
     @Test
     void createAuthenticationController() {
