@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 
+import java.util.Optional;
+
 @Controller
 public class PromoCodControllerFacade extends AbstractFacade implements
         EntityControllerFacade<PromoCodDTO, PromoCodDTO, PromoCodDTO, String> {
@@ -45,7 +47,9 @@ public class PromoCodControllerFacade extends AbstractFacade implements
 
     @Override
     public ResponseEntity<?> createOrUpdate(PromoCodDTO promoCodDTO, BindingResult bindingResult, String token) {
-        PromoCodDTO validatePromoCodDTO = promoCodValidator.validate(promoCodDTO, bindingResult);
+        Optional<PromoCod> optionalPromoCod = promoCodService.retrievePromoCodByName(promoCodDTO.getName());
+
+        PromoCodDTO validatePromoCodDTO = promoCodValidator.validate(promoCodDTO, optionalPromoCod, bindingResult);
 
         return save(validatePromoCodDTO, bindingResult);
     }
@@ -65,6 +69,9 @@ public class PromoCodControllerFacade extends AbstractFacade implements
 
         if (!bindingResult.hasErrors()) {
             PromoCod promoCod = promoCodService.save(promoCodMapper.toEntity(promoCodDTO));
+
+            System.out.println("\n\n\n\n\n\n\n" + promoCod + "\n\n\n\n\n\n\n\n");
+
             return ResponseEntity.ok(promoCodMapper.toDto(promoCod));
         } else {
             return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);

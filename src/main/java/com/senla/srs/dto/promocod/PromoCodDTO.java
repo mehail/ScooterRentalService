@@ -1,7 +1,10 @@
 package com.senla.srs.dto.promocod;
 
 import com.senla.srs.dto.AbstractDTO;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 
@@ -23,7 +26,7 @@ public class PromoCodDTO extends AbstractDTO {
     @Range(min = 0, max = 100, message = "Discount percentage must be between 0 and 100")
     private Integer discountPercentage;
     @NotNull
-    @Min(value = 0, message = "Bonus point percentage must be positive")
+    @Min(value = 0, message = "Bonus point must be positive")
     private Integer bonusPoint;
     @NonNull
     private Boolean available;
