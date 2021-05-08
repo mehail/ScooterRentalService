@@ -1,7 +1,7 @@
 package com.senla.srs.controller.v1;
 
 import com.senla.srs.controller.v1.facade.EntityControllerFacade;
-import com.senla.srs.controller.v1.util.TokenProvider;
+import com.senla.srs.controller.v1.util.AuthProvider;
 import com.senla.srs.dto.promocod.PromoCodDTO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,7 @@ class PromoCodControllerFacadeTest {
     @Value("${spring.data.web.pageable.default-page-size}")
     private Integer pageSize;
     @Autowired
-    private TokenProvider tokenProvider;
+    private AuthProvider authProvider;
     @Autowired
     private EntityControllerFacade<PromoCodDTO, PromoCodDTO, PromoCodDTO, String> controller;
 
@@ -28,6 +28,6 @@ class PromoCodControllerFacadeTest {
 
     @Test
     void getAll() {
-        Assertions.assertSame(controller.getAll(0, pageSize, "name", tokenProvider.getAdminToken()).getClass(), PageImpl.class);
+        Assertions.assertSame(controller.getAll(0, pageSize, "name", authProvider.getAdminToken()).getClass(), PageImpl.class);
     }
 }

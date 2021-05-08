@@ -1,6 +1,6 @@
 package com.senla.srs.controller.v1;
 
-import com.senla.srs.controller.v1.util.TokenProvider;
+import com.senla.srs.controller.v1.util.AuthProvider;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,7 +20,7 @@ class PromoCodControllerTest {
     @Autowired
     private PromoCodController promoCodController;
     @Autowired
-    private TokenProvider tokenProvider;
+    private AuthProvider authProvider;
     @Autowired
     private MockMvc mockMvc;
     @Value("${spring.data.web.pageable.default-page-size}")
@@ -35,7 +35,7 @@ class PromoCodControllerTest {
     void getAllAuth() throws Exception {
         mockMvc.perform(
                 get(String.format("%s?page=0&size=%d", URL, pageSize))
-                        .headers(tokenProvider.getResponseHeader(tokenProvider.getAdminToken())))
+                        .headers(authProvider.getResponseHeader(authProvider.getAdminToken())))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
@@ -46,4 +46,5 @@ class PromoCodControllerTest {
                 .andDo(print())
                 .andExpect(status().isForbidden());
     }
+
 }
