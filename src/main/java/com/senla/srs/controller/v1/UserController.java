@@ -29,7 +29,6 @@ import javax.validation.Valid;
 public class UserController {
     private final EntityControllerFacade<UserDTO, UserRequestDTO, UserFullResponseDTO, Long> entityControllerFacade;
 
-
     @Operation(summary = "Get a list of Users",
             description = "If the User is not an Administrator, then a list with an authorized User is returned")
     @ApiResponse(responseCode = "200")
