@@ -33,7 +33,6 @@ public class RentalSessionController {
     @Operation(summary = "Get a list of Rental sessions",
             description = "If the User is not an Administrator, then a list with an authorized User is returned")
     @ApiResponse(responseCode = "200")
-    @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
     @PageableAsQueryParam()
 
@@ -53,7 +52,6 @@ public class RentalSessionController {
     @Parameter(in = ParameterIn.PATH, name = "id", description = "Rental session id")
     @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json",
             schema = @Schema(implementation = RentalSessionResponseDTO.class)))
-    @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "404", content = @Content(mediaType = "application/json"))
 
@@ -70,10 +68,9 @@ public class RentalSessionController {
 
     @Operation(operationId = "createOrUpdate", summary = "Create or update Rental session",
             description = "If the Rental session exists - then the fields are updated, if not - created new Rental session")
-    @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json",
+    @ApiResponse(responseCode = "201", content = @Content(mediaType = "application/json",
             schema = @Schema(implementation = RentalSessionRequestDTO.class)))
     @ApiResponse(responseCode = "400", content = @Content(mediaType = "application/json"))
-    @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
 
     @PostMapping
@@ -91,9 +88,8 @@ public class RentalSessionController {
     @Operation(operationId = "delete", summary = "Delete Rental session")
     @Parameter(in = ParameterIn.PATH, name = "id", description = "Rental session id")
     @ApiResponse(responseCode = "202")
-    @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "400", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
-    @ApiResponse(responseCode = "404", content = @Content(mediaType = "application/json"))
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('rentalSessions:write')")

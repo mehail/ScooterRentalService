@@ -70,9 +70,7 @@ public class PromoCodControllerFacade extends AbstractFacade implements
         if (!bindingResult.hasErrors()) {
             PromoCod promoCod = promoCodService.save(promoCodMapper.toEntity(promoCodDTO));
 
-            System.out.println("\n\n\n\n\n\n\n" + promoCod + "\n\n\n\n\n\n\n\n");
-
-            return ResponseEntity.ok(promoCodMapper.toDto(promoCod));
+            return new ResponseEntity<>(promoCodMapper.toDto(promoCod), HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
         }

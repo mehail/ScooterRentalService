@@ -166,7 +166,8 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
 
             changeEntityState(rentalSession, rate);
 
-            return ResponseEntity.ok(rentalSessionResponseMapper.toDto(rentalSessionService.save(rentalSession)));
+            return new ResponseEntity<>(rentalSessionResponseMapper.toDto(rentalSessionService.save(rentalSession)),
+                    HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
         }

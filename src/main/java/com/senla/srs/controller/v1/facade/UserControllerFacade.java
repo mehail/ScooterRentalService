@@ -97,7 +97,7 @@ public class UserControllerFacade extends AbstractFacade implements
     private ResponseEntity<?> save(UserRequestDTO userRequestDTO, BindingResult bindingResult) {
         if (!bindingResult.hasErrors()) {
             User user = userService.save(userRequestMapper.toEntity(userRequestDTO, getExistEntityId(userRequestDTO)));
-            return ResponseEntity.ok(userFullResponseMapper.toDto(user));
+            return new ResponseEntity<>(userFullResponseMapper.toDto(user), HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
         }

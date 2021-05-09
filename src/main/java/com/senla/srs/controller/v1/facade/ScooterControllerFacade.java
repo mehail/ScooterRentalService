@@ -98,7 +98,7 @@ public class ScooterControllerFacade extends AbstractFacade implements
             Scooter scooter =
                     scooterService.save(scooterRequestMapper.toEntity(scooterRequestDTO, optionalScooterType.get()));
 
-            return ResponseEntity.ok(scooterResponseMapper.toDto(scooter));
+            return new ResponseEntity<>(scooterResponseMapper.toDto(scooter), HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
         }

@@ -29,7 +29,6 @@ public class PromoCodController {
 
     @Operation(summary = "Get a list of PromoCods")
     @ApiResponse(responseCode = "200")
-    @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
     @PageableAsQueryParam()
 
@@ -46,7 +45,6 @@ public class PromoCodController {
     @Parameter(in = ParameterIn.PATH, name = "name", description = "PromoCod name")
     @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json",
             schema = @Schema(implementation = PromoCodDTO.class)))
-    @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "404", content = @Content(mediaType = "application/json"))
 
@@ -59,10 +57,9 @@ public class PromoCodController {
 
     @Operation(operationId = "createOrUpdate", summary = "Create or update PromoCod",
             description = "If the PromoCod exists - then the fields are updated, if not - created new PromoCod")
-    @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json",
+    @ApiResponse(responseCode = "201", content = @Content(mediaType = "application/json",
             schema = @Schema(implementation = PromoCodDTO.class)))
     @ApiResponse(responseCode = "400", content = @Content(mediaType = "application/json"))
-    @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
 
     @PostMapping
@@ -78,9 +75,8 @@ public class PromoCodController {
     @Operation(operationId = "delete", summary = "Delete PromoCod")
     @Parameter(in = ParameterIn.PATH, name = "name", description = "PromoCod name")
     @ApiResponse(responseCode = "202", content = @Content(mediaType = "application/json"))
-    @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "400", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
-    @ApiResponse(responseCode = "404", content = @Content(mediaType = "application/json"))
 
     @DeleteMapping("/{name}")
     @PreAuthorize("hasAuthority('promoCods:write')")

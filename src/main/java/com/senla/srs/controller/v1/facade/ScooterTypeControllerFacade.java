@@ -91,7 +91,7 @@ public class ScooterTypeControllerFacade extends AbstractFacade implements
             ScooterType scooterType = scooterTypeService.save(scooterTypeRequestMapper
                     .toEntity(scooterTypeRequestDTO, optionalMakerDTO.get(), getExistEntityId(scooterTypeRequestDTO)));
 
-            return ResponseEntity.ok(scooterTypeResponseMapper.toDto(scooterType));
+            return new ResponseEntity<>(scooterTypeResponseMapper.toDto(scooterType), HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
         }

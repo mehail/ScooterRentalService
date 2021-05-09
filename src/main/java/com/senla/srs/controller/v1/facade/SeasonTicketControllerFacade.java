@@ -151,7 +151,7 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
                             remainingTime,
                             duration));
 
-            return ResponseEntity.ok(seasonTicketFullResponseMapper.toDto(seasonTicket));
+            return new ResponseEntity<>(seasonTicketFullResponseMapper.toDto(seasonTicket), HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
         }

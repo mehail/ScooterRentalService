@@ -95,7 +95,7 @@ public class PointOfRentalControllerFacade extends AbstractFacade implements
                                     optionalAddressDTO.get(),
                                     getExistEntityId(pointOfRentalRequestDTO)));
 
-            return ResponseEntity.ok(pointOfRentalResponseMapper.toDto(pointOfRental));
+            return new ResponseEntity<>(pointOfRentalResponseMapper.toDto(pointOfRental), HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
         }

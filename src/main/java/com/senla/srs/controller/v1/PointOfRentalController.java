@@ -32,7 +32,6 @@ public class PointOfRentalController {
 
     @Operation(summary = "Get a list of Point of rentals")
     @ApiResponse(responseCode = "200")
-    @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
     @PageableAsQueryParam()
 
@@ -49,8 +48,6 @@ public class PointOfRentalController {
     @Parameter(in = ParameterIn.PATH, name = "id", description = "Point of rental id")
     @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = PointOfRentalResponseDTO.class)))
-    @ApiResponse(responseCode = "400", content = @Content(mediaType = "application/json"))
-    @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "404", content = @Content(mediaType = "application/json"))
 
@@ -63,10 +60,9 @@ public class PointOfRentalController {
 
     @Operation(operationId = "createOrUpdate", summary = "Create or update Point of rental",
             description = "If the Point of rental exists - then the fields are updated, if not - created new Point of rental")
-    @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json",
+    @ApiResponse(responseCode = "201", content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = PointOfRentalResponseDTO.class)))
     @ApiResponse(responseCode = "400", content = @Content(mediaType = "application/json"))
-    @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
 
     @PostMapping
@@ -82,9 +78,8 @@ public class PointOfRentalController {
     @Operation(operationId = "delete", summary = "Delete Point of rental")
     @Parameter(in = ParameterIn.PATH, name = "id", description = "Point of rental id")
     @ApiResponse(responseCode = "202", content = @Content(mediaType = "application/json"))
-    @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "400", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
-    @ApiResponse(responseCode = "404", content = @Content(mediaType = "application/json"))
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('pointOfRentals:write')")

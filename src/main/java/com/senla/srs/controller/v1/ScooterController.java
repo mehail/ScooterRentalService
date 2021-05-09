@@ -31,7 +31,6 @@ public class ScooterController {
 
     @Operation(summary = "Get a list of Scooters")
     @ApiResponse(responseCode = "200")
-    @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
     @PageableAsQueryParam()
 
@@ -46,7 +45,6 @@ public class ScooterController {
     @Parameter(in = ParameterIn.PATH, name = "serialNumber", description = "Scooter serial number")
     @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json",
             schema = @Schema(implementation = ScooterResponseDTO.class)))
-    @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "404", content = @Content(mediaType = "application/json"))
 
@@ -59,10 +57,9 @@ public class ScooterController {
 
     @Operation(operationId = "createOrUpdate", summary = "Create or update Scooter",
             description = "If the Scooter exists - then the fields are updated, if not - created new Scooter")
-    @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json",
+    @ApiResponse(responseCode = "201", content = @Content(mediaType = "application/json",
             schema = @Schema(implementation = ScooterResponseDTO.class)))
     @ApiResponse(responseCode = "400", content = @Content(mediaType = "application/json"))
-    @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
 
     @PostMapping
@@ -78,9 +75,8 @@ public class ScooterController {
     @Operation(operationId = "delete", summary = "Delete Scooter")
     @Parameter(in = ParameterIn.PATH, name = "serialNumber", description = "Scooter serial number")
     @ApiResponse(responseCode = "202", content = @Content(mediaType = "application/json"))
-    @ApiResponse(responseCode = "401", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "400", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
-    @ApiResponse(responseCode = "404", content = @Content(mediaType = "application/json"))
 
     @DeleteMapping("/{serialNumber}")
     @PreAuthorize("hasAuthority('scooters:write')")
