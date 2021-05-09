@@ -9,8 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 @SpringBootTest
 class AuthenticationControllerTest {
     @Value("${auth.login.admin}")
@@ -19,11 +17,6 @@ class AuthenticationControllerTest {
     private String adminPassword;
     @Autowired
     private AuthenticationController authenticationController;
-
-    @Test
-    void createAuthenticationController() {
-        assertThat(authenticationController).isNotNull();
-    }
 
     @Test
     void authenticateOk() {
