@@ -18,9 +18,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -50,24 +50,28 @@ class PromoCodControllerTest {
         PromoCod getPromoCod = getPromoCodWitName(TEST_GET_NAME);
         PromoCod deletePromoCod = getPromoCodWitName(TEST_DELETE_NAME);
 
-        promoCodRepository.findByName(getPromoCod.getName())
-                .ifPresent(promoCod -> promoCodRepository.save(promoCod));
-        promoCodRepository.findByName(deletePromoCod.getName())
-                .ifPresent(promoCod -> promoCodRepository.save(promoCod));
+        if (promoCodRepository.findByName(getPromoCod.getName()).isEmpty()) {
+            promoCodRepository.save(getPromoCod);
+        }
+
+        if (promoCodRepository.findByName(deletePromoCod.getName()).isEmpty()) {
+            promoCodRepository.save(deletePromoCod);
+        }
     }
+
 
     private PromoCod getPromoCodWitName(String name) {
         return new PromoCod(name, LocalDate.of(2021, 1, 1), LocalDate.of(2021, 1, 2), 1, 0, true);
     }
-
 
     @Test
     void contextLoads() {
         assertThat(promoCodController).isNotNull();
     }
 
+
     @Test
-    void getAll200() throws Exception {
+    void getAllAdminAuth200() throws Exception {
         mockMvc.perform(
                 get(String.format("%s?page=0&size=%d", URI, pageSize))
                         .headers(authProvider.getResponseHeader(authProvider.getAdminToken())))
@@ -76,14 +80,53 @@ class PromoCodControllerTest {
     }
 
     @Test
-    void getAll403() throws Exception {
-        mockMvc.perform(get(URI))
+    void getAllNoAuth403() throws Exception {
+        mockMvc.perform(
+                get(String.format("%s?page=0&size=%d", URI, pageSize)))
                 .andDo(print())
                 .andExpect(status().isForbidden());
     }
 
     @Test
-    void createOrUpdate200() throws Exception {
+    void getAllUserAuth403() throws Exception {
+        mockMvc.perform(
+                get(String.format("%s?page=0&size=%d", URI, pageSize))
+                        .headers(authProvider.getResponseHeader(authProvider.getUserToken())))
+                .andDo(print())
+                .andExpect(status().isForbidden());
+    }
+
+
+    @Test
+    void getByNameAuth200() throws Exception {
+        mockMvc.perform(
+                get(String.format("%s/%s", URI, TEST_GET_NAME))
+                        .headers(authProvider.getResponseHeader(authProvider.getAdminToken())))
+                .andDo(print())
+                .andExpect(jsonPath("$.name").value(TEST_GET_NAME))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void getByNameNonAuth403() throws Exception {
+        mockMvc.perform(
+                get(String.format("%s/%s", URI, TEST_GET_NAME)))
+                .andDo(print())
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void getByNameNonExistName404() throws Exception {
+        mockMvc.perform(
+                get(String.format("%s/%s", URI, "nonExistName"))
+                        .headers(authProvider.getResponseHeader(authProvider.getAdminToken())))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+
+    @Test
+    void createOrUpdateAdminAuth200() throws Exception {
         PromoCod promoCod = getPromoCodWitName(TEST_POST_NAME);
 
         mockMvc.perform(
@@ -93,11 +136,26 @@ class PromoCodControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
         )
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
     }
 
     @Test
-    void createOrUpdate403() throws Exception {
+    void createOrUpdateNoValid400() throws Exception {
+        PromoCod promoCod = getPromoCodWitName(TEST_POST_NAME);
+        promoCod.setAvailable(false);
+
+        mockMvc.perform(
+                post(URI)
+                        .headers(authProvider.getResponseHeader(authProvider.getAdminToken()))
+                        .content(objectMapper.writeValueAsString(promoCodMapper.toDto(promoCod)))
+                        .contentType(MediaType.APPLICATION_JSON)
+        )
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void createOrUpdateNonAuth403() throws Exception {
         PromoCod promoCod = getPromoCodWitName(TEST_POST_NAME);
 
         mockMvc.perform(
@@ -109,6 +167,54 @@ class PromoCodControllerTest {
                 .andExpect(status().isForbidden());
     }
 
+    @Test
+    void createOrUpdateUserAuth403() throws Exception {
+        PromoCod promoCod = getPromoCodWitName(TEST_POST_NAME);
+
+        mockMvc.perform(
+                post(URI)
+                        .headers(authProvider.getResponseHeader(authProvider.getUserToken()))
+                        .content(objectMapper.writeValueAsString(promoCodMapper.toDto(promoCod)))
+                        .contentType(MediaType.APPLICATION_JSON)
+        )
+                .andDo(print())
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void deleteAdminAuth202() throws Exception {
+        mockMvc.perform(
+                delete(String.format("%s/%s", URI, TEST_DELETE_NAME))
+                        .headers(authProvider.getResponseHeader(authProvider.getAdminToken())))
+                .andDo(print())
+                .andExpect(status().isAccepted());
+    }
+
+    @Test
+    void deleteNonExistName400() throws Exception {
+        mockMvc.perform(
+                delete(String.format("%s/%s", URI, "nonExistName"))
+                        .headers(authProvider.getResponseHeader(authProvider.getAdminToken())))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void deleteNoAuth403() throws Exception {
+        mockMvc.perform(
+                delete(String.format("%s/%s", URI, TEST_DELETE_NAME)))
+                .andDo(print())
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void deleteUserAuth403() throws Exception {
+        mockMvc.perform(
+                delete(String.format("%s/%s", URI, TEST_DELETE_NAME))
+                        .headers(authProvider.getResponseHeader(authProvider.getUserToken())))
+                .andDo(print())
+                .andExpect(status().isForbidden());
+    }
 
     @AfterEach
     public void tearDown() {
