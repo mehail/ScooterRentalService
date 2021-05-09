@@ -20,10 +20,10 @@ class AuthenticationControllerTest {
     @Autowired
     private AuthenticationController authenticationController;
 
-    @Test
-    void createAuthenticationController() {
-        assertThat(authenticationController).isNotNull();
-    }
+//    @Test
+//    void createAuthenticationController() {
+//        assertThat(authenticationController).isNotNull();
+//    }
 
     @Test
     void authenticateOk() {
