@@ -5,7 +5,6 @@ import com.senla.srs.controller.v1.util.AuthProvider;
 import com.senla.srs.entity.PromoCod;
 import com.senla.srs.mapper.PromoCodMapper;
 import com.senla.srs.repository.PromoCodRepository;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +17,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.offset;
+import static org.assertj.core.api.InstanceOfAssertFactories.OPTIONAL;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -129,6 +130,11 @@ class PromoCodControllerTest {
     void createOrUpdateAdminAuth200() throws Exception {
         PromoCod promoCod = getPromoCodWitName(TEST_POST_NAME);
 
+
+        if (promoCodRepository.findByName(TEST_POST_NAME).isPresent()) {
+            promoCodRepository.delete(promoCodRepository.findByName(TEST_POST_NAME).get());
+        }
+
         mockMvc.perform(
                 post(URI)
                         .headers(authProvider.getResponseHeader(authProvider.getAdminToken()))
@@ -157,6 +163,10 @@ class PromoCodControllerTest {
     @Test
     void createOrUpdateNonAuth403() throws Exception {
         PromoCod promoCod = getPromoCodWitName(TEST_POST_NAME);
+
+        if (promoCodRepository.findByName(TEST_POST_NAME).isPresent()) {
+            promoCodRepository.delete(promoCodRepository.findByName(TEST_POST_NAME).get());
+        }
 
         mockMvc.perform(
                 post(URI)
@@ -216,13 +226,13 @@ class PromoCodControllerTest {
                 .andExpect(status().isForbidden());
     }
 
-    @AfterEach
-    public void tearDown() {
-        promoCodRepository.findByName(TEST_GET_NAME)
-                .ifPresent(promoCod -> promoCodRepository.delete(promoCod));
-        promoCodRepository.findByName(TEST_POST_NAME)
-                .ifPresent(promoCod -> promoCodRepository.delete(promoCod));
-        promoCodRepository.findByName(TEST_DELETE_NAME)
-                .ifPresent(promoCod -> promoCodRepository.delete(promoCod));
-    }
+//    @AfterEach
+//    public void tearDown() {
+//        promoCodRepository.findByName(TEST_GET_NAME)
+//                .ifPresent(promoCod -> promoCodRepository.delete(promoCod));
+//        promoCodRepository.findByName(TEST_POST_NAME)
+//                .ifPresent(promoCod -> promoCodRepository.delete(promoCod));
+//        promoCodRepository.findByName(TEST_DELETE_NAME)
+//                .ifPresent(promoCod -> promoCodRepository.delete(promoCod));
+//    }
 }
