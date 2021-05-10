@@ -1,9 +1,9 @@
 package com.senla.srs.security;
 
+import com.senla.srs.entity.User;
+import com.senla.srs.entity.UserStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import com.senla.srs.entity.UserStatus;
-import com.senla.srs.entity.User;
 import lombok.NonNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,6 +15,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class SecurityUser implements UserDetails {
+
     @NonNull
     private final String username;
     @NonNull
@@ -22,6 +23,17 @@ public class SecurityUser implements UserDetails {
     @NonNull
     private final List<SimpleGrantedAuthority> authorities;
     private final boolean isActive;
+
+    public static UserDetails fromUser(User user) {
+        return new org.springframework.security.core.userdetails.User(
+                user.getEmail(), user.getPassword(),
+                user.getStatus().equals(UserStatus.ACTIVE),
+                user.getStatus().equals(UserStatus.ACTIVE),
+                user.getStatus().equals(UserStatus.ACTIVE),
+                user.getStatus().equals(UserStatus.ACTIVE),
+                user.getRole().getAuthorities()
+        );
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -48,17 +60,6 @@ public class SecurityUser implements UserDetails {
         return isActive;
     }
 
-    public static UserDetails fromUser(User user) {
-        return new org.springframework.security.core.userdetails.User(
-                user.getEmail(), user.getPassword(),
-                user.getStatus().equals(UserStatus.ACTIVE),
-                user.getStatus().equals(UserStatus.ACTIVE),
-                user.getStatus().equals(UserStatus.ACTIVE),
-                user.getStatus().equals(UserStatus.ACTIVE),
-                user.getRole().getAuthorities()
-        );
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -69,6 +70,7 @@ public class SecurityUser implements UserDetails {
         if (isActive() != that.isActive()) return false;
         if (!getUsername().equals(that.getUsername())) return false;
         if (!getPassword().equals(that.getPassword())) return false;
+
         return getAuthorities().equals(that.getAuthorities());
     }
 
@@ -78,6 +80,8 @@ public class SecurityUser implements UserDetails {
         result = 31 * result + getPassword().hashCode();
         result = 31 * result + getAuthorities().hashCode();
         result = 31 * result + (isActive() ? 1 : 0);
+
         return result;
     }
+
 }

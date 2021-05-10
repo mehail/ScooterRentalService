@@ -10,6 +10,8 @@ import lombok.NonNull;
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"scooterType"}, callSuper = false)
 public class SeasonTicketFullResponseDTO extends SeasonTicketResponseDTO {
+
     @NonNull
     private ScooterTypeResponseDTO scooterType;
+
 }

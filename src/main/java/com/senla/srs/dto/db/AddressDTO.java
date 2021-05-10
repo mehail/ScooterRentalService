@@ -16,6 +16,7 @@ import javax.validation.constraints.Min;
 @Entity
 @Table(name = "addresses")
 public class AddressDTO extends AbstractDTO {
+
     @Id
     @NonNull
     @Min(value = 1, message = "ID must be at least 1")
@@ -27,4 +28,5 @@ public class AddressDTO extends AbstractDTO {
     @ManyToOne(optional = false)
     @JoinColumn(name = "city_id")
     private CityDTO city;
+
 }

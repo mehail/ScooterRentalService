@@ -6,7 +6,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ScooterResponseMapper extends AbstractMapperWithPagination<Scooter, ScooterResponseDTO> {
+
     public ScooterResponseMapper() {
         super(Scooter.class, ScooterResponseDTO.class);
     }
+
 }

@@ -13,6 +13,7 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 public class User extends AbstractEntity{
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -37,4 +38,5 @@ public class User extends AbstractEntity{
     @OneToMany
     @JoinColumn(name = "user_id")
     private List<SeasonTicket> seasonTickets;
+
 }

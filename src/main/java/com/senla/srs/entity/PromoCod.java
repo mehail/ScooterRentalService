@@ -12,6 +12,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "promo_cods")
 public class PromoCod extends AbstractEntity{
+
     @Id
     private String name;
     @NonNull
@@ -25,4 +26,5 @@ public class PromoCod extends AbstractEntity{
     private Integer bonusPoint;
     @NonNull
     private Boolean available;
+
 }

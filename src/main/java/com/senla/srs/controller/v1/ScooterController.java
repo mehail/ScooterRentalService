@@ -27,6 +27,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api/v1/scooters")
 public class ScooterController {
+
     private final EntityControllerFacade<ScooterDTO, ScooterRequestDTO, ScooterResponseDTO, String> entityControllerFacade;
 
     @Operation(summary = "Get a list of Scooters")
@@ -83,4 +84,5 @@ public class ScooterController {
     public ResponseEntity<?> delete(@PathVariable String serialNumber) throws NotFoundEntityException {
         return entityControllerFacade.delete(serialNumber);
     }
+
 }

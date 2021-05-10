@@ -27,6 +27,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api/v1/scooter_types")
 public class ScooterTypeController {
+
     private final EntityControllerFacade<ScooterTypeDTO, ScooterTypeRequestDTO,
             ScooterTypeResponseDTO, Long> entityControllerFacade;
 
@@ -48,7 +49,7 @@ public class ScooterTypeController {
     @Parameter(in = ParameterIn.PATH, name = "id", description = "Scooter type id")
     @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json",
             schema = @Schema(implementation = ScooterTypeResponseDTO.class)))
-    
+
     @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "404", content = @Content(mediaType = "application/json"))
 
@@ -87,5 +88,6 @@ public class ScooterTypeController {
     public ResponseEntity<?> delete(@PathVariable Long id) throws NotFoundEntityException {
         return entityControllerFacade.delete(id);
     }
+
 }
 

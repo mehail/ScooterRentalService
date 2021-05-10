@@ -13,10 +13,12 @@ import java.util.Optional;
 @Transactional
 @AllArgsConstructor
 public class AddressDtoServiceImpl implements AddressDtoService {
+
     private final AddressDtoRepository addressDtoRepository;
 
     @Override
     public Optional<AddressDTO> retrieveAddressDtoById(Long id) {
         return addressDtoRepository.findById(id);
     }
+
 }

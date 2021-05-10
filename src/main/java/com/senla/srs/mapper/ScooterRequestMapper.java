@@ -18,4 +18,5 @@ public class ScooterRequestMapper extends AbstractMapper<Scooter, ScooterRequest
 
         return scooter;
     }
+
 }

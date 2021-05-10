@@ -17,6 +17,7 @@ import java.util.Optional;
 @Transactional
 @AllArgsConstructor
 public class ScooterServiceImpl implements ScooterService {
+
     private final ScooterRepository scooterRepository;
 
     @Override
@@ -40,4 +41,5 @@ public class ScooterServiceImpl implements ScooterService {
     public void deleteById(String serialNumber) {
         scooterRepository.deleteById(serialNumber);
     }
+
 }

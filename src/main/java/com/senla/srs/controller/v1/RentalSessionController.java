@@ -27,6 +27,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api/v1/rental_sessions")
 public class RentalSessionController {
+
     private final EntityControllerFacade<RentalSessionDTO, RentalSessionRequestDTO,
             RentalSessionResponseDTO, Long> entityControllerFacade;
 
@@ -42,7 +43,7 @@ public class RentalSessionController {
                                                  Integer size,
                                                  @RequestParam(defaultValue = "id") String sort,
                                                  @Parameter(hidden = true)
-                                                     @RequestHeader (name="Authorization", required = false)  String token) {
+                                                 @RequestHeader(name = "Authorization", required = false) String token) {
 
         return entityControllerFacade.getAll(page, size, sort, token);
     }
@@ -59,7 +60,7 @@ public class RentalSessionController {
     @PreAuthorize("hasAuthority('rentalSessions:read')")
     public ResponseEntity<?> getById(@PathVariable Long id,
                                      @Parameter(hidden = true)
-                                         @RequestHeader (name="Authorization", required = false)  String token)
+                                     @RequestHeader(name = "Authorization", required = false) String token)
             throws NotFoundEntityException {
 
         return entityControllerFacade.getById(id, token);
@@ -78,7 +79,7 @@ public class RentalSessionController {
     public ResponseEntity<?> createOrUpdate(@RequestBody @Valid RentalSessionRequestDTO rentalSessionRequestDTO,
                                             BindingResult bindingResult,
                                             @Parameter(hidden = true)
-                                                @RequestHeader (name="Authorization", required = false)  String token)
+                                            @RequestHeader(name = "Authorization", required = false) String token)
             throws NotFoundEntityException {
 
         return entityControllerFacade.createOrUpdate(rentalSessionRequestDTO, bindingResult, token);
@@ -96,5 +97,6 @@ public class RentalSessionController {
     public ResponseEntity<?> delete(@PathVariable Long id) throws NotFoundEntityException {
         return entityControllerFacade.delete(id);
     }
+
 }
 

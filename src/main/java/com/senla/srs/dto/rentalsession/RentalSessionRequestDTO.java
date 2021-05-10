@@ -12,6 +12,7 @@ import javax.validation.constraints.Min;
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"userId", "scooterSerialNumber"}, callSuper = false)
 public class RentalSessionRequestDTO extends RentalSessionDTO {
+
     @NonNull
     @Min(value = 1, message = "User ID must be at least 1")
     private Long userId;
@@ -20,4 +21,5 @@ public class RentalSessionRequestDTO extends RentalSessionDTO {
     private String scooterSerialNumber;
     private Long seasonTicketId;
     private String promoCodName;
+
 }

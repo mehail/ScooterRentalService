@@ -11,7 +11,10 @@ import java.util.Optional;
 
 @Repository
 public interface SeasonTicketRepository extends JpaRepository<SeasonTicket, Long> {
+
     Page<SeasonTicket> findAllByUserId(Long userId, Pageable paging);
+
     Optional<SeasonTicket> findSeasonTicketByUserIdAndScooterTypeIdAndStartDate(Long userId, Long scooterTypeId,
                                                                                 LocalDate startDate);
+
 }

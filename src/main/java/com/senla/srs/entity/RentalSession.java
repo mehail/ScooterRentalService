@@ -13,6 +13,7 @@ import java.time.LocalTime;
 @Entity
 @Table(name = "rental_sessions")
 public class RentalSession extends AbstractEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -41,4 +42,5 @@ public class RentalSession extends AbstractEntity {
     @ManyToOne
     @JoinColumn(name = "promo_cod_name")
     private PromoCod promoCod;
+
 }

@@ -8,6 +8,7 @@ import org.springframework.validation.Errors;
 import java.util.Optional;
 
 public interface RentalSessionRequestValidator {
+
     RentalSessionRequestDTO validate(RentalSessionRequestDTO rentalSessionRequestDTO,
                                      Optional<RentalSession> optionalRentalSession,
                                      Optional<User> optionalUser,
@@ -15,4 +16,5 @@ public interface RentalSessionRequestValidator {
                                      Optional<SeasonTicket> optionalSeasonTicket,
                                      Optional<PromoCod> optionalPromoCod,
                                      Errors errors);
+
 }

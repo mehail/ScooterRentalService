@@ -12,6 +12,7 @@ import java.util.Optional;
 
 @Service
 public class SeasonTicketRequestValidatorImpl implements SeasonTicketRequestValidator {
+
     private static final String PRICE = "price";
 
     @Override
@@ -41,4 +42,5 @@ public class SeasonTicketRequestValidatorImpl implements SeasonTicketRequestVali
 
         return seasonTicketRequestDTO;
     }
+
 }

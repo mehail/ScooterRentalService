@@ -6,7 +6,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class UserCompactResponseMapper extends AbstractMapper<User, UserCompactResponseDTO> {
+
     public UserCompactResponseMapper() {
         super(User.class, UserCompactResponseDTO.class);
     }
+
 }

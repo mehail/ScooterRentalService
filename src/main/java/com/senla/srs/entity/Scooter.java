@@ -11,6 +11,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "scooters")
 public class Scooter extends AbstractEntity{
+
     @Id
     @Column(name = "serial_number")
     private String serialNumber;
@@ -27,4 +28,5 @@ public class Scooter extends AbstractEntity{
     @NonNull
     @Enumerated(EnumType.ORDINAL)
     private ScooterStatus status;
+
 }

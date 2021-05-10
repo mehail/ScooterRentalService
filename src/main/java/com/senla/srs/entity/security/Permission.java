@@ -1,6 +1,7 @@
 package com.senla.srs.entity.security;
 
 public enum Permission {
+
     POINT_OF_RENTALS_READ("pointOfRentals:read"),
     POINT_OF_RENTALS_WRITE("pointOfRentals:write"),
 
@@ -32,4 +33,5 @@ public enum Permission {
     public String getPermission() {
         return permission;
     }
+
 }

@@ -91,9 +91,9 @@ public class PointOfRentalControllerFacade extends AbstractFacade implements
 
         if (!bindingResult.hasErrors() && optionalAddressDTO.isPresent()) {
             var pointOfRental = pointOfRentalService.save(pointOfRentalRequestMapper
-                            .toEntity(pointOfRentalRequestDTO,
-                                    optionalAddressDTO.get(),
-                                    getExistEntityId(pointOfRentalRequestDTO)));
+                    .toEntity(pointOfRentalRequestDTO,
+                            optionalAddressDTO.get(),
+                            getExistEntityId(pointOfRentalRequestDTO)));
 
             return new ResponseEntity<>(pointOfRentalResponseMapper.toDto(pointOfRental), HttpStatus.CREATED);
         } else {

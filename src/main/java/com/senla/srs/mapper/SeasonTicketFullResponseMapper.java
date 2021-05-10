@@ -6,7 +6,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class SeasonTicketFullResponseMapper extends AbstractMapperWithPagination<SeasonTicket, SeasonTicketFullResponseDTO>{
+
     public SeasonTicketFullResponseMapper() {
         super(SeasonTicket.class, SeasonTicketFullResponseDTO.class);
     }
+
 }

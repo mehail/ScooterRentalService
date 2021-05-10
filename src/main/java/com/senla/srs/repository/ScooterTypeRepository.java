@@ -8,5 +8,7 @@ import java.util.Optional;
 
 @Repository
 public interface ScooterTypeRepository extends JpaRepository<ScooterType, Long> {
+
     Optional<ScooterType> findByModel(String model);
+
 }

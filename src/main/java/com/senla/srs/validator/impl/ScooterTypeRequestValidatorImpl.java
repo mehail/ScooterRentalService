@@ -10,6 +10,7 @@ import java.util.Optional;
 
 @Service
 public class ScooterTypeRequestValidatorImpl implements ScooterTypeRequestValidator {
+
     @Override
     public ScooterTypeRequestDTO validate(ScooterTypeRequestDTO scooterTypeRequestDTO,
                                           Optional<MakerDTO> optionalMakerDTO,
@@ -21,4 +22,5 @@ public class ScooterTypeRequestValidatorImpl implements ScooterTypeRequestValida
 
         return scooterTypeRequestDTO;
     }
+
 }

@@ -13,6 +13,7 @@ import lombok.NonNull;
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
 public class RentalSessionResponseDTO extends RentalSessionDTO {
+
     @NonNull
     private Long id;
     @NonNull
@@ -23,4 +24,5 @@ public class RentalSessionResponseDTO extends RentalSessionDTO {
     private Integer rate;
     private SeasonTicketCompactResponseDTO seasonTicket;
     private PromoCodDTO promoCod;
+
 }

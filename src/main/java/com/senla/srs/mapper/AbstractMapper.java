@@ -9,11 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Objects;
 
 public abstract class AbstractMapper<E extends AbstractEntity, D extends AbstractDTO> implements Mapper<E, D> {
-    @Autowired
-    ModelMapper mapper;
 
     private final Class<E> entityClass;
     private final Class<D> dtoClass;
+
+    @Autowired
+    ModelMapper mapper;
 
     AbstractMapper(Class<E> entityClass, Class<D> dtoClass) {
         this.entityClass = entityClass;

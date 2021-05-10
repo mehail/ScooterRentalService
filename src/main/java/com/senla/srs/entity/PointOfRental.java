@@ -13,6 +13,7 @@ import java.util.List;
 @Entity
 @Table(name = "point_of_rentals")
 public class PointOfRental extends AbstractEntity{
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,4 +28,5 @@ public class PointOfRental extends AbstractEntity{
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "point_of_rental_id")
     private List<Scooter> scooters;
+
 }

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class RentalSessionRequestMapper extends AbstractMapper<RentalSession, RentalSessionRequestDTO> {
+
     public RentalSessionRequestMapper() {
         super(RentalSession.class, RentalSessionRequestDTO.class);
     }
@@ -48,4 +49,5 @@ public class RentalSessionRequestMapper extends AbstractMapper<RentalSession, Re
 
         return rentalSession;
     }
+
 }

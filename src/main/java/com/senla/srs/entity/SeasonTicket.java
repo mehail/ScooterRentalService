@@ -12,6 +12,7 @@ import java.time.LocalDate;
 @Data
 @Table(name = "season_tickets")
 public class SeasonTicket extends AbstractEntity{
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -35,4 +36,5 @@ public class SeasonTicket extends AbstractEntity{
     @Column(name = "available_for_use")
     @NonNull
     private Boolean availableForUse;
+
 }

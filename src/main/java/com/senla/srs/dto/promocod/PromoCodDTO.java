@@ -16,6 +16,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"name"}, callSuper = false)
 public class PromoCodDTO extends AbstractDTO {
+
     @NonNull
     @Length(min = 1, max = 64, message = "Name must be between 1 and 64 characters")
     private String name;
@@ -30,4 +31,5 @@ public class PromoCodDTO extends AbstractDTO {
     private Integer bonusPoint;
     @NonNull
     private Boolean available;
+
 }

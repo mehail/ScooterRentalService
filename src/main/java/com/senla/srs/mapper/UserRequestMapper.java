@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class UserRequestMapper extends AbstractMapper<User, UserRequestDTO> {
+
     private final int encryptionStrength;
 
     UserRequestMapper(@Value("${jwt.encryption.strength}") int encryptionStrength) {
@@ -32,4 +33,5 @@ public class UserRequestMapper extends AbstractMapper<User, UserRequestDTO> {
         var bCryptPasswordEncoder = new BCryptPasswordEncoder(encryptionStrength);
         return bCryptPasswordEncoder.encode(rowPassword);
     }
+
 }

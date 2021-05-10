@@ -10,6 +10,7 @@ import java.util.Optional;
 
 @Service
 public class PromoCodValidatorImpl implements PromoCodValidator {
+
     @Override
     public PromoCodDTO validate(PromoCodDTO promoCodDTO, Optional<PromoCod> optionalPromoCod, Errors errors) {
 
@@ -30,4 +31,5 @@ public class PromoCodValidatorImpl implements PromoCodValidator {
 
         return promoCodDTO;
     }
+
 }

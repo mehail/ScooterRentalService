@@ -7,5 +7,7 @@ import org.springframework.validation.Errors;
 import java.util.Optional;
 
 public interface PromoCodValidator {
+
     PromoCodDTO validate(PromoCodDTO promoCodDTO, Optional<PromoCod> optionalPromoCod, Errors errors);
+
 }

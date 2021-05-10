@@ -19,6 +19,7 @@ import java.util.Optional;
 @Transactional
 @AllArgsConstructor
 public class RentalSessionServiceImpl implements RentalSessionService {
+
     private final RentalSessionRepository rentalSessionRepository;
 
     @Override
@@ -51,7 +52,7 @@ public class RentalSessionServiceImpl implements RentalSessionService {
                                                                                                                LocalDate beginDate,
                                                                                                                LocalTime beginTime) {
 
-        return  rentalSessionRepository.findByUserIdAndScooterSerialNumberAndBeginDateAndBeginTime(userId,
+        return rentalSessionRepository.findByUserIdAndScooterSerialNumberAndBeginDateAndBeginTime(userId,
                 scooterSerialNumber, beginDate, beginTime);
     }
 
@@ -59,4 +60,5 @@ public class RentalSessionServiceImpl implements RentalSessionService {
     public void deleteById(Long id) {
         rentalSessionRepository.deleteById(id);
     }
+
 }

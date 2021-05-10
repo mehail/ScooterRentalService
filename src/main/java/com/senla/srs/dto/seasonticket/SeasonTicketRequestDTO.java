@@ -11,10 +11,12 @@ import javax.validation.constraints.Min;
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"price", "scooterTypeId"}, callSuper = false)
 public class SeasonTicketRequestDTO extends SeasonTicketDTO {
+
     @NonNull
     @Min(value = 1, message = "Scooter type ID must be at least 1")
     private Long scooterTypeId;
     @NonNull
     @Min(value = 1, message = "Price must be at least 1")
     private Integer price;
+
 }

@@ -67,7 +67,6 @@ public class ScooterControllerFacade extends AbstractFacade implements
                                             String token)
             throws NotFoundEntityException {
 
-
         Optional<PointOfRental> optionalPointOfRental =
                 pointOfRentalService.retrievePointOfRentalById(scooterRequestDTO.getPointOfRentalId());
         Optional<ScooterType> optionalScooterType =
@@ -82,6 +81,7 @@ public class ScooterControllerFacade extends AbstractFacade implements
     @Override
     public ResponseEntity<?> delete(String serialNumber) {
         scooterService.deleteById(serialNumber);
+
         return new ResponseEntity<>("Scooter with this serial number was deleted", HttpStatus.ACCEPTED);
     }
 
@@ -103,4 +103,5 @@ public class ScooterControllerFacade extends AbstractFacade implements
         }
 
     }
+
 }

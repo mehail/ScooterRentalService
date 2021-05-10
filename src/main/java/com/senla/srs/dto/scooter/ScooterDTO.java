@@ -14,6 +14,7 @@ import javax.validation.constraints.Min;
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"serialNumber"}, callSuper = false)
 public class ScooterDTO extends AbstractDTO {
+
     @NonNull
     @Length(min = 1, max = 64, message = "Serial number must be between 1 and 64 characters")
     private String serialNumber;
@@ -25,4 +26,5 @@ public class ScooterDTO extends AbstractDTO {
     private Integer timeMillage;
     @NonNull
     private ScooterStatus status;
+
 }

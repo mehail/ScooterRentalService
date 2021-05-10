@@ -6,7 +6,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class SeasonTicketCompactResponseMapper extends AbstractMapper<SeasonTicket, SeasonTicketCompactResponseDTO>{
+
     public SeasonTicketCompactResponseMapper() {
         super(SeasonTicket.class, SeasonTicketCompactResponseDTO.class);
     }
+
 }

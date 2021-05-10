@@ -25,6 +25,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api/v1/promo_codes")
 public class PromoCodController {
+
     private final EntityControllerFacade<PromoCodDTO, PromoCodDTO, PromoCodDTO, String> entityControllerFacade;
 
     @Operation(summary = "Get a list of PromoCods")
@@ -81,6 +82,7 @@ public class PromoCodController {
     @DeleteMapping("/{name}")
     @PreAuthorize("hasAuthority('promoCods:write')")
     public ResponseEntity<?> delete(@PathVariable String name) throws NotFoundEntityException {
-       return entityControllerFacade.delete(name);
+        return entityControllerFacade.delete(name);
     }
+
 }

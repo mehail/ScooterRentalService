@@ -20,4 +20,5 @@ public abstract class AbstractMapperWithPagination<E extends AbstractEntity, D e
 
         return new PageImpl<>(seasonTicketFullResponseDTOS, page.getPageable(), page.getTotalElements());
     }
+
 }

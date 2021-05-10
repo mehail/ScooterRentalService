@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 
 public interface EntityControllerFacade<D, Q extends D, S extends D, T> {
+
     Page<S> getAll(Integer page, Integer size, String sort, String token);
 
     ResponseEntity<?> getById(T id, String token)
@@ -17,4 +18,5 @@ public interface EntityControllerFacade<D, Q extends D, S extends D, T> {
     ResponseEntity<?> delete(T id) throws NotFoundEntityException;
 
     T getExistEntityId(Q dto);
+
 }

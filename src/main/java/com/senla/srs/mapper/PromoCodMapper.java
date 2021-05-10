@@ -6,7 +6,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PromoCodMapper extends AbstractMapperWithPagination<PromoCod, PromoCodDTO> {
+
     public PromoCodMapper() {
         super(PromoCod.class, PromoCodDTO.class);
     }
+
 }

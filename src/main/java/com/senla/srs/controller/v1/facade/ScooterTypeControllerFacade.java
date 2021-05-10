@@ -96,4 +96,5 @@ public class ScooterTypeControllerFacade extends AbstractFacade implements
         }
 
     }
+
 }

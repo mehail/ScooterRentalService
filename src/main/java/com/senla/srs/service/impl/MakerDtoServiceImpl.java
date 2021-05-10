@@ -13,10 +13,12 @@ import java.util.Optional;
 @Transactional
 @AllArgsConstructor
 public class MakerDtoServiceImpl implements MakerDtoService {
+
     private final MakerDtoRepository makerDtoRepository;
 
     @Override
     public Optional<MakerDTO> retrieveMakerDtoById(Long id) {
         return makerDtoRepository.findById(id);
     }
+
 }

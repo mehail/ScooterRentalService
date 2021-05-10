@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
 public class SeasonTicketResponseDTO extends SeasonTicketDTO{
+
     @NonNull
     private Long id;
     @NonNull
@@ -19,4 +20,5 @@ public class SeasonTicketResponseDTO extends SeasonTicketDTO{
     private LocalDate expiredDate;
     @NonNull
     private Boolean availableForUse;
+
 }

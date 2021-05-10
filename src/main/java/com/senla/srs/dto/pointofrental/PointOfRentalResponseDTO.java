@@ -13,9 +13,11 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
 public class PointOfRentalResponseDTO extends PointOfRentalDTO{
+
     @NonNull
     private Long id;
     @NonNull
     private AddressDTO address;
     private List<ScooterResponseDTO> scooters;
+
 }

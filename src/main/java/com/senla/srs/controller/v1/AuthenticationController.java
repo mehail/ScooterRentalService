@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthenticationController {
+
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
@@ -38,12 +39,13 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticate(@RequestBody AuthenticationRequestDTO request) {
+
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(),
                     request.getPassword()));
 
-            var user = userRepository.findByEmail(request.getEmail()).orElseThrow(() ->
-                    new UsernameNotFoundException("User doesn't exists"));
+            var user = userRepository.findByEmail(
+                    request.getEmail()).orElseThrow(() -> new UsernameNotFoundException("User doesn't exists"));
 
             String token = jwtTokenProvider.createToken(user.getId(), request.getEmail(), user.getRole().name());
 
@@ -51,6 +53,7 @@ public class AuthenticationController {
         } catch (AuthenticationException e) {
             return new ResponseEntity<>("Invalid email/password combination", HttpStatus.FORBIDDEN);
         }
+
     }
 
 }

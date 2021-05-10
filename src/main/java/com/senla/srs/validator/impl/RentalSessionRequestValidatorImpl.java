@@ -12,6 +12,7 @@ import java.util.Optional;
 
 @Service
 public class RentalSessionRequestValidatorImpl implements RentalSessionRequestValidator {
+
     private static final String SEASON_TICKET_ID = "seasonTicketId";
     private static final String PROMO_COD_NAME = "promoCodName";
 
@@ -79,6 +80,7 @@ public class RentalSessionRequestValidatorImpl implements RentalSessionRequestVa
                 var sessionBegin = rentalSessionRequestDTO.getBegin().toLocalDate();
                 LocalDate promoCodStart = promoCod.getStartDate();
                 LocalDate promoCodExpired = promoCod.getExpiredDate();
+
                 if (!sessionBegin.isBefore(promoCodStart) && sessionBegin.isBefore(promoCodExpired)) {
                     errors.reject(PROMO_COD_NAME, "The start of the rental session does not match the PromoCod");
                 }
@@ -86,6 +88,7 @@ public class RentalSessionRequestValidatorImpl implements RentalSessionRequestVa
             }
 
         }
+
     }
 
     private void validateSeasonTicket(RentalSessionRequestDTO rentalSessionRequestDTO,
@@ -107,6 +110,7 @@ public class RentalSessionRequestValidatorImpl implements RentalSessionRequestVa
                 var sessionBegin = rentalSessionRequestDTO.getBegin().toLocalDate();
                 LocalDate seasonStart = seasonTicket.getStartDate();
                 LocalDate seasonExpired = seasonTicket.getExpiredDate();
+
                 if (sessionBegin.isBefore(seasonStart) && !sessionBegin.isBefore(seasonExpired)) {
                     errors.reject(SEASON_TICKET_ID, "The start of the rental session does not match the season ticket");
                 }
@@ -151,7 +155,6 @@ public class RentalSessionRequestValidatorImpl implements RentalSessionRequestVa
             if (existRentalSession.getEndDate() != null || existRentalSession.getEndTime() != null) {
                 errors.reject("this", "Completed rental session is not available for editing");
             } else {
-
                 validateMatchExistRentalSession(rentalSessionRequestDTO, existRentalSession, errors);
 
                 validateBeginAndEnd(LocalDateTime.of(existRentalSession.getBeginDate(), existRentalSession.getBeginTime()),

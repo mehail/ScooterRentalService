@@ -18,6 +18,7 @@ import javax.validation.constraints.Min;
 @Entity
 @Table(name = "makers")
 public class MakerDTO extends AbstractDTO {
+
     @Id
     @NonNull
     @Min(value = 1, message = "ID must be at least 1")
@@ -25,4 +26,5 @@ public class MakerDTO extends AbstractDTO {
     @NonNull
     @Length(min = 1, max = 64, message = "Maker must be between 1 and 64 characters")
     private String maker;
+
 }

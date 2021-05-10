@@ -13,6 +13,7 @@ import javax.validation.constraints.Min;
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"model"}, callSuper = false)
 public class ScooterTypeDTO extends AbstractDTO {
+
     @NonNull
     @Length(min = 1, max = 64)
     private String model;
@@ -22,4 +23,5 @@ public class ScooterTypeDTO extends AbstractDTO {
     @NonNull
     @Min(1)
     private Integer pricePerMinute;
+
 }

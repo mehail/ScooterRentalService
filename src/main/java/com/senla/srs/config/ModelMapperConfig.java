@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ModelMapperConfig {
+
     @Bean
     public ModelMapper modelMapper() {
         var mapper = new ModelMapper();
@@ -17,4 +18,5 @@ public class ModelMapperConfig {
                 .setFieldAccessLevel(org.modelmapper.config.Configuration.AccessLevel.PRIVATE);
         return mapper;
     }
+
 }

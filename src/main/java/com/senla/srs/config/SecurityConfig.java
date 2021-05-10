@@ -16,11 +16,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
     @Value("${jwt.encryption.strength}")
     private int encryptionStrength;
     private final JwtConfig jwtConfig;
 
     private static final String[] AUTH_WHITELIST = {
+            // -- Login and Registration
             "/api/v1/auth/login",
             "/api/v1/users",
 
@@ -37,7 +39,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-                //не используются сессии
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
@@ -45,7 +46,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest()
                 .authenticated()
                 .and()
-                //аутентификация на основе jwtConfigurer
                 .apply(jwtConfig);
     }
 
@@ -59,4 +59,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(encryptionStrength);
     }
+
 }

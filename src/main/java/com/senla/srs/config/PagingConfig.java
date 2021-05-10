@@ -6,8 +6,10 @@ import org.springframework.data.web.config.PageableHandlerMethodArgumentResolver
 
 @Configuration
 public class PagingConfig {
+
     @Bean
     PageableHandlerMethodArgumentResolverCustomizer pageableResolverCustomizer() {
         return pageableResolver -> pageableResolver.setOneIndexedParameters(true);
     }
+
 }

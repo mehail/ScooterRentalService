@@ -12,7 +12,9 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
 public class UserFullResponseDTO extends UserDTO {
+
     @NonNull
     private Long id;
     private List<SeasonTicketFullResponseDTO> seasonTickets;
+
 }

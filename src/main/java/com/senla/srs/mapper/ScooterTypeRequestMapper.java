@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ScooterTypeRequestMapper extends AbstractMapper<ScooterType, ScooterTypeRequestDTO> {
+
     public ScooterTypeRequestMapper() {
         super(ScooterType.class, ScooterTypeRequestDTO.class);
     }
@@ -24,4 +25,5 @@ public class ScooterTypeRequestMapper extends AbstractMapper<ScooterType, Scoote
 
         return scooterType;
     }
+
 }

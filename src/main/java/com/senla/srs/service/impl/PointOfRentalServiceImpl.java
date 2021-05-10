@@ -17,6 +17,7 @@ import java.util.Optional;
 @Transactional
 @AllArgsConstructor
 public class PointOfRentalServiceImpl implements PointOfRentalService {
+
     private final PointOfRentalRepository pointOfRentalRepository;
 
     @Override
@@ -45,4 +46,5 @@ public class PointOfRentalServiceImpl implements PointOfRentalService {
     public void deleteById(Long id) {
         pointOfRentalRepository.deleteById(id);
     }
+
 }

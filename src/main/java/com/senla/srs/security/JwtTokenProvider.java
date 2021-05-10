@@ -17,7 +17,8 @@ import java.util.Base64;
 import java.util.Date;
 
 @Component
-public class JwtTokenProvider implements JwtTokenData{
+public class JwtTokenProvider implements JwtTokenData {
+
     private final UserDetailsService userDetailsService;
     @Value("${jwt.secret}")
     private String secretKey;
@@ -51,16 +52,20 @@ public class JwtTokenProvider implements JwtTokenData{
     }
 
     public boolean validateToken(String token) {
+
         try {
             Jws<Claims> claimsJws = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+
             return !claimsJws.getBody().getExpiration().before(new Date());
         } catch (JwtException | IllegalArgumentException e) {
             throw new JwtAuthenticationException("JWT token is expired or invalid", HttpStatus.UNAUTHORIZED);
         }
+
     }
 
     public Authentication getAuthentication(String token) {
         var userDetails = userDetailsService.loadUserByUsername(getUsername(token));
+
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
@@ -90,4 +95,5 @@ public class JwtTokenProvider implements JwtTokenData{
     public Role getRole(String token) {
         return Role.valueOf(getBody(token).get("role", String.class));
     }
+
 }

@@ -14,9 +14,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"begin", "end"}, callSuper = false)
 public class RentalSessionDTO extends AbstractDTO {
+
     @NonNull
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     LocalDateTime begin;
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     LocalDateTime end;
+
 }

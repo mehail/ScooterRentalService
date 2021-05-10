@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 @Service("userDetailsServiceImpl")
 @AllArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
+
     private final UserRepository userRepository;
 
     @Override
@@ -17,6 +18,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         var user = userRepository
                 .findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User doesn't exists"));
+
         return com.senla.srs.security.SecurityUser.fromUser(user);
     }
+
 }

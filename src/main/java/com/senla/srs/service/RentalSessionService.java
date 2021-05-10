@@ -8,13 +8,20 @@ import java.time.LocalTime;
 import java.util.Optional;
 
 public interface RentalSessionService {
+
     RentalSession save(RentalSession rentalSession);
+
     Page<RentalSession> retrieveAllRentalSessions(Integer pageNo, Integer pageSize, String sortBy);
+
     Page<RentalSession> retrieveAllRentalSessionsByUserId(Long id, Integer pageNo, Integer pageSize, String sortBy);
+
     Optional<RentalSession> retrieveRentalSessionById(Long id);
+
     Optional<RentalSession> retrieveRentalSessionByUserIdAndScooterSerialNumberAndBeginDateAndBeginTime(Long userId,
                                                                                                         String scooterSerialNumber,
-                                                                                                        LocalDate beginDate, LocalTime beginTime);
+                                                                                                        LocalDate beginDate,
+                                                                                                        LocalTime beginTime);
 
     void deleteById(Long id);
+
 }

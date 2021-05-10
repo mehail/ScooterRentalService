@@ -10,7 +10,9 @@ import org.hibernate.validator.constraints.Length;
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"password"}, callSuper = false)
 public class UserRequestDTO extends UserDTO {
+
     @NonNull
     @Length(min = 3, message = "Password must be at least 3 characters")
     private String password;
+
 }

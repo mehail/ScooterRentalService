@@ -12,6 +12,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "scooter_types")
 public class ScooterType extends AbstractEntity{
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,4 +27,5 @@ public class ScooterType extends AbstractEntity{
     @NonNull
     @Column(name = "price_per_minute")
     private Integer pricePerMinute;
+
 }

@@ -9,6 +9,8 @@ import java.util.Optional;
 
 @Repository
 public interface AddressDtoRepository extends JpaRepository<AddressDTO, Long> {
+
     @NonNull
     Optional<AddressDTO> findById(@NonNull Long id);
+
 }

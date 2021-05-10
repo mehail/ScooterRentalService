@@ -27,6 +27,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api/v1/season_tickets")
 public class SeasonTicketController {
+
     private final EntityControllerFacade<SeasonTicketDTO, SeasonTicketRequestDTO,
             SeasonTicketFullResponseDTO, Long> entityControllerFacade;
 
@@ -42,7 +43,7 @@ public class SeasonTicketController {
                                                     Integer size,
                                                     @RequestParam(defaultValue = "id") String sort,
                                                     @Parameter(hidden = true)
-                                                        @RequestHeader (name="Authorization", required = false)  String token) {
+                                                    @RequestHeader(name = "Authorization", required = false) String token) {
         return entityControllerFacade.getAll(page, size, sort, token);
     }
 
@@ -51,7 +52,6 @@ public class SeasonTicketController {
     @Parameter(in = ParameterIn.PATH, name = "id", description = "Season ticket id")
     @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json",
             schema = @Schema(implementation = SeasonTicketFullResponseDTO.class)))
-    
     @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "404", content = @Content(mediaType = "application/json"))
 
@@ -59,7 +59,7 @@ public class SeasonTicketController {
     @PreAuthorize("hasAuthority('seasonTickets:read')")
     public ResponseEntity<?> getById(@PathVariable Long id,
                                      @Parameter(hidden = true)
-                                         @RequestHeader (name="Authorization", required = false)  String token)
+                                     @RequestHeader(name = "Authorization", required = false) String token)
             throws NotFoundEntityException {
 
         return entityControllerFacade.getById(id, token);
@@ -78,7 +78,7 @@ public class SeasonTicketController {
     public ResponseEntity<?> createOrUpdate(@RequestBody @Valid SeasonTicketRequestDTO seasonTicketRequestDTO,
                                             BindingResult bindingResult,
                                             @Parameter(hidden = true)
-                                                @RequestHeader (name="Authorization", required = false)  String token)
+                                            @RequestHeader(name = "Authorization", required = false) String token)
             throws NotFoundEntityException {
 
         return entityControllerFacade.createOrUpdate(seasonTicketRequestDTO, bindingResult, token);
@@ -96,4 +96,5 @@ public class SeasonTicketController {
     public ResponseEntity<?> delete(@PathVariable Long id) throws NotFoundEntityException {
         return entityControllerFacade.delete(id);
     }
+
 }

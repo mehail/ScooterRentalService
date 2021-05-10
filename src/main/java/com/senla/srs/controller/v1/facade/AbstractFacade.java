@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 
 @Controller
 public abstract class AbstractFacade {
+
     protected final JwtTokenData jwtTokenData;
 
     protected AbstractFacade(JwtTokenData jwtTokenData) {
@@ -35,4 +36,5 @@ public abstract class AbstractFacade {
     protected Role getAuthUserRole(String token) {
         return jwtTokenData.getRole(token);
     }
+
 }

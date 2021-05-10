@@ -26,6 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 class PromoCodControllerTest {
+
     private static final String URI = "/api/v1/promo_codes";
     private static final String TEST_GET_NAME = "testPromoCod1";
     private static final String TEST_POST_NAME = "testPromoCod2";
@@ -49,6 +50,7 @@ class PromoCodControllerTest {
 
     @Nested
     class GetAll {
+
         @Test
         void getAllAdminAuth200() throws Exception {
             mockMvc.perform(
@@ -74,10 +76,12 @@ class PromoCodControllerTest {
                     .andDo(print())
                     .andExpect(status().isForbidden());
         }
+
     }
 
     @Nested
     class Get {
+
         @BeforeEach
         public void setUp() {
             PromoCod getPromoCod = getPromoCodWitName(TEST_GET_NAME);
@@ -85,6 +89,7 @@ class PromoCodControllerTest {
             if (promoCodRepository.findByName(TEST_GET_NAME).isEmpty()) {
                 promoCodRepository.save(getPromoCod);
             }
+
         }
 
         @Test
@@ -119,10 +124,12 @@ class PromoCodControllerTest {
             promoCodRepository.findByName(TEST_GET_NAME)
                     .ifPresent(promoCod -> promoCodRepository.delete(promoCod));
         }
+
     }
 
     @Nested
     class Post {
+
         @BeforeEach
         public void setUp() {
             promoCodRepository.findByName(TEST_POST_NAME)
@@ -202,6 +209,7 @@ class PromoCodControllerTest {
 
     @Nested
     class Delete {
+
         @BeforeEach
         public void setUp() {
             PromoCod getPromoCod = getPromoCodWitName(TEST_DELETE_NAME);
@@ -251,5 +259,7 @@ class PromoCodControllerTest {
             promoCodRepository.findByName(TEST_DELETE_NAME)
                     .ifPresent(promoCod -> promoCodRepository.delete(promoCod));
         }
+
     }
+
 }

@@ -11,6 +11,7 @@ import java.util.Optional;
 
 @Service
 public class ScooterRequestValidatorImpl implements ScooterRequestValidator {
+
     @Override
     public ScooterRequestDTO validate(ScooterRequestDTO scooterRequestDTO,
                                       Optional<PointOfRental> optionalPointOfRentalDTO,
@@ -26,4 +27,5 @@ public class ScooterRequestValidatorImpl implements ScooterRequestValidator {
 
         return scooterRequestDTO;
     }
+
 }

@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public enum Role {
+
     USER(Set.of(Permission.POINT_OF_RENTALS_READ,
             Permission.PROMO_CODS_READ,
             Permission.RENTAL_SESSIONS_READ,
@@ -42,10 +43,10 @@ public enum Role {
         return permissions;
     }
 
-    //Конвертирует наши роли в права для Security
     public Set<SimpleGrantedAuthority> getAuthorities() {
         return getPermissions().stream()
                 .map(permission -> new SimpleGrantedAuthority(permission.getPermission()))
                 .collect(Collectors.toSet());
     }
+
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PointOfRentalRequestMapper extends AbstractMapper<PointOfRental, PointOfRentalRequestDTO> {
+
     public PointOfRentalRequestMapper() {
         super(PointOfRental.class, PointOfRentalRequestDTO.class);
     }
@@ -24,4 +25,5 @@ public class PointOfRentalRequestMapper extends AbstractMapper<PointOfRental, Po
 
         return pointOfRental;
     }
+
 }

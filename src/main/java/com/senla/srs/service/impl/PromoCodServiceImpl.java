@@ -17,6 +17,7 @@ import java.util.Optional;
 @Transactional
 @AllArgsConstructor
 public class PromoCodServiceImpl implements PromoCodService {
+
     private final PromoCodRepository promoCodRepository;
 
     @Override
@@ -40,4 +41,5 @@ public class PromoCodServiceImpl implements PromoCodService {
     public void deleteById(String name) {
         promoCodRepository.deleteById(name);
     }
+
 }

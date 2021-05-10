@@ -9,6 +9,8 @@ import lombok.NonNull;
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
 public class UserCompactResponseDTO extends UserDTO {
+
     @NonNull
     private Long id;
+
 }

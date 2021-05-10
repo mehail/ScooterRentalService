@@ -50,6 +50,7 @@ public class UserRequestValidatorImpl implements UserRequestValidator {
 
     @Override
     public UserRequestDTO validateExistDto(UserRequestDTO requestDto, Errors errors, Optional<User> optionalDto) {
+
         if (optionalDto.isEmpty()) {
             errors.reject("email", "User with this email was not found");
         } else {
@@ -58,6 +59,7 @@ public class UserRequestValidatorImpl implements UserRequestValidator {
             if (!requestDto.getBalance().equals(existUser.getBalance())) {
                 errors.reject("balance", "Balance can only be changed by the Administrator");
             }
+
         }
 
         if (requestDto.getRole() != Role.USER) {
@@ -66,4 +68,5 @@ public class UserRequestValidatorImpl implements UserRequestValidator {
 
         return requestDto;
     }
+
 }

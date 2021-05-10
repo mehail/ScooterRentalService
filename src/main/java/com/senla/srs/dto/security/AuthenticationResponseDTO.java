@@ -11,6 +11,7 @@ import lombok.NonNull;
 @AllArgsConstructor
 @EqualsAndHashCode(of = {"email"}, callSuper = false)
 public class AuthenticationResponseDTO extends AbstractDTO {
+
     @NonNull
     private Long id;
     @NonNull
@@ -19,4 +20,5 @@ public class AuthenticationResponseDTO extends AbstractDTO {
     private Role role;
     @NonNull
     private String token;
+
 }

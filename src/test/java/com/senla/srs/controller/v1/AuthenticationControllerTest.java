@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 
 @SpringBootTest
 class AuthenticationControllerTest {
+
     @Value("${auth.login.admin}")
     private String adminLogin;
     @Value("${auth.password.admin}")
@@ -35,4 +36,5 @@ class AuthenticationControllerTest {
         Assertions.assertEquals(HttpStatus.FORBIDDEN, responseEntity.getStatusCode(),
                 "Authentication completed successfully with invalid login password");
     }
+
 }

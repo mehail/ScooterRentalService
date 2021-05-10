@@ -10,6 +10,7 @@ import java.util.Optional;
 
 @Service
 public class PointOfRentalRequestValidatorImpl implements PointOfRentalRequestValidator {
+
     @Override
     public PointOfRentalRequestDTO validate(PointOfRentalRequestDTO pointOfRentalRequestDTO,
                                             Optional<AddressDTO> optionalAddressDTO,
@@ -21,4 +22,5 @@ public class PointOfRentalRequestValidatorImpl implements PointOfRentalRequestVa
 
         return pointOfRentalRequestDTO;
     }
+
 }

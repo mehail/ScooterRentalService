@@ -12,6 +12,11 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class SwaggerConfig {
+
+    private static final String DESCRIPTION = "This software was written as part of the final assignment for Java " +
+            "development courses from SENLA. The main goal of creating this application was the practical application " +
+            "of the knowledge I have accumulated about creating applications using the Spring framework, " +
+            "Hibernate and relational databases.";
     @Value("${jwt.header}")
     private String authorizationHeader;
     @Value("${swagger.version}")
@@ -22,11 +27,6 @@ public class SwaggerConfig {
     private String url;
     @Value("${swagger.name}")
     private String name;
-
-    private static final String DESCRIPTION = "This software was written as part of the final assignment for Java " +
-            "development courses from SENLA. The main goal of creating this application was the practical application " +
-            "of the knowledge I have accumulated about creating applications using the Spring framework, " +
-            "Hibernate and relational databases.";
 
     @Bean
     public OpenAPI customOpenAPI() {
@@ -52,4 +52,5 @@ public class SwaggerConfig {
                                 .name(name))
                 );
     }
+
 }

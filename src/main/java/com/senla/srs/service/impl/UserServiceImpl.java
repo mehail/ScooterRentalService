@@ -17,6 +17,7 @@ import java.util.Optional;
 @Transactional
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
+
     private final UserRepository userRepository;
 
     @Override
@@ -52,4 +53,5 @@ public class UserServiceImpl implements UserService {
     public void deleteById(Long id) {
         userRepository.deleteById(id);
     }
+
 }

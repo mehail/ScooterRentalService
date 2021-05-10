@@ -13,6 +13,7 @@ import org.hibernate.validator.constraints.Length;
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"email"}, callSuper = false)
 public class UserDTO extends AbstractDTO {
+
     @NonNull
     @Length(max = 320, message = "Email must be no more than 320 characters")
     private String email;
@@ -28,4 +29,5 @@ public class UserDTO extends AbstractDTO {
     private UserStatus status;
     @NonNull
     private Integer balance;
+
 }

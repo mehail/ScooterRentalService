@@ -6,6 +6,7 @@ import org.springframework.security.core.AuthenticationException;
 
 @Getter
 public class JwtAuthenticationException extends AuthenticationException {
+
     private HttpStatus httpStatus;
 
     public JwtAuthenticationException(String msg) {
@@ -16,4 +17,5 @@ public class JwtAuthenticationException extends AuthenticationException {
         super(msg);
         this.httpStatus = httpStatus;
     }
+
 }

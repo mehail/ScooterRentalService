@@ -27,6 +27,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api/v1/point_of_rentals")
 public class PointOfRentalController {
+
     private final EntityControllerFacade<PointOfRentalDTO, PointOfRentalRequestDTO,
             PointOfRentalResponseDTO, Long> entityControllerFacade;
 
@@ -47,7 +48,7 @@ public class PointOfRentalController {
     @Operation(operationId = "getById", summary = "Get a Point of rental by its id")
     @Parameter(in = ParameterIn.PATH, name = "id", description = "Point of rental id")
     @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = PointOfRentalResponseDTO.class)))
+            schema = @Schema(implementation = PointOfRentalResponseDTO.class)))
     @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "404", content = @Content(mediaType = "application/json"))
 
@@ -61,13 +62,13 @@ public class PointOfRentalController {
     @Operation(operationId = "createOrUpdate", summary = "Create or update Point of rental",
             description = "If the Point of rental exists - then the fields are updated, if not - created new Point of rental")
     @ApiResponse(responseCode = "201", content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = PointOfRentalResponseDTO.class)))
+            schema = @Schema(implementation = PointOfRentalResponseDTO.class)))
     @ApiResponse(responseCode = "400", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
 
     @PostMapping
     @PreAuthorize("hasAuthority('pointOfRentals:write')")
-    public ResponseEntity<?> createOrUpdate(@RequestBody  @Valid PointOfRentalRequestDTO pointOfRentalRequestDTO,
+    public ResponseEntity<?> createOrUpdate(@RequestBody @Valid PointOfRentalRequestDTO pointOfRentalRequestDTO,
                                             BindingResult bindingResult)
             throws NotFoundEntityException {
 
@@ -84,6 +85,7 @@ public class PointOfRentalController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('pointOfRentals:write')")
     public ResponseEntity<?> delete(@PathVariable Long id) throws NotFoundEntityException {
-       return entityControllerFacade.delete(id);
+        return entityControllerFacade.delete(id);
     }
+
 }

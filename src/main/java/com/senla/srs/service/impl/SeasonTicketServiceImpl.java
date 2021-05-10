@@ -18,6 +18,7 @@ import java.util.Optional;
 @Transactional
 @AllArgsConstructor
 public class SeasonTicketServiceImpl implements SeasonTicketService {
+
     private final SeasonTicketRepository seasonTicketRepository;
 
     @Override
@@ -45,8 +46,10 @@ public class SeasonTicketServiceImpl implements SeasonTicketService {
     }
 
     @Override
-    public Optional<SeasonTicket> retrieveSeasonTicketByUserIdAndScooterTypeIdAndStartDate(Long userId, Long scooterTypeId,
+    public Optional<SeasonTicket> retrieveSeasonTicketByUserIdAndScooterTypeIdAndStartDate(Long userId,
+                                                                                           Long scooterTypeId,
                                                                                            LocalDate startDate) {
+
         return seasonTicketRepository.findSeasonTicketByUserIdAndScooterTypeIdAndStartDate(userId, scooterTypeId, startDate);
     }
 
@@ -54,4 +57,5 @@ public class SeasonTicketServiceImpl implements SeasonTicketService {
     public void deleteById(Long id) {
         seasonTicketRepository.deleteById(id);
     }
+
 }

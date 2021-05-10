@@ -75,6 +75,7 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
         } else {
             return new ResponseEntity<>("Another user's season ticket is requested", HttpStatus.FORBIDDEN);
         }
+
     }
 
     @Transactional
@@ -169,4 +170,5 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
     private int calculateCorrectPrice(ScooterType scooterType, int remainingTime) {
         return scooterType.getPricePerMinute() * remainingTime;
     }
+
 }

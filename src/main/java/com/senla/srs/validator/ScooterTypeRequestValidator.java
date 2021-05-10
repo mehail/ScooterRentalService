@@ -7,7 +7,9 @@ import org.springframework.validation.Errors;
 import java.util.Optional;
 
 public interface ScooterTypeRequestValidator {
+
     ScooterTypeRequestDTO validate(ScooterTypeRequestDTO scooterTypeRequestDTO,
                                    Optional<MakerDTO> optionalMakerDTO,
                                    Errors errors);
+
 }

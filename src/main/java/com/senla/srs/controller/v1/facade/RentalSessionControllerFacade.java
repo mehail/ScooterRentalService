@@ -290,4 +290,5 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
 
         return rate * (100 - discountPercentage) / 100;
     }
+
 }

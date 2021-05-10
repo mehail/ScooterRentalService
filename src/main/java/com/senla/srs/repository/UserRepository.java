@@ -10,6 +10,9 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
+
     Page<User> findAllByEmail(String email, Pageable paging);
+
     Optional<User> findByEmail(String email);
+
 }

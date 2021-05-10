@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AuthProviderImpl implements AuthProvider {
+
     @Value("${auth.login.admin}")
     private String adminLogin;
     @Value("${auth.password.admin}")
@@ -48,4 +49,5 @@ public class AuthProviderImpl implements AuthProvider {
 
         return authenticationResponseDTO != null ? authenticationResponseDTO.getToken() : null;
     }
+
 }

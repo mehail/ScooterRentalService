@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 
 @Component
 public class RentalSessionResponseMapper extends AbstractMapperWithPagination<RentalSession, RentalSessionResponseDTO>{
+
     public RentalSessionResponseMapper() {
         super(RentalSession.class, RentalSessionResponseDTO.class);
     }
@@ -24,4 +25,5 @@ public class RentalSessionResponseMapper extends AbstractMapperWithPagination<Re
 
         return dto;
     }
+
 }

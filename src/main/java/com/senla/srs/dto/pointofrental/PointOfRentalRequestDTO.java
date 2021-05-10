@@ -11,7 +11,9 @@ import javax.validation.constraints.Min;
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"addressId"}, callSuper = false)
 public class PointOfRentalRequestDTO extends PointOfRentalDTO {
+
     @NonNull
     @Min(value = 1, message = "Address ID must be at least 1")
     private Long addressId;
+
 }

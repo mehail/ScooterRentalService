@@ -27,6 +27,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api/v1/users")
 public class UserController {
+
     private final EntityControllerFacade<UserDTO, UserRequestDTO, UserFullResponseDTO, Long> entityControllerFacade;
 
     @Operation(summary = "Get a list of Users",
@@ -94,4 +95,5 @@ public class UserController {
     public ResponseEntity<?> delete(@PathVariable Long id) throws NotFoundEntityException {
         return entityControllerFacade.delete(id);
     }
+
 }

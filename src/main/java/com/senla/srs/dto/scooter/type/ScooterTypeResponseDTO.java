@@ -10,8 +10,10 @@ import lombok.NonNull;
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
 public class ScooterTypeResponseDTO extends ScooterTypeDTO {
+
     @NonNull
     private Long id;
     @NonNull
     private MakerDTO maker;
+
 }
