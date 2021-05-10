@@ -93,7 +93,7 @@ public class RentalSessionController {
     @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('rentalSessions:write')")
+    @PreAuthorize("hasAuthority('rentalSessions:writeAll')")
     public ResponseEntity<?> delete(@PathVariable Long id) throws NotFoundEntityException {
         return entityControllerFacade.delete(id);
     }

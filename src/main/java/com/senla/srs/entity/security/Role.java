@@ -26,6 +26,7 @@ public enum Role {
             Permission.SCOOTERS_WRITE,
             Permission.RENTAL_SESSIONS_READ,
             Permission.RENTAL_SESSIONS_WRITE,
+            Permission.RENTAL_SESSIONS_WRITE_ALL,
             Permission.SCOOTER_TYPES_READ,
             Permission.SCOOTER_TYPES_WRITE,
             Permission.SEASON_TICKETS_READ,
