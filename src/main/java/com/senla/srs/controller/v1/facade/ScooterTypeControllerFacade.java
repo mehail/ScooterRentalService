@@ -70,8 +70,9 @@ public class ScooterTypeControllerFacade extends AbstractFacade implements
     }
 
     @Override
-    public ResponseEntity<?> delete(Long id) {
+    public ResponseEntity<?> delete(Long id, String token) {
         scooterTypeService.deleteById(id);
+
         return new ResponseEntity<>("Scooter type with this id was deleted", HttpStatus.ACCEPTED);
     }
 

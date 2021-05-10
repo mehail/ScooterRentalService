@@ -121,7 +121,7 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
     }
 
     @Override
-    public ResponseEntity<?> delete(Long id) throws NotFoundEntityException {
+    public ResponseEntity<?> delete(Long id, String token) throws NotFoundEntityException {
         Optional<RentalSession> optionalRentalSession = rentalSessionService.retrieveRentalSessionById(id);
 
         if (optionalRentalSession.map(RentalSession::getEndDate).isEmpty()) {

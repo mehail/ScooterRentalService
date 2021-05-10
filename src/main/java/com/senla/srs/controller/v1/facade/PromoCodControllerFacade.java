@@ -55,8 +55,9 @@ public class PromoCodControllerFacade extends AbstractFacade implements
     }
 
     @Override
-    public ResponseEntity<?> delete(String name) {
+    public ResponseEntity<?> delete(String name, String token) {
         promoCodService.deleteByName(name);
+
         return new ResponseEntity<>("PromoCod with this serial number was deleted", HttpStatus.ACCEPTED);
     }
 

@@ -73,8 +73,9 @@ public class PointOfRentalControllerFacade extends AbstractFacade implements
     }
 
     @Override
-    public ResponseEntity<?> delete(Long id) {
+    public ResponseEntity<?> delete(Long id, String token) {
         pointOfRentalService.deleteById(id);
+
         return new ResponseEntity<>("Point of rental with this id was deleted", HttpStatus.ACCEPTED);
     }
 

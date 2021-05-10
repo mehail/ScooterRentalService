@@ -14,7 +14,6 @@ public enum Permission {
 
     RENTAL_SESSIONS_READ("rentalSessions:read"),
     RENTAL_SESSIONS_WRITE("rentalSessions:write"),
-    RENTAL_SESSIONS_WRITE_ALL("rentalSessions:writeAll"),
 
     SCOOTER_TYPES_READ("scooterTypes:read"),
     SCOOTER_TYPES_WRITE("scooterTypes:write"),

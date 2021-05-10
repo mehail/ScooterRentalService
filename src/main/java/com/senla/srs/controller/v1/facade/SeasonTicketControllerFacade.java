@@ -89,30 +89,40 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
                 seasonTicketService.retrieveSeasonTicketByUserIdAndScooterTypeIdAndStartDate(seasonTicketRequestDTO.getUserId(),
                         seasonTicketRequestDTO.getScooterTypeId(),
                         seasonTicketRequestDTO.getStartDate());
-        Optional<User> optionalUser = userService.retrieveUserById(seasonTicketRequestDTO.getUserId());
-        Optional<ScooterType> optionalScooterType =
-                scooterTypeService.retrieveScooterTypeById(seasonTicketRequestDTO.getScooterTypeId());
 
-        var validSeasonTicketRequestDTO = seasonTicketRequestValidator.validate(seasonTicketRequestDTO,
-                optionalSeasonTicket,
-                optionalUser,
-                optionalScooterType,
-                bindingResult);
+        if (isAdmin(token) || isThisUserById(token, seasonTicketRequestDTO.getUserId())) {
+            Optional<User> optionalUser = userService.retrieveUserById(seasonTicketRequestDTO.getUserId());
+            Optional<ScooterType> optionalScooterType =
+                    scooterTypeService.retrieveScooterTypeById(seasonTicketRequestDTO.getScooterTypeId());
 
-        return save(validSeasonTicketRequestDTO, optionalUser, optionalScooterType, bindingResult);
+            var validSeasonTicketRequestDTO = seasonTicketRequestValidator.validate(seasonTicketRequestDTO,
+                    optionalSeasonTicket,
+                    optionalUser,
+                    optionalScooterType,
+                    bindingResult);
+
+            return save(validSeasonTicketRequestDTO, optionalUser, optionalScooterType, bindingResult);
+        } else {
+            return new ResponseEntity<>("Creation of another user's season ticket requested", HttpStatus.FORBIDDEN);
+        }
+
     }
 
     @Override
-    public ResponseEntity<?> delete(Long id) throws NotFoundEntityException {
+    public ResponseEntity<?> delete(Long id, String token) throws NotFoundEntityException {
         Optional<SeasonTicket> optionalSeasonTicket = seasonTicketService.retrieveSeasonTicketsById(id);
 
-        if (optionalSeasonTicket
-                .map(SeasonTicket::getAvailableForUse)
-                .orElseThrow(() -> new NotFoundEntityException(SeasonTicket.class, id))) {
+        if ((isThisUserById(token, optionalSeasonTicket
+                .map(SeasonTicket::getUserId)
+                .orElseThrow(() -> new NotFoundEntityException(SeasonTicket.class, id))) || isAdmin(token)) &&
+
+                optionalSeasonTicket
+                        .map(SeasonTicket::getAvailableForUse)
+                        .orElseThrow(() -> new NotFoundEntityException(SeasonTicket.class, id))) {
 
             seasonTicketService.deleteById(id);
-            return new ResponseEntity<>("Season ticket with this id was deleted", HttpStatus.ACCEPTED);
 
+            return new ResponseEntity<>("Season ticket with this id was deleted", HttpStatus.ACCEPTED);
         } else {
             return new ResponseEntity<>(FORBIDDEN_FOR_DELETE, HttpStatus.FORBIDDEN);
         }
@@ -141,16 +151,17 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
 
         if (!bindingResult.hasErrors() && optionalScooterType.isPresent()) {
 
-            changeUserBalance(optionalUser, seasonTicketRequestDTO);
-
             int remainingTime = calculateRemainingTime(seasonTicketRequestDTO, optionalScooterType.get());
+            int correctPrice = calculateCorrectPrice(optionalScooterType.get(), remainingTime);
 
             var seasonTicket = seasonTicketService.save(seasonTicketRequestMapper
                     .toEntity(seasonTicketRequestDTO,
                             optionalScooterType.get(),
-                            calculateCorrectPrice(optionalScooterType.get(), remainingTime),
+                            correctPrice,
                             remainingTime,
                             duration));
+
+            changeUserBalance(optionalUser, correctPrice);
 
             return new ResponseEntity<>(seasonTicketFullResponseMapper.toDto(seasonTicket), HttpStatus.CREATED);
         } else {
@@ -159,8 +170,8 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
 
     }
 
-    private void changeUserBalance(Optional<User> optionalUser, SeasonTicketRequestDTO seasonTicketRequestDTO) {
-        optionalUser.ifPresent(user -> user.setBalance(user.getBalance() - seasonTicketRequestDTO.getPrice()));
+    private void changeUserBalance(Optional<User> optionalUser, int price) {
+        optionalUser.ifPresent(user -> user.setBalance(user.getBalance() - price));
     }
 
     private int calculateRemainingTime(SeasonTicketRequestDTO seasonTicketRequestDTO, ScooterType scooterType) {

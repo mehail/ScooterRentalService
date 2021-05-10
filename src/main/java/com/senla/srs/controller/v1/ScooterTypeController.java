@@ -86,7 +86,7 @@ public class ScooterTypeController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('scooterTypes:write')")
     public ResponseEntity<?> delete(@PathVariable Long id) throws NotFoundEntityException {
-        return entityControllerFacade.delete(id);
+        return entityControllerFacade.delete(id, null);
     }
 
 }

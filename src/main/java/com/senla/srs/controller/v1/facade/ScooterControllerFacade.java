@@ -79,7 +79,7 @@ public class ScooterControllerFacade extends AbstractFacade implements
     }
 
     @Override
-    public ResponseEntity<?> delete(String serialNumber) {
+    public ResponseEntity<?> delete(String serialNumber, String token) {
         scooterService.deleteById(serialNumber);
 
         return new ResponseEntity<>("Scooter with this serial number was deleted", HttpStatus.ACCEPTED);
