@@ -1,14 +1,13 @@
 package com.senla.srs.security;
 
-import com.senla.srs.exception.JwtAuthenticationException;
 import com.senla.srs.entity.security.Role;
+import com.senla.srs.exception.JwtAuthenticationException;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
@@ -37,11 +36,11 @@ public class JwtTokenProvider implements JwtTokenData{
     }
 
     public String createToken(Long id, String email, String role) {
-        Claims claims = Jwts.claims().setSubject(email);
+        var claims = Jwts.claims().setSubject(email);
         claims.put("role", role);
         claims.put("id", id);
-        Date now = new Date();
-        Date validity = new Date(now.getTime() + validityInMilliseconds * 1000);
+        var now = new Date();
+        var validity = new Date(now.getTime() + validityInMilliseconds * 1000);
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -61,7 +60,7 @@ public class JwtTokenProvider implements JwtTokenData{
     }
 
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(getUsername(token));
+        var userDetails = userDetailsService.loadUserByUsername(getUsername(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 

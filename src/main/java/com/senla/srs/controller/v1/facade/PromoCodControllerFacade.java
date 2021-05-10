@@ -49,7 +49,7 @@ public class PromoCodControllerFacade extends AbstractFacade implements
     public ResponseEntity<?> createOrUpdate(PromoCodDTO promoCodDTO, BindingResult bindingResult, String token) {
         Optional<PromoCod> optionalPromoCod = promoCodService.retrievePromoCodByName(promoCodDTO.getName());
 
-        PromoCodDTO validatePromoCodDTO = promoCodValidator.validate(promoCodDTO, optionalPromoCod, bindingResult);
+        var validatePromoCodDTO = promoCodValidator.validate(promoCodDTO, optionalPromoCod, bindingResult);
 
         return save(validatePromoCodDTO, bindingResult);
     }
@@ -68,7 +68,7 @@ public class PromoCodControllerFacade extends AbstractFacade implements
     private ResponseEntity<?> save(PromoCodDTO promoCodDTO, BindingResult bindingResult) {
 
         if (!bindingResult.hasErrors()) {
-            PromoCod promoCod = promoCodService.save(promoCodMapper.toEntity(promoCodDTO));
+            var promoCod = promoCodService.save(promoCodMapper.toEntity(promoCodDTO));
 
             return new ResponseEntity<>(promoCodMapper.toDto(promoCod), HttpStatus.CREATED);
         } else {

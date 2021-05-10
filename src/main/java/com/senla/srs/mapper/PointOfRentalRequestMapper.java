@@ -12,14 +12,14 @@ public class PointOfRentalRequestMapper extends AbstractMapper<PointOfRental, Po
     }
 
     public PointOfRental toEntity(PointOfRentalRequestDTO dto, AddressDTO addressDTO) {
-        PointOfRental pointOfRental = super.toEntity(dto);
+        var pointOfRental = super.toEntity(dto);
         pointOfRental.setAddress(addressDTO);
 
         return pointOfRental;
     }
 
     public PointOfRental toEntity(PointOfRentalRequestDTO dto, AddressDTO addressDTO, Long id) {
-        PointOfRental pointOfRental = toEntity(dto, addressDTO);
+        var pointOfRental = toEntity(dto, addressDTO);
         pointOfRental.setId(id);
 
         return pointOfRental;

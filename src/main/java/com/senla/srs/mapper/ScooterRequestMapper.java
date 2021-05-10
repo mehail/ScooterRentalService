@@ -13,7 +13,7 @@ public class ScooterRequestMapper extends AbstractMapper<Scooter, ScooterRequest
     }
 
     public Scooter toEntity(ScooterRequestDTO dto, ScooterType scooterType) {
-        Scooter scooter = super.toEntity(dto);
+        var scooter = super.toEntity(dto);
         scooter.setType(scooterType);
 
         return scooter;

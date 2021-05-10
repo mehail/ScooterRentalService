@@ -66,7 +66,7 @@ public class PointOfRentalControllerFacade extends AbstractFacade implements
         Optional<AddressDTO> optionalAddressDTO =
                 addressDtoService.retrieveAddressDtoById(pointOfRentalRequestDTO.getAddressId());
 
-        PointOfRentalRequestDTO validPointOfRentalRequestDTO =
+        var validPointOfRentalRequestDTO =
                 pointOfRentalRequestValidator.validate(pointOfRentalRequestDTO, optionalAddressDTO, bindingResult);
 
         return save(validPointOfRentalRequestDTO, optionalAddressDTO, bindingResult);
@@ -90,7 +90,7 @@ public class PointOfRentalControllerFacade extends AbstractFacade implements
                                    BindingResult bindingResult) {
 
         if (!bindingResult.hasErrors() && optionalAddressDTO.isPresent()) {
-            PointOfRental pointOfRental = pointOfRentalService.save(pointOfRentalRequestMapper
+            var pointOfRental = pointOfRentalService.save(pointOfRentalRequestMapper
                             .toEntity(pointOfRentalRequestDTO,
                                     optionalAddressDTO.get(),
                                     getExistEntityId(pointOfRentalRequestDTO)));

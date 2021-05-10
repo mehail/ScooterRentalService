@@ -146,20 +146,19 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
     }
 
     private ResponseEntity<?> save(RentalSessionRequestDTO rentalSessionRequestDTO,
-                           Optional<User> optionalUser,
-                           Optional<Scooter> optionalScooter,
-                           Optional<SeasonTicket> optionalSeasonTicket,
-                           Optional<PromoCod> optionalPromoCod,
-                           BindingResult bindingResult)
+                                   Optional<User> optionalUser,
+                                   Optional<Scooter> optionalScooter,
+                                   Optional<SeasonTicket> optionalSeasonTicket,
+                                   Optional<PromoCod> optionalPromoCod,
+                                   BindingResult bindingResult)
             throws NotFoundEntityException {
 
         if (!bindingResult.hasErrors()) {
-            RentalSession rentalSession =
-                    toEntity(rentalSessionRequestDTO,
-                            optionalUser,
-                            optionalScooter,
-                            optionalSeasonTicket,
-                            optionalPromoCod);
+            var rentalSession = toEntity(rentalSessionRequestDTO,
+                    optionalUser,
+                    optionalScooter,
+                    optionalSeasonTicket,
+                    optionalPromoCod);
 
             int rate = calculateRate(rentalSession);
             rentalSession.setRate(rate);
@@ -181,9 +180,9 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
                                    Optional<PromoCod> optionalPromoCod)
             throws NotFoundEntityException {
 
-        User user = optionalUser.orElseThrow(() -> new NotFoundEntityException(User.class));
+        var user = optionalUser.orElseThrow(() -> new NotFoundEntityException(User.class));
 
-        Scooter scooter = optionalScooter.orElseThrow(() -> new NotFoundEntityException(Scooter.class));
+        var scooter = optionalScooter.orElseThrow(() -> new NotFoundEntityException(Scooter.class));
 
         Long seasonTicketId = rentalSessionRequestDTO.getSeasonTicketId();
         SeasonTicket seasonTicket = seasonTicketId != null
@@ -207,9 +206,9 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
     }
 
     private void changeEntityState(RentalSession rentalSession, Integer rate) {
-        Scooter scooter = rentalSession.getScooter();
-        SeasonTicket seasonTicket = rentalSession.getSeasonTicket();
-        User user = rentalSession.getUser();
+        var scooter = rentalSession.getScooter();
+        var seasonTicket = rentalSession.getSeasonTicket();
+        var user = rentalSession.getUser();
 
         if (rentalSession.getEndDate() == null) {
             scooter.setStatus(ScooterStatus.USED);
@@ -244,8 +243,8 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
 
     private int getUsageTime(RentalSession rentalSession) {
         if (rentalSession.getEndDate() != null && rentalSession.getEndTime() != null) {
-            LocalDateTime begin = LocalDateTime.of(rentalSession.getBeginDate(), rentalSession.getBeginTime());
-            LocalDateTime end = LocalDateTime.of(rentalSession.getEndDate(), rentalSession.getBeginTime());
+            var begin = LocalDateTime.of(rentalSession.getBeginDate(), rentalSession.getBeginTime());
+            var end = LocalDateTime.of(rentalSession.getEndDate(), rentalSession.getBeginTime());
             return (int) (Duration.between(begin, end).getSeconds() / 60);
         } else {
             return 0;
@@ -274,7 +273,7 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
     }
 
     private int applyPromoCod(int rate, PromoCod promoCod, User user) {
-        int discountPercentage = 0;
+        var discountPercentage = 0;
 
         if (promoCod != null) {
 

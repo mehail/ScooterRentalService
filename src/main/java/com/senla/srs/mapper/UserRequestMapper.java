@@ -29,7 +29,7 @@ public class UserRequestMapper extends AbstractMapper<User, UserRequestDTO> {
     }
 
     public String cryptPassword(String rowPassword) {
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(encryptionStrength);
+        var bCryptPasswordEncoder = new BCryptPasswordEncoder(encryptionStrength);
         return bCryptPasswordEncoder.encode(rowPassword);
     }
 }

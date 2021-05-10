@@ -70,13 +70,13 @@ public class RentalSessionRequestValidatorImpl implements RentalSessionRequestVa
             if (optionalPromoCod.isEmpty()) {
                 errors.reject(PROMO_COD_NAME, "PromoCod with this name does not exist");
             } else {
-                PromoCod promoCod = optionalPromoCod.get();
+                var promoCod = optionalPromoCod.get();
 
                 if (!promoCod.getAvailable()) {
                     errors.reject(PROMO_COD_NAME, "PromoCod with this name not available for use");
                 }
 
-                LocalDate sessionBegin = rentalSessionRequestDTO.getBegin().toLocalDate();
+                var sessionBegin = rentalSessionRequestDTO.getBegin().toLocalDate();
                 LocalDate promoCodStart = promoCod.getStartDate();
                 LocalDate promoCodExpired = promoCod.getExpiredDate();
                 if (!sessionBegin.isBefore(promoCodStart) && sessionBegin.isBefore(promoCodExpired)) {
@@ -98,13 +98,13 @@ public class RentalSessionRequestValidatorImpl implements RentalSessionRequestVa
             if (optionalSeasonTicket.isEmpty()) {
                 errors.reject(SEASON_TICKET_ID, "Season ticket with this ID does not exist");
             } else {
-                SeasonTicket seasonTicket = optionalSeasonTicket.get();
+                var seasonTicket = optionalSeasonTicket.get();
 
                 if (!seasonTicket.getAvailableForUse()) {
                     errors.reject(SEASON_TICKET_ID, "Season ticket with this ID not available for use");
                 }
 
-                LocalDate sessionBegin = rentalSessionRequestDTO.getBegin().toLocalDate();
+                var sessionBegin = rentalSessionRequestDTO.getBegin().toLocalDate();
                 LocalDate seasonStart = seasonTicket.getStartDate();
                 LocalDate seasonExpired = seasonTicket.getExpiredDate();
                 if (sessionBegin.isBefore(seasonStart) && !sessionBegin.isBefore(seasonExpired)) {
@@ -146,7 +146,7 @@ public class RentalSessionRequestValidatorImpl implements RentalSessionRequestVa
                                                         Errors errors) {
 
         if (optionalExistRentalSession.isPresent()) {
-            RentalSession existRentalSession = optionalExistRentalSession.get();
+            var existRentalSession = optionalExistRentalSession.get();
 
             if (existRentalSession.getEndDate() != null || existRentalSession.getEndTime() != null) {
                 errors.reject("this", "Completed rental session is not available for editing");
@@ -190,7 +190,7 @@ public class RentalSessionRequestValidatorImpl implements RentalSessionRequestVa
 
     private boolean isMatchPromoCodName(RentalSessionRequestDTO rentalSessionRequestDTO, RentalSession existRentalSession) {
         String dtoPromoCodName = rentalSessionRequestDTO.getPromoCodName();
-        PromoCod existPromoCod = existRentalSession.getPromoCod();
+        var existPromoCod = existRentalSession.getPromoCod();
 
         if (dtoPromoCodName == null && existPromoCod == null) {
             return true;
@@ -203,7 +203,7 @@ public class RentalSessionRequestValidatorImpl implements RentalSessionRequestVa
 
     private boolean isMatchSeasonTicketId(RentalSessionRequestDTO rentalSessionRequestDTO, RentalSession existRentalSession) {
         Long dtoSeasonTicketId = rentalSessionRequestDTO.getSeasonTicketId();
-        SeasonTicket existSeasonTicket = existRentalSession.getSeasonTicket();
+        var existSeasonTicket = existRentalSession.getSeasonTicket();
 
         if (dtoSeasonTicketId == null && existSeasonTicket == null) {
             return true;

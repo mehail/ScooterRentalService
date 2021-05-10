@@ -16,7 +16,7 @@ public class RentalSessionRequestMapper extends AbstractMapper<RentalSession, Re
                                   Integer rate,
                                   SeasonTicket seasonTicket,
                                   PromoCod promoCod) {
-        RentalSession rentalSession = super.toEntity(dto);
+        var rentalSession = super.toEntity(dto);
 
         rentalSession.setBeginDate(dto.getBegin().toLocalDate());
         rentalSession.setBeginTime(dto.getBegin().toLocalTime());
@@ -43,7 +43,7 @@ public class RentalSessionRequestMapper extends AbstractMapper<RentalSession, Re
                                   PromoCod promoCod,
                                   Long id) {
 
-        RentalSession rentalSession = toEntity(dto, user, scooter, rate, seasonTicket, promoCod);
+        var rentalSession = toEntity(dto, user, scooter, rate, seasonTicket, promoCod);
         rentalSession.setId(id);
 
         return rentalSession;

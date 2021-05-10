@@ -53,7 +53,7 @@ public class UserRequestValidatorImpl implements UserRequestValidator {
         if (optionalDto.isEmpty()) {
             errors.reject("email", "User with this email was not found");
         } else {
-            User existUser = optionalDto.get();
+            var existUser = optionalDto.get();
 
             if (!requestDto.getBalance().equals(existUser.getBalance())) {
                 errors.reject("balance", "Balance can only be changed by the Administrator");

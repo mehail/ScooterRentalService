@@ -73,8 +73,8 @@ public class ScooterControllerFacade extends AbstractFacade implements
         Optional<ScooterType> optionalScooterType =
                 scooterTypeService.retrieveScooterTypeById(scooterRequestDTO.getTypeId());
 
-        ScooterRequestDTO validScooterRequestDTO =
-                scooterRequestValidator.validate(scooterRequestDTO, optionalPointOfRental, optionalScooterType, bindingResult);
+        var validScooterRequestDTO = scooterRequestValidator.validate(scooterRequestDTO,
+                optionalPointOfRental, optionalScooterType, bindingResult);
 
         return save(validScooterRequestDTO, optionalScooterType, bindingResult);
     }
@@ -95,8 +95,7 @@ public class ScooterControllerFacade extends AbstractFacade implements
                                    BindingResult bindingResult) {
 
         if (!bindingResult.hasErrors() && optionalScooterType.isPresent()) {
-            Scooter scooter =
-                    scooterService.save(scooterRequestMapper.toEntity(scooterRequestDTO, optionalScooterType.get()));
+            var scooter = scooterService.save(scooterRequestMapper.toEntity(scooterRequestDTO, optionalScooterType.get()));
 
             return new ResponseEntity<>(scooterResponseMapper.toDto(scooter), HttpStatus.CREATED);
         } else {

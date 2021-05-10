@@ -2,7 +2,6 @@ package com.senla.srs.controller.v1;
 
 import com.senla.srs.dto.security.AuthenticationRequestDTO;
 import com.senla.srs.dto.security.AuthenticationResponseDTO;
-import com.senla.srs.entity.User;
 import com.senla.srs.repository.UserRepository;
 import com.senla.srs.security.JwtTokenProvider;
 import io.swagger.v3.oas.annotations.Operation;
@@ -43,7 +42,7 @@ public class AuthenticationController {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(),
                     request.getPassword()));
 
-            User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() ->
+            var user = userRepository.findByEmail(request.getEmail()).orElseThrow(() ->
                     new UsernameNotFoundException("User doesn't exists"));
 
             String token = jwtTokenProvider.createToken(user.getId(), request.getEmail(), user.getRole().name());

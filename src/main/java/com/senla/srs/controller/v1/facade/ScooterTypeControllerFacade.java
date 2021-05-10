@@ -64,8 +64,7 @@ public class ScooterTypeControllerFacade extends AbstractFacade implements
 
         Optional<MakerDTO> optionalMakerDTO = makerDtoService.retrieveMakerDtoById(scooterTypeRequestDTO.getMakerId());
 
-        ScooterTypeRequestDTO validScooterTypeRequestDTO =
-                scooterTypeRequestValidator.validate(scooterTypeRequestDTO, optionalMakerDTO, bindingResult);
+        var validScooterTypeRequestDTO = scooterTypeRequestValidator.validate(scooterTypeRequestDTO, optionalMakerDTO, bindingResult);
 
         return save(validScooterTypeRequestDTO, optionalMakerDTO, bindingResult);
     }
@@ -88,7 +87,7 @@ public class ScooterTypeControllerFacade extends AbstractFacade implements
                                    BindingResult bindingResult) {
 
         if (!bindingResult.hasErrors() && optionalMakerDTO.isPresent()) {
-            ScooterType scooterType = scooterTypeService.save(scooterTypeRequestMapper
+            var scooterType = scooterTypeService.save(scooterTypeRequestMapper
                     .toEntity(scooterTypeRequestDTO, optionalMakerDTO.get(), getExistEntityId(scooterTypeRequestDTO)));
 
             return new ResponseEntity<>(scooterTypeResponseMapper.toDto(scooterType), HttpStatus.CREATED);

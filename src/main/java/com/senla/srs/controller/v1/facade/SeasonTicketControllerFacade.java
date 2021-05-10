@@ -92,7 +92,7 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
         Optional<ScooterType> optionalScooterType =
                 scooterTypeService.retrieveScooterTypeById(seasonTicketRequestDTO.getScooterTypeId());
 
-        SeasonTicketRequestDTO validSeasonTicketRequestDTO = seasonTicketRequestValidator.validate(seasonTicketRequestDTO,
+        var validSeasonTicketRequestDTO = seasonTicketRequestValidator.validate(seasonTicketRequestDTO,
                 optionalSeasonTicket,
                 optionalUser,
                 optionalScooterType,
@@ -144,7 +144,7 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
 
             int remainingTime = calculateRemainingTime(seasonTicketRequestDTO, optionalScooterType.get());
 
-            SeasonTicket seasonTicket = seasonTicketService.save(seasonTicketRequestMapper
+            var seasonTicket = seasonTicketService.save(seasonTicketRequestMapper
                     .toEntity(seasonTicketRequestDTO,
                             optionalScooterType.get(),
                             calculateCorrectPrice(optionalScooterType.get(), remainingTime),
