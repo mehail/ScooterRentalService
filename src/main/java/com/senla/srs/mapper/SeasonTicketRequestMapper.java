@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class SeasonTicketRequestMapper extends AbstractMapper<SeasonTicket, SeasonTicketRequestDTO> {
+
     public SeasonTicketRequestMapper() {
         super(SeasonTicket.class, SeasonTicketRequestDTO.class);
     }
@@ -17,13 +18,11 @@ public class SeasonTicketRequestMapper extends AbstractMapper<SeasonTicket, Seas
                                  int remainingTime,
                                  int duration) {
 
-        var seasonTicket = new SeasonTicket();
+        var seasonTicket = super.toEntity(seasonTicketRequestDTO);
 
-        seasonTicket.setUserId(seasonTicketRequestDTO.getUserId());
         seasonTicket.setScooterType(scooterType);
         seasonTicket.setPrice(price);
         seasonTicket.setRemainingTime(remainingTime);
-        seasonTicket.setStartDate(seasonTicketRequestDTO.getStartDate());
         seasonTicket.setExpiredDate(seasonTicket.getStartDate().plusDays(duration));
         seasonTicket.setAvailableForUse(true);
 
@@ -40,7 +39,7 @@ public class SeasonTicketRequestMapper extends AbstractMapper<SeasonTicket, Seas
         var seasonTicket = toEntity(seasonTicketRequestDTO, scooterType, price, remainingTime, duration);
         seasonTicket.setId(id);
 
-        return seasonTicket;
+        return null;
     }
 
 }

@@ -9,19 +9,4 @@ public class SeasonTicketCompactResponseMapper extends AbstractMapper<SeasonTick
     public SeasonTicketCompactResponseMapper() {
         super(SeasonTicket.class, SeasonTicketCompactResponseDTO.class);
     }
-
-    @Override
-    public SeasonTicketCompactResponseDTO toDto(SeasonTicket entity) {
-        var dto = new SeasonTicketCompactResponseDTO();
-
-        dto.setId(entity.getId());
-        dto.setUserId(entity.getUserId());
-        dto.setScooterTypeId(entity.getScooterType().getId());
-        dto.setRemainingTime(entity.getRemainingTime());
-        dto.setStartDate(entity.getStartDate());
-        dto.setExpiredDate(entity.getExpiredDate());
-        dto.setAvailableForUse(entity.getAvailableForUse());
-
-        return dto;
-    }
 }
