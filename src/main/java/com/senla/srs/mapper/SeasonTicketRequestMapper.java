@@ -17,11 +17,13 @@ public class SeasonTicketRequestMapper extends AbstractMapper<SeasonTicket, Seas
                                  int remainingTime,
                                  int duration) {
 
-        SeasonTicket seasonTicket = super.toEntity(seasonTicketRequestDTO);
+        var seasonTicket = new SeasonTicket();
 
+        seasonTicket.setUserId(seasonTicketRequestDTO.getUserId());
         seasonTicket.setScooterType(scooterType);
         seasonTicket.setPrice(price);
         seasonTicket.setRemainingTime(remainingTime);
+        seasonTicket.setStartDate(seasonTicketRequestDTO.getStartDate());
         seasonTicket.setExpiredDate(seasonTicket.getStartDate().plusDays(duration));
         seasonTicket.setAvailableForUse(true);
 
@@ -35,10 +37,10 @@ public class SeasonTicketRequestMapper extends AbstractMapper<SeasonTicket, Seas
                                  int duration,
                                  Long id) {
 
-        SeasonTicket seasonTicket = toEntity(seasonTicketRequestDTO, scooterType, price, remainingTime, duration);
+        var seasonTicket = toEntity(seasonTicketRequestDTO, scooterType, price, remainingTime, duration);
         seasonTicket.setId(id);
 
-        return null;
+        return seasonTicket;
     }
 
 }
