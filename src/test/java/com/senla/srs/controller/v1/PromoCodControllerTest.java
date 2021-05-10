@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.senla.srs.controller.v1.util.AuthProvider;
 import com.senla.srs.entity.PromoCod;
 import com.senla.srs.mapper.PromoCodMapper;
-import com.senla.srs.repository.PromoCodRepository;
+import com.senla.srs.service.PromoCodService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -34,7 +34,7 @@ class PromoCodControllerTest {
     @Value("${spring.data.web.pageable.default-page-size}")
     private Integer pageSize;
     @Autowired
-    private PromoCodRepository promoCodRepository;
+    private PromoCodService promoCodService;
     @Autowired
     private PromoCodMapper promoCodMapper;
     @Autowired
@@ -47,6 +47,7 @@ class PromoCodControllerTest {
     private PromoCod getPromoCodWitName(String name) {
         return new PromoCod(name, LocalDate.of(2021, 1, 1), LocalDate.of(2021, 1, 2), 1, 0, true);
     }
+
 
     @Nested
     class GetAll {
@@ -86,8 +87,8 @@ class PromoCodControllerTest {
         public void setUp() {
             PromoCod getPromoCod = getPromoCodWitName(TEST_GET_NAME);
 
-            if (promoCodRepository.findByName(TEST_GET_NAME).isEmpty()) {
-                promoCodRepository.save(getPromoCod);
+            if (promoCodService.retrievePromoCodByName(TEST_GET_NAME).isEmpty()) {
+                promoCodService.save(getPromoCod);
             }
 
         }
@@ -121,8 +122,8 @@ class PromoCodControllerTest {
 
         @AfterEach
         public void tearDown() {
-            promoCodRepository.findByName(TEST_GET_NAME)
-                    .ifPresent(promoCod -> promoCodRepository.delete(promoCod));
+            promoCodService.retrievePromoCodByName(TEST_GET_NAME)
+                    .ifPresent(promoCod -> promoCodService.deleteByName(promoCod.getName()));
         }
 
     }
@@ -132,17 +133,13 @@ class PromoCodControllerTest {
 
         @BeforeEach
         public void setUp() {
-            promoCodRepository.findByName(TEST_POST_NAME)
-                    .ifPresent(promoCod -> promoCodRepository.delete(promoCod));
+            promoCodService.retrievePromoCodByName(TEST_POST_NAME)
+                    .ifPresent(promoCod -> promoCodService.deleteByName(promoCod.getName()));
         }
 
         @Test
         void createOrUpdateAdminAuth200() throws Exception {
             PromoCod promoCod = getPromoCodWitName(TEST_POST_NAME);
-
-            if (promoCodRepository.findByName(TEST_POST_NAME).isPresent()) {
-                promoCodRepository.delete(promoCodRepository.findByName(TEST_POST_NAME).get());
-            }
 
             mockMvc.perform(
                     post(URI)
@@ -173,10 +170,6 @@ class PromoCodControllerTest {
         void createOrUpdateNonAuth403() throws Exception {
             PromoCod promoCod = getPromoCodWitName(TEST_POST_NAME);
 
-            if (promoCodRepository.findByName(TEST_POST_NAME).isPresent()) {
-                promoCodRepository.delete(promoCodRepository.findByName(TEST_POST_NAME).get());
-            }
-
             mockMvc.perform(
                     post(URI)
                             .content(objectMapper.writeValueAsString(promoCodMapper.toDto(promoCod)))
@@ -202,8 +195,8 @@ class PromoCodControllerTest {
 
         @AfterEach
         public void tearDown() {
-            promoCodRepository.findByName(TEST_POST_NAME)
-                    .ifPresent(promoCod -> promoCodRepository.delete(promoCod));
+            promoCodService.retrievePromoCodByName(TEST_POST_NAME)
+                    .ifPresent(promoCod -> promoCodService.deleteByName(promoCod.getName()));
         }
     }
 
@@ -214,8 +207,8 @@ class PromoCodControllerTest {
         public void setUp() {
             PromoCod getPromoCod = getPromoCodWitName(TEST_DELETE_NAME);
 
-            if (promoCodRepository.findByName(TEST_DELETE_NAME).isEmpty()) {
-                promoCodRepository.save(getPromoCod);
+            if (promoCodService.retrievePromoCodByName(TEST_DELETE_NAME).isEmpty()) {
+                promoCodService.save(getPromoCod);
             }
         }
 
@@ -256,8 +249,8 @@ class PromoCodControllerTest {
 
         @AfterEach
         public void tearDown() {
-            promoCodRepository.findByName(TEST_DELETE_NAME)
-                    .ifPresent(promoCod -> promoCodRepository.delete(promoCod));
+            promoCodService.retrievePromoCodByName(TEST_DELETE_NAME)
+                    .ifPresent(promoCod -> promoCodService.deleteByName(promoCod.getName()));
         }
 
     }

@@ -13,6 +13,6 @@ public interface PromoCodService {
 
     Optional<PromoCod> retrievePromoCodByName(String name);
 
-    void deleteById(String name);
+    void deleteByName(String name);
 
 }

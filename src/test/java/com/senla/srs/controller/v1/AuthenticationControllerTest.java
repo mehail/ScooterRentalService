@@ -1,10 +1,15 @@
 package com.senla.srs.controller.v1;
 
 import com.senla.srs.dto.security.AuthenticationRequestDTO;
+import com.senla.srs.entity.User;
+import com.senla.srs.entity.UserStatus;
+import com.senla.srs.entity.security.Role;
+import com.senla.srs.service.UserService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,17 +17,28 @@ import org.springframework.http.ResponseEntity;
 @SpringBootTest
 class AuthenticationControllerTest {
 
-    @Value("${auth.login.admin}")
-    private String adminLogin;
-    @Value("${auth.password.admin}")
-    private String adminPassword;
+    private final static String EMAIL = "login@mail.com";
+    private final static String PASSWORD = "password";
+    private final User user = new User(null, EMAIL, PASSWORD, "Random", "Random", Role.USER,
+            UserStatus.ACTIVE, 0, null);
+    @Autowired
+    private UserService userService;
     @Autowired
     private AuthenticationController authenticationController;
+
+    @BeforeEach
+    public void setUp() {
+
+        if (userService.retrieveUserByEmail(EMAIL).isEmpty()) {
+            userService.save(user);
+        }
+
+    }
 
     @Test
     void authenticateOk() {
         ResponseEntity<?> responseEntity =
-                authenticationController.authenticate(new AuthenticationRequestDTO(adminLogin, adminPassword));
+                authenticationController.authenticate(new AuthenticationRequestDTO(EMAIL, PASSWORD));
 
         Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode(),
                 "Authentication failed with valid login and password");
@@ -31,10 +47,16 @@ class AuthenticationControllerTest {
     @Test
     void authenticateForbidden() {
         ResponseEntity<?> responseEntity =
-                authenticationController.authenticate(new AuthenticationRequestDTO(adminLogin, "otherPassword"));
+                authenticationController.authenticate(new AuthenticationRequestDTO(EMAIL, "otherPassword"));
 
         Assertions.assertEquals(HttpStatus.FORBIDDEN, responseEntity.getStatusCode(),
                 "Authentication completed successfully with invalid login password");
+    }
+
+    @AfterEach
+    public void tearDown() {
+        userService.retrieveUserByEmail(EMAIL)
+                .ifPresent(user -> userService.deleteById(user.getId()));
     }
 
 }
