@@ -33,8 +33,4 @@ public abstract class AbstractFacade {
         return jwtTokenData.getEmail(token);
     }
 
-    protected Role getAuthUserRole(String token) {
-        return jwtTokenData.getRole(token);
-    }
-
 }
