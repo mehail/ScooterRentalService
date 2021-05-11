@@ -74,6 +74,7 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
         } else {
             return new ResponseEntity<>("Unauthorized user session requested", HttpStatus.FORBIDDEN);
         }
+
     }
 
     @Transactional
@@ -132,6 +133,7 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
         } else {
             return new ResponseEntity<>("Rental session closed and cannot be deleted", HttpStatus.FORBIDDEN);
         }
+
     }
 
     @Override
@@ -229,22 +231,23 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
             }
 
         }
+
     }
 
     private int calculateRate(RentalSession rentalSession) {
         int pricePerMinute = rentalSession.getScooter().getType().getPricePerMinute();
-
         int billableTime = calculateBillableTime(rentalSession.getSeasonTicket(), getUsageTime(rentalSession));
-
         int priceWithoutPromoCod = billableTime * pricePerMinute;
 
         return applyPromoCod(priceWithoutPromoCod, rentalSession.getPromoCod(), rentalSession.getUser());
     }
 
     private int getUsageTime(RentalSession rentalSession) {
+
         if (rentalSession.getEndDate() != null && rentalSession.getEndTime() != null) {
             var begin = LocalDateTime.of(rentalSession.getBeginDate(), rentalSession.getBeginTime());
-            var end = LocalDateTime.of(rentalSession.getEndDate(), rentalSession.getBeginTime());
+            var end = LocalDateTime.of(rentalSession.getEndDate(), rentalSession.getEndTime());
+
             return (int) (Duration.between(begin, end).getSeconds() / 60);
         } else {
             return 0;
@@ -253,6 +256,7 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
     }
 
     private int calculateBillableTime(SeasonTicket seasonTicket, int usageTime) {
+
         if (seasonTicket != null) {
 
             if (seasonTicket.getRemainingTime() >= usageTime) {
