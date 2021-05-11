@@ -111,7 +111,7 @@ public class RentalSessionRequestValidatorImpl implements RentalSessionRequestVa
                 LocalDate seasonStart = seasonTicket.getStartDate();
                 LocalDate seasonExpired = seasonTicket.getExpiredDate();
 
-                if (sessionBegin.isBefore(seasonStart) && !sessionBegin.isBefore(seasonExpired)) {
+                if (sessionBegin.isBefore(seasonStart) || !sessionBegin.isBefore(seasonExpired)) {
                     errors.reject(SEASON_TICKET_ID, "The start of the rental session does not match the season ticket");
                 }
 
