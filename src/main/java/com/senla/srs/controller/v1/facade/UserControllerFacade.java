@@ -64,10 +64,16 @@ public class UserControllerFacade extends AbstractFacade implements
 
     @Override
     public ResponseEntity<?> createOrUpdate(UserRequestDTO requestDTO, BindingResult bindingResult, String token) {
-        Optional<com.senla.srs.entity.User> optionalExistUser = userService.retrieveUserByEmail(requestDTO.getEmail());
+        Optional<User> optionalExistUser = userService.retrieveUserByEmail(requestDTO.getEmail());
 
         if (token == null || token.isEmpty()) {
-            return save(userRequestValidator.validateNewDto(requestDTO, bindingResult), bindingResult);
+
+            if (optionalExistUser.isEmpty()) {
+                return save(userRequestValidator.validateNewDto(requestDTO, bindingResult), bindingResult);
+            } else {
+                return new ResponseEntity<>(RE_AUTH, HttpStatus.FORBIDDEN);
+            }
+
         } else {
 
             if (isAdmin(token)) {
