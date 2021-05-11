@@ -53,7 +53,7 @@ ___
         <tr>
             <td>Java</td>
             <td align="center">11</td>
-            <td><i>sudo apt-get install openjdk-11-jdk</i></td>
+            <td><i>sudo apt install openjdk-11-jdk</i></td>
             <td><a href="https://jdk.java.net/java-se-ri/11">jdk.java.net</a></td>
         </tr>
         <tr>
@@ -65,7 +65,7 @@ ___
         <tr>
             <td>Maven</td>
             <td align="center">3.6.3</td>
-            <td><i>sudo apt-get install maven</i></td>
+            <td><i>sudo apt install maven</i></td>
             <td><a href="https://maven.apache.org/download.cgi">maven.apache.org</a></td>
         </tr>
     </tbody>
