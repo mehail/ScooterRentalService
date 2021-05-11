@@ -1,16 +1,16 @@
 package com.senla.srs.controller.v1.facade;
 
+import com.senla.srs.dto.scooter.ScooterCompactResponseDTO;
 import com.senla.srs.dto.scooter.ScooterDTO;
 import com.senla.srs.dto.scooter.ScooterRequestDTO;
-import com.senla.srs.dto.scooter.ScooterCompactResponseDTO;
 import com.senla.srs.entity.PointOfRental;
 import com.senla.srs.entity.RentalSession;
 import com.senla.srs.entity.Scooter;
 import com.senla.srs.entity.ScooterType;
 import com.senla.srs.exception.NotFoundEntityException;
+import com.senla.srs.mapper.ScooterCompactResponseMapper;
 import com.senla.srs.mapper.ScooterFullResponseMapper;
 import com.senla.srs.mapper.ScooterRequestMapper;
-import com.senla.srs.mapper.ScooterResponseMapper;
 import com.senla.srs.security.JwtTokenData;
 import com.senla.srs.service.PointOfRentalService;
 import com.senla.srs.service.RentalSessionService;
@@ -30,12 +30,12 @@ import java.util.Optional;
 public class ScooterControllerFacade extends AbstractFacade implements
         EntityControllerFacade<ScooterDTO, ScooterRequestDTO, ScooterCompactResponseDTO, String> {
 
-    private final ScooterService scooterService;
-    private final ScooterTypeService scooterTypeService;
     private final PointOfRentalService pointOfRentalService;
     private final RentalSessionService rentalSessionService;
+    private final ScooterService scooterService;
+    private final ScooterTypeService scooterTypeService;
     private final ScooterRequestMapper scooterRequestMapper;
-    private final ScooterResponseMapper scooterResponseMapper;
+    private final ScooterCompactResponseMapper scooterCompactResponseMapper;
     private final ScooterFullResponseMapper scooterFullResponseMapper;
     private final ScooterRequestValidator scooterRequestValidator;
 
@@ -44,24 +44,24 @@ public class ScooterControllerFacade extends AbstractFacade implements
                                    ScooterService scooterService,
                                    ScooterTypeService scooterTypeService,
                                    ScooterRequestMapper scooterRequestMapper,
-                                   ScooterResponseMapper scooterResponseMapper,
+                                   ScooterCompactResponseMapper scooterCompactResponseMapper,
                                    ScooterFullResponseMapper scooterFullResponseMapper,
                                    ScooterRequestValidator scooterRequestValidator,
                                    JwtTokenData jwtTokenData) {
         super(jwtTokenData);
+        this.pointOfRentalService = pointOfRentalService;
+        this.rentalSessionService = rentalSessionService;
         this.scooterService = scooterService;
         this.scooterTypeService = scooterTypeService;
         this.scooterRequestMapper = scooterRequestMapper;
-        this.scooterResponseMapper = scooterResponseMapper;
-        this.pointOfRentalService = pointOfRentalService;
-        this.scooterRequestValidator = scooterRequestValidator;
+        this.scooterCompactResponseMapper = scooterCompactResponseMapper;
         this.scooterFullResponseMapper = scooterFullResponseMapper;
-        this.rentalSessionService = rentalSessionService;
+        this.scooterRequestValidator = scooterRequestValidator;
     }
 
     @Override
     public Page<ScooterCompactResponseDTO> getAll(Integer page, Integer size, String sort, String token) {
-        return scooterResponseMapper.mapPageToDtoPage(scooterService.retrieveAllScooters(page, size, sort));
+        return scooterCompactResponseMapper.mapPageToDtoPage(scooterService.retrieveAllScooters(page, size, sort));
     }
 
     @Override
@@ -69,7 +69,9 @@ public class ScooterControllerFacade extends AbstractFacade implements
         List<RentalSession> rentalSessions = rentalSessionService.retrieveRentalSessionByScooterSerialNumber(serialNumber);
 
         return new ResponseEntity<>(scooterService.retrieveScooterBySerialNumber(serialNumber)
-                .map(scooter -> scooterFullResponseMapper.toFullDto(scooter, rentalSessions))
+                .map(isAdmin(token)
+                        ? scooter -> scooterFullResponseMapper.toFullDto(scooter, rentalSessions)
+                        : scooterCompactResponseMapper::toDto)
                 .orElseThrow(() -> new NotFoundEntityException(Scooter.class, serialNumber)), HttpStatus.OK);
     }
 
@@ -109,7 +111,7 @@ public class ScooterControllerFacade extends AbstractFacade implements
         if (!bindingResult.hasErrors() && optionalScooterType.isPresent()) {
             var scooter = scooterService.save(scooterRequestMapper.toEntity(scooterRequestDTO, optionalScooterType.get()));
 
-            return new ResponseEntity<>(scooterResponseMapper.toDto(scooter), HttpStatus.CREATED);
+            return new ResponseEntity<>(scooterCompactResponseMapper.toDto(scooter), HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
         }

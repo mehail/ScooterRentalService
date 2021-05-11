@@ -24,25 +24,26 @@ import java.util.Optional;
 public class ScooterTypeControllerFacade extends AbstractFacade implements
         EntityControllerFacade<ScooterTypeDTO, ScooterTypeRequestDTO, ScooterTypeResponseDTO, Long> {
 
-    private final ScooterTypeService scooterTypeService;
     private final MakerDtoService makerDtoService;
+    private final ScooterTypeService scooterTypeService;
     private final ScooterTypeRequestMapper scooterTypeRequestMapper;
     private final ScooterTypeResponseMapper scooterTypeResponseMapper;
     private final ScooterTypeRequestValidator scooterTypeRequestValidator;
 
-    public ScooterTypeControllerFacade(ScooterTypeService scooterTypeService,
-                                       MakerDtoService makerDtoService,
+    public ScooterTypeControllerFacade(MakerDtoService makerDtoService,
+                                       ScooterTypeService scooterTypeService,
                                        ScooterTypeRequestMapper scooterTypeRequestMapper,
                                        ScooterTypeResponseMapper scooterTypeResponseMapper,
                                        ScooterTypeRequestValidator scooterTypeRequestValidator,
                                        JwtTokenData jwtTokenData) {
         super(jwtTokenData);
-        this.scooterTypeService = scooterTypeService;
         this.makerDtoService = makerDtoService;
+        this.scooterTypeService = scooterTypeService;
         this.scooterTypeRequestMapper = scooterTypeRequestMapper;
         this.scooterTypeResponseMapper = scooterTypeResponseMapper;
         this.scooterTypeRequestValidator = scooterTypeRequestValidator;
     }
+
 
     @Override
     public Page<ScooterTypeResponseDTO> getAll(Integer page, Integer size, String sort, String token) {

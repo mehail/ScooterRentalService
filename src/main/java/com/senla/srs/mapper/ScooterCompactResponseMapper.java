@@ -5,9 +5,9 @@ import com.senla.srs.entity.Scooter;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ScooterResponseMapper extends AbstractMapperWithPagination<Scooter, ScooterCompactResponseDTO> {
+public class ScooterCompactResponseMapper extends AbstractMapperWithPagination<Scooter, ScooterCompactResponseDTO> {
 
-    public ScooterResponseMapper() {
+    public ScooterCompactResponseMapper() {
         super(Scooter.class, ScooterCompactResponseDTO.class);
     }
 

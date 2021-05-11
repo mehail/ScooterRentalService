@@ -51,8 +51,12 @@ public class ScooterController {
 
     @GetMapping("/{serialNumber}")
     @PreAuthorize("hasAuthority('scooters:read')")
-    public ResponseEntity<?> getBySerialNumber(@PathVariable String serialNumber) throws NotFoundEntityException {
-        return entityControllerFacade.getById(serialNumber, null);
+    public ResponseEntity<?> getBySerialNumber(@PathVariable String serialNumber,
+                                               @Parameter(hidden = true)
+                                               @RequestHeader(name = "Authorization", required = false) String token)
+            throws NotFoundEntityException {
+
+        return entityControllerFacade.getById(serialNumber, token);
     }
 
 

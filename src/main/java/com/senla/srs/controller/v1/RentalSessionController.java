@@ -1,10 +1,9 @@
 package com.senla.srs.controller.v1;
 
 import com.senla.srs.controller.v1.facade.EntityControllerFacade;
-import com.senla.srs.dto.rentalsession.RentalSessionCompactResponseDTO;
 import com.senla.srs.dto.rentalsession.RentalSessionDTO;
-import com.senla.srs.dto.rentalsession.RentalSessionRequestDTO;
 import com.senla.srs.dto.rentalsession.RentalSessionFullResponseDTO;
+import com.senla.srs.dto.rentalsession.RentalSessionRequestDTO;
 import com.senla.srs.exception.NotFoundEntityException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -30,7 +29,7 @@ import javax.validation.Valid;
 public class RentalSessionController {
 
     private final EntityControllerFacade<RentalSessionDTO, RentalSessionRequestDTO,
-            RentalSessionCompactResponseDTO, Long> entityControllerFacade;
+            RentalSessionFullResponseDTO, Long> entityControllerFacade;
 
     @Operation(summary = "Get a list of Rental sessions",
             description = "If the User is not an Administrator, then a list with an authorized User is returned")
@@ -40,7 +39,7 @@ public class RentalSessionController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('rentalSessions:read')")
-    public Page<RentalSessionCompactResponseDTO> getAll(Integer page,
+    public Page<RentalSessionFullResponseDTO> getAll(Integer page,
                                                      Integer size,
                                                      @RequestParam(defaultValue = "id") String sort,
                                                      @Parameter(hidden = true)

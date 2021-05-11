@@ -32,7 +32,8 @@ public class UserControllerFacade extends AbstractFacade implements
     public UserControllerFacade(UserFullResponseMapper userFullResponseMapper,
                                 UserRequestMapper userRequestMapper,
                                 UserRequestValidator userRequestValidator,
-                                JwtTokenData jwtTokenData, UserService userService) {
+                                UserService userService,
+                                JwtTokenData jwtTokenData) {
         super(jwtTokenData);
         this.userFullResponseMapper = userFullResponseMapper;
         this.userRequestMapper = userRequestMapper;

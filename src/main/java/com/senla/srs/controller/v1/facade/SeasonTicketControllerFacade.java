@@ -43,16 +43,17 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
                                         SeasonTicketRequestMapper seasonTicketRequestMapper,
                                         SeasonTicketFullResponseMapper seasonTicketFullResponseMapper,
                                         SeasonTicketRequestValidator seasonTicketRequestValidator,
+                                        UserService userService,
                                         @Value("${srs.season.duration:365}") int duration,
-                                        JwtTokenData jwtTokenData, UserService userService) {
+                                        JwtTokenData jwtTokenData) {
         super(jwtTokenData);
         this.seasonTicketService = seasonTicketService;
         this.scooterTypeService = scooterTypeService;
         this.seasonTicketRequestMapper = seasonTicketRequestMapper;
-        this.seasonTicketFullResponseMapper = seasonTicketFullResponseMapper;
-        this.duration = duration;
         this.seasonTicketRequestValidator = seasonTicketRequestValidator;
+        this.seasonTicketFullResponseMapper = seasonTicketFullResponseMapper;
         this.userService = userService;
+        this.duration = duration;
     }
 
     @Override
