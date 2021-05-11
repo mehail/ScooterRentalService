@@ -1,12 +1,13 @@
 package com.senla.srs.controller.v1.facade;
 
+import com.senla.srs.dto.rentalsession.RentalSessionCompactResponseDTO;
 import com.senla.srs.dto.rentalsession.RentalSessionDTO;
 import com.senla.srs.dto.rentalsession.RentalSessionRequestDTO;
-import com.senla.srs.dto.rentalsession.RentalSessionResponseDTO;
 import com.senla.srs.entity.*;
 import com.senla.srs.exception.NotFoundEntityException;
+import com.senla.srs.mapper.RentalSessionCompactResponseMapper;
+import com.senla.srs.mapper.RentalSessionFullResponseMapper;
 import com.senla.srs.mapper.RentalSessionRequestMapper;
-import com.senla.srs.mapper.RentalSessionResponseMapper;
 import com.senla.srs.security.JwtTokenData;
 import com.senla.srs.service.*;
 import com.senla.srs.validator.RentalSessionRequestValidator;
@@ -23,12 +24,13 @@ import java.util.Optional;
 
 @Controller
 public class RentalSessionControllerFacade extends AbstractFacade implements
-        EntityControllerFacade<RentalSessionDTO, RentalSessionRequestDTO, RentalSessionResponseDTO, Long> {
+        EntityControllerFacade<RentalSessionDTO, RentalSessionRequestDTO, RentalSessionCompactResponseDTO, Long> {
 
     private final PromoCodService promoCodService;
     private final RentalSessionService rentalSessionService;
     private final RentalSessionRequestMapper rentalSessionRequestMapper;
-    private final RentalSessionResponseMapper rentalSessionResponseMapper;
+    private final RentalSessionFullResponseMapper rentalSessionFullResponseMapper;
+    private final RentalSessionCompactResponseMapper rentalSessionCompactResponseMapper;
     private final ScooterService scooterService;
     private final SeasonTicketService seasonTicketService;
     private final UserService userService;
@@ -37,29 +39,30 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
     public RentalSessionControllerFacade(PromoCodService promoCodService,
                                          RentalSessionService rentalSessionService,
                                          RentalSessionRequestMapper rentalSessionRequestMapper,
-                                         RentalSessionResponseMapper rentalSessionResponseMapper,
+                                         RentalSessionFullResponseMapper rentalSessionFullResponseMapper,
                                          ScooterService scooterService,
                                          SeasonTicketService seasonTicketService,
                                          RentalSessionRequestValidator rentalSessionRequestValidator,
                                          UserService userService,
-                                         JwtTokenData jwtTokenData) {
+                                         JwtTokenData jwtTokenData, RentalSessionCompactResponseMapper rentalSessionCompactResponseMapper) {
         super(jwtTokenData);
         this.rentalSessionService = rentalSessionService;
         this.rentalSessionRequestMapper = rentalSessionRequestMapper;
-        this.rentalSessionResponseMapper = rentalSessionResponseMapper;
+        this.rentalSessionFullResponseMapper = rentalSessionFullResponseMapper;
         this.scooterService = scooterService;
         this.seasonTicketService = seasonTicketService;
         this.promoCodService = promoCodService;
         this.userService = userService;
         this.rentalSessionRequestValidator = rentalSessionRequestValidator;
+        this.rentalSessionCompactResponseMapper = rentalSessionCompactResponseMapper;
     }
 
     @Override
-    public Page<RentalSessionResponseDTO> getAll(Integer page, Integer size, String sort, String token) {
+    public Page<RentalSessionCompactResponseDTO> getAll(Integer page, Integer size, String sort, String token) {
         return isAdmin(token)
-                ? rentalSessionResponseMapper.mapPageToDtoPage(rentalSessionService.retrieveAllRentalSessions(page, size, sort))
+                ? rentalSessionCompactResponseMapper.mapPageToDtoPage(rentalSessionService.retrieveAllRentalSessions(page, size, sort))
 
-                : rentalSessionResponseMapper.mapPageToDtoPage(
+                : rentalSessionCompactResponseMapper.mapPageToDtoPage(
                 rentalSessionService.retrieveAllRentalSessionsByUserId(getAuthUserId(token), page, size, sort));
     }
 
@@ -69,7 +72,7 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
 
         if (isAdmin(token) || isThisUserRentalSession(optionalRentalSession, token)) {
             return new ResponseEntity<>(optionalRentalSession
-                    .map(rentalSessionResponseMapper::toDto)
+                    .map(rentalSessionFullResponseMapper::toDto)
                     .orElseThrow(() -> new NotFoundEntityException(RentalSession.class, id)), HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Unauthorized user session requested", HttpStatus.FORBIDDEN);
@@ -168,7 +171,7 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
 
             changeEntityState(rentalSession, savedRentalSession.getRate());
 
-            return new ResponseEntity<>(rentalSessionResponseMapper.toDto(savedRentalSession), HttpStatus.CREATED);
+            return new ResponseEntity<>(rentalSessionFullResponseMapper.toDto(savedRentalSession), HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
         }

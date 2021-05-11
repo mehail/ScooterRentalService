@@ -9,7 +9,7 @@ import lombok.NonNull;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"type"}, callSuper = false)
-public class ScooterResponseDTO extends ScooterDTO{
+public class ScooterCompactResponseDTO extends ScooterDTO{
 
     @NonNull
     private ScooterTypeResponseDTO type;

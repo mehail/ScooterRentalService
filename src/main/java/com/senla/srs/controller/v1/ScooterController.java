@@ -3,7 +3,7 @@ package com.senla.srs.controller.v1;
 import com.senla.srs.controller.v1.facade.EntityControllerFacade;
 import com.senla.srs.dto.scooter.ScooterDTO;
 import com.senla.srs.dto.scooter.ScooterRequestDTO;
-import com.senla.srs.dto.scooter.ScooterResponseDTO;
+import com.senla.srs.dto.scooter.ScooterCompactResponseDTO;
 import com.senla.srs.exception.NotFoundEntityException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -28,7 +28,7 @@ import javax.validation.Valid;
 @RequestMapping("/api/v1/scooters")
 public class ScooterController {
 
-    private final EntityControllerFacade<ScooterDTO, ScooterRequestDTO, ScooterResponseDTO, String> entityControllerFacade;
+    private final EntityControllerFacade<ScooterDTO, ScooterRequestDTO, ScooterCompactResponseDTO, String> entityControllerFacade;
 
     @Operation(summary = "Get a list of Scooters")
     @ApiResponse(responseCode = "200")
@@ -37,7 +37,7 @@ public class ScooterController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('scooters:read')")
-    public Page<ScooterResponseDTO> getAll(Integer page, Integer size, @RequestParam(defaultValue = "serialNumber") String sort) {
+    public Page<ScooterCompactResponseDTO> getAll(Integer page, Integer size, @RequestParam(defaultValue = "serialNumber") String sort) {
         return entityControllerFacade.getAll(page, size, sort, null);
     }
 
@@ -45,7 +45,7 @@ public class ScooterController {
     @Operation(operationId = "getBySerialNumber", summary = "Get a Scooter by its serial number")
     @Parameter(in = ParameterIn.PATH, name = "serialNumber", description = "Scooter serial number")
     @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = ScooterResponseDTO.class)))
+            schema = @Schema(implementation = ScooterCompactResponseDTO.class)))
     @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "404", content = @Content(mediaType = "application/json"))
 
@@ -59,7 +59,7 @@ public class ScooterController {
     @Operation(operationId = "createOrUpdate", summary = "Create or update Scooter",
             description = "If the Scooter exists - then the fields are updated, if not - created new Scooter")
     @ApiResponse(responseCode = "201", content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = ScooterResponseDTO.class)))
+            schema = @Schema(implementation = ScooterCompactResponseDTO.class)))
     @ApiResponse(responseCode = "400", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
 

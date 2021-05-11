@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -54,6 +55,11 @@ public class RentalSessionServiceImpl implements RentalSessionService {
 
         return rentalSessionRepository.findByUserIdAndScooterSerialNumberAndBeginDateAndBeginTime(userId,
                 scooterSerialNumber, beginDate, beginTime);
+    }
+
+    @Override
+    public List<RentalSession> retrieveRentalSessionByScooterSerialNumber(String scooterSerialNumber) {
+        return rentalSessionRepository.findByScooterSerialNumber(scooterSerialNumber);
     }
 
     @Override

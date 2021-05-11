@@ -1,7 +1,7 @@
 package com.senla.srs.dto.pointofrental;
 
 import com.senla.srs.dto.db.AddressDTO;
-import com.senla.srs.dto.scooter.ScooterResponseDTO;
+import com.senla.srs.dto.scooter.ScooterCompactResponseDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -18,6 +18,6 @@ public class PointOfRentalResponseDTO extends PointOfRentalDTO{
     private Long id;
     @NonNull
     private AddressDTO address;
-    private List<ScooterResponseDTO> scooters;
+    private List<ScooterCompactResponseDTO> scooters;
 
 }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -19,5 +20,7 @@ public interface RentalSessionRepository extends JpaRepository<RentalSession, Lo
                                                                                        String scooterSerialNumber,
                                                                                        LocalDate beginDate,
                                                                                        LocalTime beginTime);
+
+    List<RentalSession> findByScooterSerialNumber(String scooterSerialNumber);
 
 }

@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 
 public interface RentalSessionService {
@@ -21,6 +22,8 @@ public interface RentalSessionService {
                                                                                                         String scooterSerialNumber,
                                                                                                         LocalDate beginDate,
                                                                                                         LocalTime beginTime);
+
+    List<RentalSession> retrieveRentalSessionByScooterSerialNumber(String scooterSerialNumber);
 
     void deleteById(Long id);
 
