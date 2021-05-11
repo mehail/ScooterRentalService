@@ -174,7 +174,7 @@ public class RentalSessionRequestValidatorImpl implements RentalSessionRequestVa
         boolean isMatchBeginDate =
                 rentalSessionRequestDTO.getBegin().toLocalDate().equals(existRentalSession.getBeginDate());
         boolean isMatchBeginTime =
-                rentalSessionRequestDTO.getBegin().toLocalTime().equals(existRentalSession.getBeginTime());
+                rentalSessionRequestDTO.getBegin().toLocalTime().withNano(0).equals(existRentalSession.getBeginTime());
         boolean isMatchScooterSerialNumber =
                 rentalSessionRequestDTO.getScooterSerialNumber().equals(existRentalSession.getScooter().getSerialNumber());
 

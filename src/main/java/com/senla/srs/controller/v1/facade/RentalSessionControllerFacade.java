@@ -160,13 +160,13 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
                     optionalSeasonTicket,
                     optionalPromoCod);
 
-            int rate = calculateRate(rentalSession);
-            rentalSession.setRate(rate);
+            rentalSession.setRate(calculateRate(rentalSession));
 
-            changeEntityState(rentalSession, rate);
+            var savedRentalSession = rentalSessionService.save(rentalSession);
 
-            return new ResponseEntity<>(rentalSessionResponseMapper.toDto(rentalSessionService.save(rentalSession)),
-                    HttpStatus.CREATED);
+            changeEntityState(rentalSession, savedRentalSession.getRate());
+
+            return new ResponseEntity<>(rentalSessionResponseMapper.toDto(savedRentalSession), HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
         }

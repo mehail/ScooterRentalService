@@ -30,7 +30,7 @@ public class SwaggerConfig {
 
     @Bean
     public OpenAPI customOpenAPI() {
-        final var securitySchemeName = "scheme";
+        final var securitySchemeName = "JWT token";
 
         return new OpenAPI()
                 .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
