@@ -2,6 +2,7 @@ package com.senla.srs.controller.v1;
 
 import com.senla.srs.controller.v1.facade.EntityControllerFacade;
 import com.senla.srs.dto.scooter.ScooterDTO;
+import com.senla.srs.dto.scooter.ScooterFullResponseDTO;
 import com.senla.srs.dto.scooter.ScooterRequestDTO;
 import com.senla.srs.dto.scooter.ScooterCompactResponseDTO;
 import com.senla.srs.exception.NotFoundEntityException;
@@ -44,8 +45,10 @@ public class ScooterController {
 
     @Operation(operationId = "getBySerialNumber", summary = "Get a Scooter by its serial number")
     @Parameter(in = ParameterIn.PATH, name = "serialNumber", description = "Scooter serial number")
-    @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json",
+    @ApiResponse(responseCode = "200  ", description = "for User", content = @Content(mediaType = "application/json",
             schema = @Schema(implementation = ScooterCompactResponseDTO.class)))
+    @ApiResponse(responseCode = "200 ", description = "for Admin", content = @Content(mediaType = "application/json",
+            schema = @Schema(implementation = ScooterFullResponseDTO.class)))
     @ApiResponse(responseCode = "403", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "404", content = @Content(mediaType = "application/json"))
 
