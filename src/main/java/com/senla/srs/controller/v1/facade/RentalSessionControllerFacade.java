@@ -247,8 +247,9 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
         if (rentalSession.getEndDate() != null && rentalSession.getEndTime() != null) {
             var begin = LocalDateTime.of(rentalSession.getBeginDate(), rentalSession.getBeginTime());
             var end = LocalDateTime.of(rentalSession.getEndDate(), rentalSession.getEndTime());
+            var usageTime = (int) (Duration.between(begin, end).getSeconds() / 60);
 
-            return (int) (Duration.between(begin, end).getSeconds() / 60);
+            return usageTime == 0 ? 1 : usageTime;
         } else {
             return 0;
         }
