@@ -70,7 +70,7 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
         if (isAdmin(token) || isThisUserRentalSession(optionalRentalSession, token)) {
             return new ResponseEntity<>(optionalRentalSession
                     .map(rentalSessionResponseMapper::toDto)
-                    .orElseThrow(() -> new NotFoundEntityException(RentalSession.class, id)), HttpStatus.NOT_FOUND);
+                    .orElseThrow(() -> new NotFoundEntityException(RentalSession.class, id)), HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Unauthorized user session requested", HttpStatus.FORBIDDEN);
         }
