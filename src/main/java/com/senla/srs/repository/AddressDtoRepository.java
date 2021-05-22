@@ -1,6 +1,6 @@
 package com.senla.srs.repository;
 
-import com.senla.srs.dto.db.AddressDTO;
+import com.senla.srs.dto.geo.AddressDTO;
 import lombok.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

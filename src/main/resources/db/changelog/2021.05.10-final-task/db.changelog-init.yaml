@@ -12,7 +12,7 @@ databaseChangeLog:
                   name: name
                   type: STRING
             encoding: UTF-8
-            file: "db/changelog/testDataset/countries.csv"
+            file: "db/changelog/2021.05.10-final-task/testDataset/countries.csv"
             schemaName: public
             separator: ','
             tableName: countries
@@ -32,7 +32,7 @@ databaseChangeLog:
                   name: country_id
                   type: NUMERIC
             encoding: UTF-8
-            file: "db/changelog/testDataset/cities.csv"
+            file: "db/changelog/2021.05.10-final-task/testDataset/cities.csv"
             schemaName: public
             separator: ','
             tableName: cities
@@ -49,10 +49,16 @@ databaseChangeLog:
                   name: name
                   type: STRING
               - column:
+                  name: longitude
+                  type: NUMERIC
+              - column:
+                  name: latitude
+                  type: NUMERIC
+              - column:
                   name: city_id
                   type: NUMERIC
             encoding: UTF-8
-            file: "db/changelog/testDataset/addresses.csv"
+            file: "db/changelog/2021.05.10-final-task/testDataset/addresses.csv"
             schemaName: public
             separator: ','
             tableName: addresses
@@ -75,7 +81,7 @@ databaseChangeLog:
                   name: available
                   type: BOOLEAN
             encoding: UTF-8
-            file: "db/changelog/testDataset/pointOfRentals.csv"
+            file: "db/changelog/2021.05.10-final-task/testDataset/pointOfRentals.csv"
             schemaName: public
             separator: ','
             tableName: point_of_rentals
@@ -92,7 +98,7 @@ databaseChangeLog:
                   name: maker
                   type: STRING
             encoding: UTF-8
-            file: "db/changelog/testDataset/makers.csv"
+            file: "db/changelog/2021.05.10-final-task/testDataset/makers.csv"
             schemaName: public
             separator: ','
             tableName: makers
@@ -118,7 +124,7 @@ databaseChangeLog:
                   name: price_per_minute
                   type: NUMERIC
             encoding: UTF-8
-            file: "db/changelog/testDataset/scooterTypes.csv"
+            file: "db/changelog/2021.05.10-final-task/testDataset/scooterTypes.csv"
             schemaName: public
             separator: ','
             tableName: scooter_types
@@ -144,7 +150,7 @@ databaseChangeLog:
                   name: status_id
                   type: NUMERIC
             encoding: UTF-8
-            file: "db/changelog/testDataset/scooters.csv"
+            file: "db/changelog/2021.05.10-final-task/testDataset/scooters.csv"
             schemaName: public
             separator: ','
             tableName: scooters
@@ -176,7 +182,7 @@ databaseChangeLog:
                   name: balance
                   type: NUMERIC
             encoding: UTF-8
-            file: "db/changelog/testDataset/users.csv"
+            file: "db/changelog/2021.05.10-final-task/testDataset/users.csv"
             schemaName: public
             separator: ','
             tableName: users
@@ -211,7 +217,7 @@ databaseChangeLog:
                   name: available_for_use
                   type: BOOLEAN
             encoding: UTF-8
-            file: "db/changelog/testDataset/seasonTickets.csv"
+            file: "db/changelog/2021.05.10-final-task/testDataset/seasonTickets.csv"
             schemaName: public
             separator: ','
             tableName: season_tickets
@@ -240,7 +246,7 @@ databaseChangeLog:
                   name: available
                   type: BOOLEAN
             encoding: UTF-8
-            file: "db/changelog/testDataset/promoCods.csv"
+            file: "db/changelog/2021.05.10-final-task/testDataset/promoCods.csv"
             schemaName: public
             separator: ','
             tableName: promo_cods
@@ -277,7 +283,7 @@ databaseChangeLog:
                   name: promo_cod_name
                   type: STRING
             encoding: UTF-8
-            file: "db/changelog/testDataset/rentalSessions.csv"
+            file: "db/changelog/2021.05.10-final-task/testDataset/rentalSessions.csv"
             schemaName: public
             separator: ','
             tableName: rental_sessions

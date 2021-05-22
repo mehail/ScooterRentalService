@@ -1,6 +1,6 @@
 package com.senla.srs.entity;
 
-import com.senla.srs.dto.db.MakerDTO;
+import com.senla.srs.dto.scooter.type.MakerDTO;
 import lombok.*;
 
 import javax.persistence.*;

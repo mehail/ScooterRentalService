@@ -1,6 +1,6 @@
 package com.senla.srs.service.impl;
 
-import com.senla.srs.dto.db.AddressDTO;
+import com.senla.srs.dto.geo.AddressDTO;
 import com.senla.srs.repository.AddressDtoRepository;
 import com.senla.srs.service.AddressDtoService;
 import lombok.AllArgsConstructor;

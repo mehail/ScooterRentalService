@@ -1,6 +1,6 @@
 package com.senla.srs.service;
 
-import com.senla.srs.dto.db.AddressDTO;
+import com.senla.srs.dto.geo.AddressDTO;
 
 import java.util.Optional;
 

@@ -1,6 +1,6 @@
 package com.senla.srs.controller.v1.facade;
 
-import com.senla.srs.dto.db.MakerDTO;
+import com.senla.srs.dto.scooter.type.MakerDTO;
 import com.senla.srs.dto.scooter.type.ScooterTypeDTO;
 import com.senla.srs.dto.scooter.type.ScooterTypeRequestDTO;
 import com.senla.srs.dto.scooter.type.ScooterTypeResponseDTO;

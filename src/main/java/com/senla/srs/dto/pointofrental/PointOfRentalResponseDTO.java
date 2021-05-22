@@ -1,6 +1,6 @@
 package com.senla.srs.dto.pointofrental;
 
-import com.senla.srs.dto.db.AddressDTO;
+import com.senla.srs.dto.geo.AddressDTO;
 import com.senla.srs.dto.scooter.ScooterCompactResponseDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

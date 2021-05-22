@@ -1,6 +1,5 @@
 package com.senla.srs.dto.scooter.type;
 
-import com.senla.srs.dto.db.MakerDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;

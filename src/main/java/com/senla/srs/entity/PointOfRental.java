@@ -1,6 +1,7 @@
 package com.senla.srs.entity;
 
-import com.senla.srs.dto.db.AddressDTO;
+import com.senla.srs.dto.geo.AddressDTO;
+import com.senla.srs.dto.geo.GisPointDTO;
 import lombok.*;
 
 import javax.persistence.*;
@@ -28,5 +29,8 @@ public class PointOfRental extends AbstractEntity{
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "point_of_rental_id")
     private List<Scooter> scooters;
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "gis_point_id")
+    private List<GisPointDTO> rollingTrack;
 
 }

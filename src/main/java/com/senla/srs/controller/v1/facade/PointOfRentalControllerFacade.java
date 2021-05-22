@@ -1,6 +1,6 @@
 package com.senla.srs.controller.v1.facade;
 
-import com.senla.srs.dto.db.AddressDTO;
+import com.senla.srs.dto.geo.AddressDTO;
 import com.senla.srs.dto.pointofrental.PointOfRentalDTO;
 import com.senla.srs.dto.pointofrental.PointOfRentalRequestDTO;
 import com.senla.srs.dto.pointofrental.PointOfRentalResponseDTO;

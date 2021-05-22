@@ -1,4 +1,4 @@
-package com.senla.srs.dto.db;
+package com.senla.srs.dto.geo;
 
 import com.senla.srs.dto.AbstractDTO;
 import lombok.Data;
@@ -28,5 +28,10 @@ public class AddressDTO extends AbstractDTO {
     @ManyToOne(optional = false)
     @JoinColumn(name = "city_id")
     private CityDTO city;
+    @NonNull
+    @Min(value = 1, message = "ID must be at least 1")
+    @JoinColumn(name = "gis_point_id")
+    private Long gisPointId;
+
 
 }

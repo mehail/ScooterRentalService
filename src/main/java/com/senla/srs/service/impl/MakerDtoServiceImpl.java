@@ -1,6 +1,6 @@
 package com.senla.srs.service.impl;
 
-import com.senla.srs.dto.db.MakerDTO;
+import com.senla.srs.dto.scooter.type.MakerDTO;
 import com.senla.srs.repository.MakerDtoRepository;
 import com.senla.srs.service.MakerDtoService;
 import lombok.AllArgsConstructor;

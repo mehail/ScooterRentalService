@@ -1,0 +1,199 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2021.05.23-01
+      author: Mihail Artugin
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: point_of_rentals
+            baseTableSchemaName: public
+            constraintName: point_of_rentals_addres_id_fk
+
+  - changeSet:
+      id: 2021.05.23-02
+      author: Mihail Artugin
+      changes:
+        - dropTable:
+            cascadeConstraints: true
+            schemaName: public
+            tableName: addresses
+
+  - changeSet:
+      id: 2021.05.23-03
+      author: Mihail Artugin
+      changes:
+        - dropColumn:
+            columnName: address_id
+            schemaName: public
+            tableName: point_of_rentals
+
+  - changeSet:
+      id: 2021.05.23-04
+      author: Mihail Artugin
+      changes:
+        - createTable:
+            tableName: gis_points
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: gis_points_pk
+              - column:
+                  name: address
+                  type: VARCHAR(64)
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: gis_points_uq
+              - column:
+                  name: city_id
+                  type: BIGINT
+              - column:
+                  name: point_of_rental_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: longitude
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: latitude
+                  type: double
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 2021.05.23-05
+      author: Mihail Artugin
+      changes:
+        - addColumn:
+            tableName: point_of_rentals
+            columns:
+              - column:
+                  name: city_id
+                  type: BIGINT
+                  constraints:
+                    unique: true
+                    uniqueConstraintName: point_of_rentals_city_id_uq
+
+  - changeSet:
+      id: 2021.05.23-06
+      author: Mihail Artugin
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: city_id
+            baseTableName: point_of_rentals
+            constraintName: point_of_rentals_city_id_fk
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: cities
+            validate: true
+
+  - changeSet:
+      id: 2021.05.23-07
+      author: Mihail Artugin
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: city_id
+            baseTableName: gis_points
+            constraintName: gis_points_countries_id_fk
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: cities
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: point_of_rental_id
+            baseTableName: gis_points
+            constraintName: gis_points_point_of_rental_id_fk
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: point_of_rentals
+            validate: true
+
+  - changeSet:
+      id: 2021.05.23-08
+      author: Mihail Artugin
+      changes:
+        - loadData:
+            columns:
+              - column:
+                  name: id
+                  type: NUMERIC
+              - column:
+                  name: address
+                  type: STRING
+              - column:
+                  name: city_id
+                  type: NUMERIC
+              - column:
+                  name: point_of_rental_id
+                  type: NUMERIC
+              - column:
+                  name: longitude
+                  type: NUMERIC
+              - column:
+                  name: latitude
+                  type: NUMERIC
+            encoding: UTF-8
+            file: "db/changelog/2021.05.23-gis-points/gisPoints-2021.05.23.csv"
+            schemaName: public
+            separator: ','
+            tableName: gis_points
+
+        - sql:
+            sql: SELECT setval('gis_points_id_seq', (SELECT max(id) FROM gis_points))
+
+  - changeSet:
+      id: 2021.05.23-09
+      author: Mihail Artugin
+      changes:
+        - loadUpdateData:
+            columns:
+              - column:
+                  header: id
+                  name: id
+                  type: NUMERIC
+              - column:
+                  header: city_id
+                  name: city_id
+                  type: NUMERIC
+            encoding: UTF-8
+            file: "db/changelog/2021.05.23-gis-points/pointOfRentals-2021.05.23.csv"
+            primaryKey: id
+            onlyUpdate: true
+            separator: ','
+            tableName: point_of_rentals
+
+  - changeSet:
+      id: 2021.05.23-10
+      author: Mihail Artugin
+      changes:
+        - addNotNullConstraint:
+            columnDataType: BIGINT
+            columnName: city_id
+            constraints:
+              nullable: false
+            schemaName: public
+            tableName: gis_points
+            validate: true
+
+  - changeSet:
+      id: 2021.05.23-11
+      author: Mihail Artugin
+      changes:
+        - addNotNullConstraint:
+            columnDataType: BIGINT
+            columnName: city_id
+            constraints:
+              nullable: false
+            schemaName: public
+            tableName: point_of_rentals
+            validate: true

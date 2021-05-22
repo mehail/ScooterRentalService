@@ -1,6 +1,6 @@
 package com.senla.srs.repository;
 
-import com.senla.srs.dto.db.MakerDTO;
+import com.senla.srs.dto.scooter.type.MakerDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

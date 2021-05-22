@@ -1,4 +1,4 @@
-package com.senla.srs.dto.db;
+package com.senla.srs.dto.geo;
 
 import com.senla.srs.dto.AbstractDTO;
 import lombok.Data;
@@ -7,15 +7,17 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.Min;
 
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
 @Entity
-@Table(name = "cities")
-public class CityDTO extends AbstractDTO {
+@Table(name = "countries")
+public class CountryDTO extends AbstractDTO {
 
     @Id
     @NonNull
@@ -24,9 +26,5 @@ public class CityDTO extends AbstractDTO {
     @NonNull
     @Length(min = 1, max = 64, message = "Name must be between 1 and 64 characters")
     private String name;
-    @NonNull
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "country_id")
-    private CountryDTO country;
 
 }

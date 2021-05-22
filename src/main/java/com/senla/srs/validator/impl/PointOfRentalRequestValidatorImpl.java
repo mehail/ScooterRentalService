@@ -1,6 +1,6 @@
 package com.senla.srs.validator.impl;
 
-import com.senla.srs.dto.db.AddressDTO;
+import com.senla.srs.dto.geo.AddressDTO;
 import com.senla.srs.dto.pointofrental.PointOfRentalRequestDTO;
 import com.senla.srs.validator.PointOfRentalRequestValidator;
 import org.springframework.stereotype.Service;

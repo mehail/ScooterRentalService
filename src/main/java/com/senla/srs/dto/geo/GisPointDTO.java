@@ -1,11 +1,11 @@
-package com.senla.srs.dto.db;
+package com.senla.srs.dto.geo;
 
-import com.senla.srs.dto.AbstractDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -16,8 +16,8 @@ import javax.validation.constraints.Min;
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
 @Entity
-@Table(name = "countries")
-public class CountryDTO extends AbstractDTO {
+@Table(name = "gis_points")
+public class GisPointDTO {
 
     @Id
     @NonNull
@@ -26,5 +26,14 @@ public class CountryDTO extends AbstractDTO {
     @NonNull
     @Length(min = 1, max = 64, message = "Name must be between 1 and 64 characters")
     private String name;
+    @NonNull
+    @Min(value = 1, message = "PointOfRentalID must be at least 1")
+    private Long pointOfRentalId;
+    @NonNull
+    @Range(min = -180, max = 180, message = "Longitude must be between -180 and 180")
+    private Double longitude;
+    @NonNull
+    @Range(min = -90, max = 90, message = "Latitude must be between -90 and 90")
+    private Double latitude;
 
 }

@@ -1,6 +1,6 @@
 package com.senla.srs.validator;
 
-import com.senla.srs.dto.db.MakerDTO;
+import com.senla.srs.dto.scooter.type.MakerDTO;
 import com.senla.srs.dto.scooter.type.ScooterTypeRequestDTO;
 import org.springframework.validation.Errors;
 
