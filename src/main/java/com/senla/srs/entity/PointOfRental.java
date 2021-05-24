@@ -1,6 +1,6 @@
 package com.senla.srs.entity;
 
-import com.senla.srs.dto.geo.AddressDTO;
+import com.senla.srs.dto.geo.CityDTO;
 import com.senla.srs.dto.geo.GisPointDTO;
 import lombok.*;
 
@@ -21,16 +21,16 @@ public class PointOfRental extends AbstractEntity{
     @NonNull
     private String name;
     @NonNull
-    @OneToOne(optional = false)
-    @JoinColumn(name = "address_id")
-    private AddressDTO address;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "city_id")
+    private CityDTO cityDTO;
     @NonNull
     private Boolean available;
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "point_of_rental_id")
     private List<Scooter> scooters;
     @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "gis_point_id")
+    @JoinColumn(name = "gis_point_of_rental_id")
     private List<GisPointDTO> rollingTrack;
 
 }

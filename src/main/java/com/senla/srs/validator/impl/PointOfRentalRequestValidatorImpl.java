@@ -1,6 +1,6 @@
 package com.senla.srs.validator.impl;
 
-import com.senla.srs.dto.geo.AddressDTO;
+import com.senla.srs.dto.geo.CityDTO;
 import com.senla.srs.dto.pointofrental.PointOfRentalRequestDTO;
 import com.senla.srs.validator.PointOfRentalRequestValidator;
 import org.springframework.stereotype.Service;
@@ -13,11 +13,11 @@ public class PointOfRentalRequestValidatorImpl implements PointOfRentalRequestVa
 
     @Override
     public PointOfRentalRequestDTO validate(PointOfRentalRequestDTO pointOfRentalRequestDTO,
-                                            Optional<AddressDTO> optionalAddressDTO,
+                                            Optional<CityDTO> optionalCityDTO,
                                             Errors errors) {
 
-        if (optionalAddressDTO.isEmpty()) {
-            errors.reject("addressId", "Address with this ID does not exist");
+        if (optionalCityDTO.isEmpty()) {
+            errors.reject("cityId", "City with this ID does not exist");
         }
 
         return pointOfRentalRequestDTO;

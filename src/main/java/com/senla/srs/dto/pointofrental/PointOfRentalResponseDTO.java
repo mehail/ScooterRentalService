@@ -1,6 +1,7 @@
 package com.senla.srs.dto.pointofrental;
 
-import com.senla.srs.dto.geo.AddressDTO;
+import com.senla.srs.dto.geo.CityDTO;
+import com.senla.srs.dto.geo.GisPointDTO;
 import com.senla.srs.dto.scooter.ScooterCompactResponseDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,7 +18,9 @@ public class PointOfRentalResponseDTO extends PointOfRentalDTO{
     @NonNull
     private Long id;
     @NonNull
-    private AddressDTO address;
+    private CityDTO cityDTO;
     private List<ScooterCompactResponseDTO> scooters;
+    //ToDo Split into full and compact versions
+    private List<GisPointDTO> rollingTrack;
 
 }

@@ -1,6 +1,6 @@
 package com.senla.srs.controller.v1.facade;
 
-import com.senla.srs.dto.geo.AddressDTO;
+import com.senla.srs.dto.geo.CityDTO;
 import com.senla.srs.dto.pointofrental.PointOfRentalDTO;
 import com.senla.srs.dto.pointofrental.PointOfRentalRequestDTO;
 import com.senla.srs.dto.pointofrental.PointOfRentalResponseDTO;
@@ -9,7 +9,7 @@ import com.senla.srs.exception.NotFoundEntityException;
 import com.senla.srs.mapper.PointOfRentalRequestMapper;
 import com.senla.srs.mapper.PointOfRentalResponseMapper;
 import com.senla.srs.security.JwtTokenData;
-import com.senla.srs.service.AddressDtoService;
+import com.senla.srs.service.CityDtoService;
 import com.senla.srs.service.PointOfRentalService;
 import com.senla.srs.validator.PointOfRentalRequestValidator;
 import org.springframework.data.domain.Page;
@@ -24,20 +24,20 @@ import java.util.Optional;
 public class PointOfRentalControllerFacade extends AbstractFacade implements
         EntityControllerFacade<PointOfRentalDTO, PointOfRentalRequestDTO, PointOfRentalResponseDTO, Long> {
 
-    private final AddressDtoService addressDtoService;
+    private final CityDtoService cityDtoService;
     private final PointOfRentalService pointOfRentalService;
     private final PointOfRentalRequestMapper pointOfRentalRequestMapper;
     private final PointOfRentalResponseMapper pointOfRentalResponseMapper;
     private final PointOfRentalRequestValidator pointOfRentalRequestValidator;
 
-    public PointOfRentalControllerFacade(AddressDtoService addressDtoService,
+    public PointOfRentalControllerFacade(CityDtoService cityDtoService,
                                          PointOfRentalService pointOfRentalService,
                                          PointOfRentalRequestMapper pointOfRentalRequestMapper,
                                          PointOfRentalResponseMapper pointOfRentalResponseMapper,
                                          PointOfRentalRequestValidator pointOfRentalRequestValidator,
                                          JwtTokenData jwtTokenData) {
         super(jwtTokenData);
-        this.addressDtoService = addressDtoService;
+        this.cityDtoService = cityDtoService;
         this.pointOfRentalService = pointOfRentalService;
         this.pointOfRentalRequestMapper = pointOfRentalRequestMapper;
         this.pointOfRentalResponseMapper = pointOfRentalResponseMapper;
@@ -63,13 +63,13 @@ public class PointOfRentalControllerFacade extends AbstractFacade implements
                                             String token)
             throws NotFoundEntityException {
 
-        Optional<AddressDTO> optionalAddressDTO =
-                addressDtoService.retrieveAddressDtoById(pointOfRentalRequestDTO.getAddressId());
+        Optional<CityDTO> optionalCityDTO =
+                cityDtoService.retrieveGisPointDtoById(pointOfRentalRequestDTO.getCityId());
 
         var validPointOfRentalRequestDTO =
-                pointOfRentalRequestValidator.validate(pointOfRentalRequestDTO, optionalAddressDTO, bindingResult);
+                pointOfRentalRequestValidator.validate(pointOfRentalRequestDTO, optionalCityDTO, bindingResult);
 
-        return save(validPointOfRentalRequestDTO, optionalAddressDTO, bindingResult);
+        return save(validPointOfRentalRequestDTO, optionalCityDTO, bindingResult);
     }
 
     @Override
@@ -87,13 +87,13 @@ public class PointOfRentalControllerFacade extends AbstractFacade implements
     }
 
     private ResponseEntity<?> save(PointOfRentalRequestDTO pointOfRentalRequestDTO,
-                                   Optional<AddressDTO> optionalAddressDTO,
+                                   Optional<CityDTO> optionalCityDTO,
                                    BindingResult bindingResult) {
 
-        if (!bindingResult.hasErrors() && optionalAddressDTO.isPresent()) {
+        if (!bindingResult.hasErrors() && optionalCityDTO.isPresent()) {
             var pointOfRental = pointOfRentalService.save(pointOfRentalRequestMapper
                     .toEntity(pointOfRentalRequestDTO,
-                            optionalAddressDTO.get(),
+                            optionalCityDTO.get(),
                             getExistEntityId(pointOfRentalRequestDTO)));
 
             return new ResponseEntity<>(pointOfRentalResponseMapper.toDto(pointOfRental), HttpStatus.CREATED);

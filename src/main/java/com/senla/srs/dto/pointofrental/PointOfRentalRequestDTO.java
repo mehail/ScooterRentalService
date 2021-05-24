@@ -13,7 +13,7 @@ import javax.validation.constraints.Min;
 public class PointOfRentalRequestDTO extends PointOfRentalDTO {
 
     @NonNull
-    @Min(value = 1, message = "Address ID must be at least 1")
-    private Long addressId;
+    @Min(value = 1, message = "CityDTO ID must be at least 1")
+    private Long cityId;
 
 }

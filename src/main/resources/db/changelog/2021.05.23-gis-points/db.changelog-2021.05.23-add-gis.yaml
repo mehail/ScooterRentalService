@@ -52,7 +52,7 @@ databaseChangeLog:
                   name: city_id
                   type: BIGINT
               - column:
-                  name: point_of_rental_id
+                  name: gis_point_of_rental_id
                   type: BIGINT
                   constraints:
                     nullable: false
@@ -109,7 +109,7 @@ databaseChangeLog:
             referencedTableName: cities
             validate: true
         - addForeignKeyConstraint:
-            baseColumnNames: point_of_rental_id
+            baseColumnNames: gis_point_of_rental_id
             baseTableName: gis_points
             constraintName: gis_points_point_of_rental_id_fk
             deferrable: false
@@ -134,7 +134,7 @@ databaseChangeLog:
                   name: city_id
                   type: NUMERIC
               - column:
-                  name: point_of_rental_id
+                  name: gis_point_of_rental_id
                   type: NUMERIC
               - column:
                   name: longitude
