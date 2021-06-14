@@ -1,4 +1,4 @@
-package com.senla.srs;
+package com.senla.srs.geotag;
 
 //import org.locationtech.jts.geom.Coordinate;
 //import org.locationtech.jts.geom.Geometry;
