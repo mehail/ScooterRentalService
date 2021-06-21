@@ -11,12 +11,12 @@
     <groupId>com.senla</groupId>
     <artifactId>SRS</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <packaging>pom</packaging>
     <name>ScooterRentalService</name>
     <properties>
         <java.version>11</java.version>
         <jjwt.version>0.9.1</jjwt.version>
-        <spring.version>2.4.5</spring.version>
+        <spring.version>2.5.1</spring.version>
     </properties>
     <dependencies>
         <dependency>

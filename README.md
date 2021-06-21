@@ -77,7 +77,7 @@ ___
   git clone https://github.com/mehail/ScooterRentalService.git
 ```
 
-## 3. Edit the [application.properties](src/main/resources/application.properties) file according to your privacy settings
+## 3. Edit the [application.properties](core/src/main/resources/application.properties) file according to your privacy settings
 
 ## 4. Launch the application
 * Run the [runner.bat](runner.bat) file for Windows 
