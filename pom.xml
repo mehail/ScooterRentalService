@@ -10,6 +10,7 @@
     </parent>
     <modules>
         <module>core</module>
+        <module>web</module>
     </modules>
     <groupId>com.senla</groupId>
     <artifactId>SRS</artifactId>
