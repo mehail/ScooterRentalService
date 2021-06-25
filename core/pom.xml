@@ -7,7 +7,6 @@
         <groupId>com.senla</groupId>
         <artifactId>SRS</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
     <groupId>com.senla.srs</groupId>
