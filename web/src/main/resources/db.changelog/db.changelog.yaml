@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - include:
+      file: classpath:db.changelog/2021.05.10-final-task/db.changelog-create.yaml
+
+  - include:
+      file: classpath:db.changelog/2021.05.10-final-task/db.changelog-init.yaml
+
+  - include:
+      file: classpath:db.changelog/2021.05.23-gis-points/db.changelog-2021.05.23-add-gis.yaml

@@ -143,7 +143,7 @@ databaseChangeLog:
                   name: latitude
                   type: NUMERIC
             encoding: UTF-8
-            file: "db/changelog/2021.05.23-gis-points/gisPoints-2021.05.23.csv"
+            file: "db.changelog/2021.05.23-gis-points/gisPoints-2021.05.23.csv"
             schemaName: public
             separator: ','
             tableName: gis_points
@@ -166,7 +166,7 @@ databaseChangeLog:
                   name: city_id
                   type: NUMERIC
             encoding: UTF-8
-            file: "db/changelog/2021.05.23-gis-points/pointOfRentals-2021.05.23.csv"
+            file: "db.changelog/2021.05.23-gis-points/pointOfRentals-2021.05.23.csv"
             primaryKey: id
             onlyUpdate: true
             separator: ','

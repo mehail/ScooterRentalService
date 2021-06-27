@@ -86,7 +86,7 @@ ___
 * From the command line / terminal:
 
 ```
-mvn clean spring-boot:run
+mvn clean install spring-boot:run
 ```
 
 ## 5. Technical description
