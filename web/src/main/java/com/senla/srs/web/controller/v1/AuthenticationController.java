@@ -4,6 +4,7 @@ import com.senla.srs.core.dto.security.AuthenticationRequestDTO;
 import com.senla.srs.core.dto.security.AuthenticationResponseDTO;
 import com.senla.srs.core.repository.UserRepository;
 import com.senla.srs.core.security.JwtTokenProvider;
+import com.senla.srs.core.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -28,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthenticationController {
 
     private final AuthenticationManager authenticationManager;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final JwtTokenProvider jwtTokenProvider;
 
     @Operation(operationId = "authenticate", summary = "Authenticate", description = "Authenticate with JWT token")
@@ -44,7 +45,7 @@ public class AuthenticationController {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(),
                     request.getPassword()));
 
-            var user = userRepository.findByEmail(
+            var user = userService.retrieveUserByEmail(
                     request.getEmail()).orElseThrow(() -> new UsernameNotFoundException("User doesn't exists"));
 
             String token = jwtTokenProvider.createToken(user.getId(), request.getEmail(), user.getRole().name());
