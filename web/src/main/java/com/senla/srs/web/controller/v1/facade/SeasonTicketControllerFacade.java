@@ -113,13 +113,7 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
     public ResponseEntity<?> delete(Long id, String token) throws NotFoundEntityException {
         Optional<SeasonTicket> optionalSeasonTicket = seasonTicketService.retrieveSeasonTicketsById(id);
 
-        if ((isThisUserById(token, optionalSeasonTicket
-                .map(SeasonTicket::getUserId)
-                .orElseThrow(() -> new NotFoundEntityException(SeasonTicket.class, id))) || isAdmin(token)) &&
-
-                optionalSeasonTicket
-                        .map(SeasonTicket::getAvailableForUse)
-                        .orElseThrow(() -> new NotFoundEntityException(SeasonTicket.class, id))) {
+        if (isCorrectDeleteSeasonTicket(id, token, optionalSeasonTicket)) {
 
             seasonTicketService.deleteById(id);
 
@@ -127,6 +121,20 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
         } else {
             return new ResponseEntity<>(FORBIDDEN_FOR_DELETE, HttpStatus.FORBIDDEN);
         }
+    }
+
+    private boolean isCorrectDeleteSeasonTicket(Long id, String token, Optional<SeasonTicket> optionalSeasonTicket)
+            throws NotFoundEntityException {
+
+        boolean isHasRight = isThisUserById(token, optionalSeasonTicket
+                .map(SeasonTicket::getUserId)
+                .orElseThrow(() -> new NotFoundEntityException(SeasonTicket.class, id))) || isAdmin(token);
+
+        boolean isAvailableForUse = optionalSeasonTicket
+                .map(SeasonTicket::getAvailableForUse)
+                .orElseThrow(() -> new NotFoundEntityException(SeasonTicket.class, id));
+
+        return isHasRight && isAvailableForUse;
     }
 
     @Override
