@@ -22,9 +22,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtConfig jwtConfig;
 
     private static final String[] AUTH_WHITELIST = {
-            // -- Login and Registration
+            // -- Login, Registration and Scooter info
             "/api/v1/auth/login",
             "/api/v1/users",
+            "/api/v1/scooters/**",
+            "/api/v1/scooter_types/**",
 
             // -- Swagger UI v3 (OpenAPI)
             "/v3/api-docs/**",

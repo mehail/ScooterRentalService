@@ -37,7 +37,6 @@ public class ScooterController {
     @PageableAsQueryParam()
 
     @GetMapping
-    @PreAuthorize("hasAuthority('scooters:read')")
     public Page<ScooterCompactResponseDTO> getAll(Integer page, Integer size, @RequestParam(defaultValue = "serialNumber") String sort) {
         return entityControllerFacade.getAll(page, size, sort, null);
     }
@@ -53,7 +52,6 @@ public class ScooterController {
     @ApiResponse(responseCode = "404", content = @Content(mediaType = "application/json"))
 
     @GetMapping("/{serialNumber}")
-    @PreAuthorize("hasAuthority('scooters:read')")
     public ResponseEntity<?> getBySerialNumber(@PathVariable String serialNumber,
                                                @Parameter(hidden = true)
                                                @RequestHeader(name = "Authorization", required = false) String token)

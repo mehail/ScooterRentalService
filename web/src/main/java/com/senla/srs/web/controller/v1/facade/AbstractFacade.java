@@ -14,7 +14,7 @@ public abstract class AbstractFacade {
     }
 
     protected boolean isAdmin(String token) {
-        return jwtTokenData.getRole(token) == Role.ADMIN;
+        return token != null && !token.equals("") && jwtTokenData.getRole(token) == Role.ADMIN;
     }
 
     protected boolean isThisUserById(String token, Long id) {

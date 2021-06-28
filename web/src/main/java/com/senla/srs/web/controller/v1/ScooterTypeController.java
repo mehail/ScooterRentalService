@@ -37,7 +37,6 @@ public class ScooterTypeController {
     @PageableAsQueryParam()
 
     @GetMapping
-    @PreAuthorize("hasAuthority('scooterTypes:read')")
     public Page<ScooterTypeResponseDTO> getAll(Integer page,
                                                Integer size,
                                                @RequestParam(defaultValue = "id") String sort) {
@@ -54,7 +53,6 @@ public class ScooterTypeController {
     @ApiResponse(responseCode = "404", content = @Content(mediaType = "application/json"))
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('scooterTypes:read')")
     public ResponseEntity<?> getById(@PathVariable Long id) throws NotFoundEntityException {
         return entityControllerFacade.getById(id, null);
     }
