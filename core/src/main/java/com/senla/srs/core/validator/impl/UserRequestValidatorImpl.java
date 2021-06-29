@@ -26,6 +26,10 @@ public class UserRequestValidatorImpl implements UserRequestValidator {
             errors.reject("email", "Email must comply with RFC822");
         }
 
+        if (requestDto.getRole() == Role.ADMIN && requestDto.getStatus() == UserStatus.BANNED) {
+            errors.reject("status", "Admin cannot ban other admins");
+        }
+
         return requestDto;
     }
 
