@@ -2,9 +2,7 @@ package com.senla.srs.web.controller.v1;
 
 import com.senla.srs.core.dto.security.AuthenticationRequestDTO;
 import com.senla.srs.core.dto.security.AuthenticationResponseDTO;
-import com.senla.srs.core.repository.UserRepository;
-import com.senla.srs.core.security.JwtTokenProvider;
-import com.senla.srs.core.service.UserService;
+import com.senla.srs.core.service.AuthenticationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -13,10 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,9 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/auth")
 public class AuthenticationController {
 
-    private final AuthenticationManager authenticationManager;
-    private final UserService userService;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final AuthenticationService authenticationService;
 
     @Operation(operationId = "authenticate", summary = "Authenticate", description = "Authenticate with JWT token")
     @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json",
@@ -42,15 +35,7 @@ public class AuthenticationController {
     public ResponseEntity<?> authenticate(@RequestBody AuthenticationRequestDTO request) {
 
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(),
-                    request.getPassword()));
-
-            var user = userService.retrieveUserByEmail(
-                    request.getEmail()).orElseThrow(() -> new UsernameNotFoundException("User doesn't exists"));
-
-            String token = jwtTokenProvider.createToken(user.getId(), request.getEmail(), user.getRole().name());
-
-            return ResponseEntity.ok(new AuthenticationResponseDTO(user.getId(), user.getEmail(), user.getRole(), token));
+            return ResponseEntity.ok(authenticationService.authenticate(request));
         } catch (AuthenticationException e) {
             return new ResponseEntity<>("Invalid email/password combination", HttpStatus.FORBIDDEN);
         }
