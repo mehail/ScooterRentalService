@@ -15,7 +15,7 @@ databaseChangeLog:
                     primaryKey: true
                     primaryKeyName: accounts_pk
               - column:
-                  name: user_id
+                  name: user_account_id
                   type: BIGINT
                   constraints:
                     nullable: false
@@ -35,13 +35,13 @@ databaseChangeLog:
                     nullable: false
 
   - changeSet:
-      id: 2021.07.01-02
+      id: SRS-create-231
       author: Mihail Artugin
       changes:
         - addForeignKeyConstraint:
-            baseColumnNames: user_id
+            baseColumnNames: user_account_id
             baseTableName: accounts
-            constraintName: accounts_user_id_fk
+            constraintName: accounts_user_account_id_fk
             deferrable: false
             initiallyDeferred: false
             referencedColumnNames: id
@@ -58,7 +58,7 @@ databaseChangeLog:
                   name: id
                   type: NUMERIC
               - column:
-                  name: user_id
+                  name: user_account_id
                   type: NUMERIC
               - column:
                   name: password

@@ -1,5 +1,6 @@
 package com.senla.srs.core.dto.user;
 
+import com.senla.srs.core.entity.Account;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -12,5 +13,7 @@ public class UserCompactResponseDTO extends UserDTO {
 
     @NonNull
     private Long id;
+//    @NonNull
+//    private Account account;
 
 }

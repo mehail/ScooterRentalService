@@ -20,7 +20,9 @@ class AuthenticationControllerTest {
 
     private final static String EMAIL = "login@mail.com";
     private final static String PASSWORD = "password";
-    private final User user = new User(null, EMAIL, PASSWORD, "Random", "Random", Role.USER,
+    private final User user = new User(null,
+            null,
+            EMAIL, PASSWORD, "Random", "Random", Role.USER,
             UserStatus.ACTIVE, 0, null);
     @Autowired
     private UserService userService;
