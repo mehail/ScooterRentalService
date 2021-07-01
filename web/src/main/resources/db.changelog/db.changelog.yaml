@@ -7,3 +7,6 @@ databaseChangeLog:
 
   - include:
       file: classpath:db.changelog/2021.05.23-gis-points/db.changelog-2021.05.23-add-gis.yaml
+
+  - include:
+      file: classpath:db.changelog/2021.07.01-add-accounts/db.changelog-2021.07.01-add-accounts.yaml
