@@ -21,10 +21,6 @@ public class User extends AbstractEntity{
     @JoinColumn(name = "account_id")
     private Account account;
     @NonNull
-    private String email;
-    @NonNull
-    private String password;
-    @NonNull
     @Column(name = "first_name")
     private String firstName;
     @NonNull

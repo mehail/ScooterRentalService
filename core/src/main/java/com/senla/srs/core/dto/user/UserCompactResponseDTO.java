@@ -13,7 +13,5 @@ public class UserCompactResponseDTO extends UserDTO {
 
     @NonNull
     private Long id;
-//    @NonNull
-//    private Account account;
 
 }

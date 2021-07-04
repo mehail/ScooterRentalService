@@ -11,4 +11,10 @@ public class UserCompactResponseMapper extends AbstractMapper<User, UserCompactR
         super(User.class, UserCompactResponseDTO.class);
     }
 
+    @Override
+    public UserCompactResponseDTO toDto(User entity) {
+        var dto = super.toDto(entity);
+        dto.setEmail(entity.getAccount().getEmail());
+        return dto;
+    }
 }

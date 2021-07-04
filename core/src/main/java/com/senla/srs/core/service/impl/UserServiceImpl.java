@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User save(User user) {
-        user.setPassword(cryptPassword(user.getPassword()));
+        user.getAccount().setPassword(cryptPassword(user.getAccount().getPassword()));
 
         return userRepository.save(user);
     }
@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
     public Page<User> retrieveAllUsersByEmail(String email, Integer pageNo, Integer pageSize, String sortBy) {
         Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
 
-        return userRepository.findAllByEmail(email, paging);
+        return userRepository.findAllByAccount_Email(email, paging);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> retrieveUserByEmail(String email) {
-        return userRepository.findByEmail(email);
+        return userRepository.findByAccount_Email(email);
     }
 
     @Override

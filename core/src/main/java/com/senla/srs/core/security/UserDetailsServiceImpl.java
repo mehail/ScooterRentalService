@@ -16,7 +16,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         var user = userRepository
-                .findByEmail(email)
+                .findByAccount_Email(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User doesn't exists"));
 
         return com.senla.srs.core.security.SecurityUser.fromUser(user);
