@@ -1,5 +1,5 @@
-id,user_account_id,email,password
-1,1,JohnDoe@mail.ru,$2y$12$OBjYvorEBXyjzdo24EeEFuda2nzCYTz9h/e6cIJi4JdkeVAKxE5de
-2,2,VasjaPupkin@mail.ru,$2y$12$AZdYy3sW/DZsfzyh2dpThO8Ai5PrK7/00XZeiL4lI43aUFG8L.pMC
-3,3,anonim@mail.ru,$2y$12$U2j2Uf8w95W8ZmFfF2NiXuwO6yFs7N9YnbUnIkAkT/WBcK2R9NrxS
-4,4,string,$2y$12$PCNbY6nszzCP9FWXOzkGbuV.SWbyXLtudBnSNOLXjCgpx1v7ERYOq
+id,email,password
+1,JohnDoe@mail.ru,$2y$12$OBjYvorEBXyjzdo24EeEFuda2nzCYTz9h/e6cIJi4JdkeVAKxE5de
+2,VasjaPupkin@mail.ru,$2y$12$AZdYy3sW/DZsfzyh2dpThO8Ai5PrK7/00XZeiL4lI43aUFG8L.pMC
+3,anonim@mail.ru,$2y$12$U2j2Uf8w95W8ZmFfF2NiXuwO6yFs7N9YnbUnIkAkT/WBcK2R9NrxS
+4,string,$2y$12$PCNbY6nszzCP9FWXOzkGbuV.SWbyXLtudBnSNOLXjCgpx1v7ERYOq

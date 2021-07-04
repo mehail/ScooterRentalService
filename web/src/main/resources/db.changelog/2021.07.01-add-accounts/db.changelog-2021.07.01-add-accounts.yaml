@@ -15,13 +15,6 @@ databaseChangeLog:
                     primaryKey: true
                     primaryKeyName: accounts_pk
               - column:
-                  name: user_account_id
-                  type: BIGINT
-                  constraints:
-                    nullable: false
-                    unique: true
-                    uniqueConstraintName: accounts_user_id_uq
-              - column:
                   name: email
                   type: VARCHAR(320)
                   constraints:
@@ -35,21 +28,44 @@ databaseChangeLog:
                     nullable: false
 
   - changeSet:
-      id: SRS-create-231
+      id: 2021.07.01-02
       author: Mihail Artugin
       changes:
-        - addForeignKeyConstraint:
-            baseColumnNames: user_account_id
-            baseTableName: accounts
-            constraintName: accounts_user_account_id_fk
-            deferrable: false
-            initiallyDeferred: false
-            referencedColumnNames: id
-            referencedTableName: users
-            validate: true
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: account_id
+                  type: BIGINT
+                  constraints:
+                    unique: true
+                    uniqueConstraintName: users_account_id_uq
+
 
   - changeSet:
       id: 2021.07.01-03
+      author: Mihail Artugin
+      changes:
+        - loadUpdateData:
+            columns:
+              - column:
+                  header: id
+                  name: id
+                  type: NUMERIC
+              - column:
+                  header: account_id
+                  name: account_id
+                  type: NUMERIC
+            encoding: UTF-8
+            file: "db.changelog/2021.07.01-add-accounts/users-2021.07.07.csv"
+            primaryKey: id
+            onlyUpdate: true
+            separator: ','
+            tableName: users
+
+
+  - changeSet:
+      id: 2021.07.01-04
       author: Mihail Artugin
       changes:
         - loadData:
@@ -74,3 +90,28 @@ databaseChangeLog:
 
   - sql:
       sql: SELECT setval('accounts_id_seq', (SELECT max(id) FROM accounts))
+
+  - changeSet:
+      id: 2021.07.01-05
+      author: Mihail Artugin
+      changes:
+        - addNotNullConstraint:
+            columnName: account_id
+            constraintName: users_account_id_nn
+            schemaName: public
+            tableName: users
+            validate: true
+
+  - changeSet:
+      id: 2021.07.01-06
+      author: Mihail Artugin
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: account_id
+            baseTableName: users
+            constraintName: users_accounts_id_fk
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: accounts
+            validate: true
