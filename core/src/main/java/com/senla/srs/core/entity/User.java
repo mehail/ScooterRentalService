@@ -17,9 +17,9 @@ public class User extends AbstractEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-//    @ManyToOne
-//    @JoinColumn(name = "id")
-//    private Account account;
+    @OneToOne
+    @JoinColumn(name = "account_id")
+    private Account account;
     @NonNull
     private String email;
     @NonNull
