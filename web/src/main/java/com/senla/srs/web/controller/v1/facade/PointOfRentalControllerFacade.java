@@ -11,7 +11,7 @@ import com.senla.srs.core.mapper.PointOfRentalResponseMapper;
 import com.senla.srs.core.security.JwtTokenData;
 import com.senla.srs.core.service.CityDtoService;
 import com.senla.srs.core.service.PointOfRentalService;
-import com.senla.srs.core.validator.PointOfRentalRequestValidator;
+import com.senla.srs.core.validatorOld.PointOfRentalRequestValidator;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

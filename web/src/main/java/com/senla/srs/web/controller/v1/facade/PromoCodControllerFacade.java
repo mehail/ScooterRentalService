@@ -6,7 +6,7 @@ import com.senla.srs.core.exception.NotFoundEntityException;
 import com.senla.srs.core.mapper.PromoCodMapper;
 import com.senla.srs.core.security.JwtTokenData;
 import com.senla.srs.core.service.PromoCodService;
-import com.senla.srs.core.validator.PromoCodValidator;
+import com.senla.srs.core.validatorOld.PromoCodValidator;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,9 +1,9 @@
-package com.senla.srs.core.validator.impl;
+package com.senla.srs.core.validatorOld.impl;
 
 import com.senla.srs.core.dto.scooter.ScooterRequestDTO;
 import com.senla.srs.core.entity.PointOfRental;
 import com.senla.srs.core.entity.ScooterType;
-import com.senla.srs.core.validator.ScooterRequestValidator;
+import com.senla.srs.core.validatorOld.ScooterRequestValidator;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 

@@ -11,12 +11,13 @@ import com.senla.srs.core.mapper.ScooterTypeResponseMapper;
 import com.senla.srs.core.security.JwtTokenData;
 import com.senla.srs.core.service.MakerDtoService;
 import com.senla.srs.core.service.ScooterTypeService;
-import com.senla.srs.core.validator.ScooterTypeRequestValidator;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 
 import java.util.Optional;
 
@@ -28,13 +29,13 @@ public class ScooterTypeControllerFacade extends AbstractFacade implements
     private final ScooterTypeService scooterTypeService;
     private final ScooterTypeRequestMapper scooterTypeRequestMapper;
     private final ScooterTypeResponseMapper scooterTypeResponseMapper;
-    private final ScooterTypeRequestValidator scooterTypeRequestValidator;
+    private final Validator scooterTypeRequestValidator;
 
     public ScooterTypeControllerFacade(MakerDtoService makerDtoService,
                                        ScooterTypeService scooterTypeService,
                                        ScooterTypeRequestMapper scooterTypeRequestMapper,
                                        ScooterTypeResponseMapper scooterTypeResponseMapper,
-                                       ScooterTypeRequestValidator scooterTypeRequestValidator,
+                                       @Qualifier("scooterTypeRequestValidator") Validator scooterTypeRequestValidator,
                                        JwtTokenData jwtTokenData) {
         super(jwtTokenData);
         this.makerDtoService = makerDtoService;
@@ -65,9 +66,9 @@ public class ScooterTypeControllerFacade extends AbstractFacade implements
 
         Optional<MakerDTO> optionalMakerDTO = makerDtoService.retrieveMakerDtoById(scooterTypeRequestDTO.getMakerId());
 
-        var validScooterTypeRequestDTO = scooterTypeRequestValidator.validate(scooterTypeRequestDTO, optionalMakerDTO, bindingResult);
+        scooterTypeRequestValidator.validate(scooterTypeRequestDTO, bindingResult);
 
-        return save(validScooterTypeRequestDTO, optionalMakerDTO, bindingResult);
+        return save(scooterTypeRequestDTO, optionalMakerDTO, bindingResult);
     }
 
     @Override
@@ -84,6 +85,7 @@ public class ScooterTypeControllerFacade extends AbstractFacade implements
                 .orElse(null);
     }
 
+    //ToDo Refactoring!!!!!!!!!!!!!!!!!!!!!!!!
     private ResponseEntity<?> save(ScooterTypeRequestDTO scooterTypeRequestDTO,
                                    Optional<MakerDTO> optionalMakerDTO,
                                    BindingResult bindingResult) {

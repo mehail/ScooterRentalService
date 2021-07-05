@@ -1,8 +1,8 @@
-package com.senla.srs.core.validator.impl;
+package com.senla.srs.core.validatorOld.impl;
 
 import com.senla.srs.core.dto.promocod.PromoCodDTO;
 import com.senla.srs.core.entity.PromoCod;
-import com.senla.srs.core.validator.PromoCodValidator;
+import com.senla.srs.core.validatorOld.PromoCodValidator;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 

@@ -16,7 +16,7 @@ import com.senla.srs.core.service.PointOfRentalService;
 import com.senla.srs.core.service.RentalSessionService;
 import com.senla.srs.core.service.ScooterService;
 import com.senla.srs.core.service.ScooterTypeService;
-import com.senla.srs.core.validator.ScooterRequestValidator;
+import com.senla.srs.core.validatorOld.ScooterRequestValidator;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

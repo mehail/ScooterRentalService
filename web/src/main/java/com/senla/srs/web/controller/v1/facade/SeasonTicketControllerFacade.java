@@ -13,7 +13,7 @@ import com.senla.srs.core.security.JwtTokenData;
 import com.senla.srs.core.service.ScooterTypeService;
 import com.senla.srs.core.service.SeasonTicketService;
 import com.senla.srs.core.service.UserService;
-import com.senla.srs.core.validator.SeasonTicketRequestValidator;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 
 import java.util.Optional;
 
@@ -34,18 +35,18 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
     private final UserService userService;
     private final SeasonTicketRequestMapper seasonTicketRequestMapper;
     private final SeasonTicketFullResponseMapper seasonTicketFullResponseMapper;
-    private final SeasonTicketRequestValidator seasonTicketRequestValidator;
     private final int duration;
+    private final Validator seasonTicketRequestValidator;
 
 
     public SeasonTicketControllerFacade(SeasonTicketService seasonTicketService,
                                         ScooterTypeService scooterTypeService,
                                         SeasonTicketRequestMapper seasonTicketRequestMapper,
                                         SeasonTicketFullResponseMapper seasonTicketFullResponseMapper,
-                                        SeasonTicketRequestValidator seasonTicketRequestValidator,
                                         UserService userService,
                                         @Value("${srs.season.duration:365}") int duration,
-                                        JwtTokenData jwtTokenData) {
+                                        JwtTokenData jwtTokenData,
+                                        @Qualifier("seasonTicketRequestValidator") Validator seasonTicketRequestValidator) {
         super(jwtTokenData);
         this.seasonTicketService = seasonTicketService;
         this.scooterTypeService = scooterTypeService;
@@ -86,23 +87,14 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
                                             String token)
             throws NotFoundEntityException {
 
-        Optional<SeasonTicket> optionalSeasonTicket =
-                seasonTicketService.retrieveSeasonTicketByUserIdAndScooterTypeIdAndStartDate(seasonTicketRequestDTO.getUserId(),
-                        seasonTicketRequestDTO.getScooterTypeId(),
-                        seasonTicketRequestDTO.getStartDate());
-
         if (isAdmin(token) || isThisUserById(token, seasonTicketRequestDTO.getUserId())) {
             Optional<User> optionalUser = userService.retrieveUserById(seasonTicketRequestDTO.getUserId());
             Optional<ScooterType> optionalScooterType =
                     scooterTypeService.retrieveScooterTypeById(seasonTicketRequestDTO.getScooterTypeId());
 
-            var validSeasonTicketRequestDTO = seasonTicketRequestValidator.validate(seasonTicketRequestDTO,
-                    optionalSeasonTicket,
-                    optionalUser,
-                    optionalScooterType,
-                    bindingResult);
+            seasonTicketRequestValidator.validate(seasonTicketRequestDTO, bindingResult);
 
-            return save(validSeasonTicketRequestDTO, optionalUser, optionalScooterType, bindingResult);
+            return save(seasonTicketRequestDTO, optionalUser, optionalScooterType, bindingResult);
         } else {
             return new ResponseEntity<>("Creation of another user's season ticket requested", HttpStatus.FORBIDDEN);
         }

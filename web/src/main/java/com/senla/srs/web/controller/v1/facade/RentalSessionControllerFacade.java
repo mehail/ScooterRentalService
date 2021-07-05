@@ -9,7 +9,7 @@ import com.senla.srs.core.mapper.RentalSessionFullResponseMapper;
 import com.senla.srs.core.mapper.RentalSessionRequestMapper;
 import com.senla.srs.core.security.JwtTokenData;
 import com.senla.srs.core.service.*;
-import com.senla.srs.core.validator.RentalSessionRequestValidator;
+import com.senla.srs.core.validatorOld.RentalSessionRequestValidator;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

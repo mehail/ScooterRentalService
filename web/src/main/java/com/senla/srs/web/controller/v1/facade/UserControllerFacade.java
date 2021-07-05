@@ -9,12 +9,13 @@ import com.senla.srs.core.mapper.UserFullResponseMapper;
 import com.senla.srs.core.mapper.UserRequestMapper;
 import com.senla.srs.core.security.JwtTokenData;
 import com.senla.srs.core.service.UserService;
-import com.senla.srs.core.validator.UserRequestValidator;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 
 import java.util.Optional;
 
@@ -27,18 +28,25 @@ public class UserControllerFacade extends AbstractFacade implements
     private final UserService userService;
     private final UserFullResponseMapper userFullResponseMapper;
     private final UserRequestMapper userRequestMapper;
-    private final UserRequestValidator userRequestValidator;
+    private final Validator userRequestNewDTOValidator;
+    private final Validator userRequestExistDTOValidator;
+    private final Validator userRequestDTOFromAdminValidator;
+
 
     public UserControllerFacade(UserFullResponseMapper userFullResponseMapper,
                                 UserRequestMapper userRequestMapper,
-                                UserRequestValidator userRequestValidator,
                                 UserService userService,
-                                JwtTokenData jwtTokenData) {
+                                JwtTokenData jwtTokenData,
+                                @Qualifier("userRequestExistDTOValidator") Validator userRequestExistDTOValidator,
+                                @Qualifier("userRequestDTOFromAdminValidator") Validator userRequestDTOFromAdminValidator,
+                                @Qualifier("userRequestNewDTOValidator") Validator userRequestNewDTOValidator) {
         super(jwtTokenData);
         this.userFullResponseMapper = userFullResponseMapper;
         this.userRequestMapper = userRequestMapper;
-        this.userRequestValidator = userRequestValidator;
         this.userService = userService;
+        this.userRequestNewDTOValidator = userRequestNewDTOValidator;
+        this.userRequestExistDTOValidator = userRequestExistDTOValidator;
+        this.userRequestDTOFromAdminValidator = userRequestDTOFromAdminValidator;
     }
 
     @Override
@@ -70,7 +78,8 @@ public class UserControllerFacade extends AbstractFacade implements
         if (token == null || token.isEmpty()) {
 
             if (optionalExistUser.isEmpty()) {
-                return save(userRequestValidator.validateNewDto(requestDTO, bindingResult), bindingResult);
+                userRequestNewDTOValidator.validate(requestDTO, bindingResult);
+                return save(requestDTO, bindingResult);
             } else {
                 return new ResponseEntity<>(RE_AUTH, HttpStatus.FORBIDDEN);
             }
@@ -78,11 +87,13 @@ public class UserControllerFacade extends AbstractFacade implements
         } else {
 
             if (isAdmin(token)) {
-                return save(userRequestValidator.validateDtoFromAdmin(requestDTO, bindingResult), bindingResult);
+                userRequestDTOFromAdminValidator.validate(requestDTO, bindingResult);
+                return save(requestDTO, bindingResult);
             } else {
 
                 if (isThisUserByEmail(token, requestDTO.getEmail())) {
-                    return save(userRequestValidator.validateExistDto(requestDTO, bindingResult, optionalExistUser), bindingResult);
+                    userRequestExistDTOValidator.validate(requestDTO, bindingResult);
+                    return save(requestDTO, bindingResult);
                 } else {
                     return new ResponseEntity<>(RE_AUTH, HttpStatus.FORBIDDEN);
                 }

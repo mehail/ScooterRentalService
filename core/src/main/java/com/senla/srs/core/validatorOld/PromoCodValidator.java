@@ -1,4 +1,4 @@
-package com.senla.srs.core.validator;
+package com.senla.srs.core.validatorOld;
 
 import com.senla.srs.core.dto.promocod.PromoCodDTO;
 import com.senla.srs.core.entity.PromoCod;
