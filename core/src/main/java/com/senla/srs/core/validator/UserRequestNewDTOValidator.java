@@ -3,6 +3,7 @@ package com.senla.srs.core.validator;
 import com.senla.srs.core.dto.user.UserRequestDTO;
 import com.senla.srs.core.entity.UserStatus;
 import com.senla.srs.core.entity.security.Role;
+import lombok.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
@@ -18,12 +19,13 @@ public class UserRequestNewDTOValidator implements Validator {
     }
 
     @Override
-    public boolean supports(Class<?> aClass) {
+    public boolean supports(@NonNull Class<?> aClass) {
         return UserRequestDTO.class.equals(aClass);
     }
 
     @Override
-    public void validate(Object o, Errors errors) {
+    public void validate(@NonNull Object o, @NonNull Errors errors) {
+
         var userRequestDTO = (UserRequestDTO) o;
         ValidationUtils.invokeValidator(userRequestDTOFromAdminValidator, userRequestDTO, errors);
 
@@ -38,6 +40,7 @@ public class UserRequestNewDTOValidator implements Validator {
         if (userRequestDTO.getStatus() != UserStatus.ACTIVE) {
             errors.rejectValue("status", "Status must be ACTIVE");
         }
+
     }
 
 }

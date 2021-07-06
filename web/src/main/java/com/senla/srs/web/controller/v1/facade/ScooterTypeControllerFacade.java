@@ -45,7 +45,6 @@ public class ScooterTypeControllerFacade extends AbstractFacade implements
         this.scooterTypeRequestValidator = scooterTypeRequestValidator;
     }
 
-
     @Override
     public Page<ScooterTypeResponseDTO> getAll(Integer page, Integer size, String sort, String token) {
         return scooterTypeResponseMapper.mapPageToDtoPage(scooterTypeService.retrieveAllScooterTypes(page, size, sort));
@@ -85,7 +84,6 @@ public class ScooterTypeControllerFacade extends AbstractFacade implements
                 .orElse(null);
     }
 
-    //ToDo Refactoring!!!!!!!!!!!!!!!!!!!!!!!!
     private ResponseEntity<?> save(ScooterTypeRequestDTO scooterTypeRequestDTO,
                                    Optional<MakerDTO> optionalMakerDTO,
                                    BindingResult bindingResult) {

@@ -3,6 +3,7 @@ package com.senla.srs.core.validator;
 import com.senla.srs.core.dto.scooter.type.MakerDTO;
 import com.senla.srs.core.dto.scooter.type.ScooterTypeRequestDTO;
 import com.senla.srs.core.service.MakerDtoService;
+import lombok.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -19,12 +20,12 @@ public class ScooterTypeRequestValidator implements Validator {
     }
 
     @Override
-    public boolean supports(Class<?> aClass) {
+    public boolean supports(@NonNull Class<?> aClass) {
         return ScooterTypeRequestDTO.class.equals(aClass);
     }
 
     @Override
-    public void validate(Object o, Errors errors) {
+    public void validate(@NonNull Object o, @NonNull Errors errors) {
 
         var scooterTypeRequestDTO = (ScooterTypeRequestDTO) o;
         Optional<MakerDTO> optionalMakerDTO = makerDtoService.retrieveMakerDtoById(scooterTypeRequestDTO.getMakerId());
@@ -34,4 +35,5 @@ public class ScooterTypeRequestValidator implements Validator {
         }
 
     }
+
 }

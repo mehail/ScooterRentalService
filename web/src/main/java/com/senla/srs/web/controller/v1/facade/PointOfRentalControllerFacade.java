@@ -45,7 +45,6 @@ public class PointOfRentalControllerFacade extends AbstractFacade implements
         this.pointOfRentalRequestValidator = pointOfRentalRequestValidator;
     }
 
-
     @Override
     public Page<PointOfRentalResponseDTO> getAll(Integer page, Integer size, String sort, String token) {
         return pointOfRentalResponseMapper.mapPageToDtoPage(pointOfRentalService.retrieveAllPointOfRentals(page, size, sort));

@@ -3,6 +3,7 @@ package com.senla.srs.core.validator;
 import com.senla.srs.core.dto.user.UserRequestDTO;
 import com.senla.srs.core.entity.UserStatus;
 import com.senla.srs.core.entity.security.Role;
+import lombok.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -17,12 +18,12 @@ public class UserRequestDTOFromAdminValidator implements Validator {
             ":[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
 
     @Override
-    public boolean supports(Class<?> aClass) {
+    public boolean supports(@NonNull Class<?> aClass) {
         return UserRequestDTO.class.equals(aClass);
     }
 
     @Override
-    public void validate(Object o, Errors errors) {
+    public void validate(@NonNull Object o, @NonNull Errors errors) {
 
         var userRequestDTO = (UserRequestDTO) o;
 

@@ -38,4 +38,5 @@ public class ScooterRequestValidator implements Validator {
         }
 
     }
+
 }

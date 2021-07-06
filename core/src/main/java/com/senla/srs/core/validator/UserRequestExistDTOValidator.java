@@ -4,6 +4,7 @@ import com.senla.srs.core.dto.user.UserRequestDTO;
 import com.senla.srs.core.entity.User;
 import com.senla.srs.core.entity.security.Role;
 import com.senla.srs.core.service.UserService;
+import lombok.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -20,12 +21,12 @@ public class UserRequestExistDTOValidator implements Validator {
     }
 
     @Override
-    public boolean supports(Class<?> aClass) {
+    public boolean supports(@NonNull Class<?> aClass) {
         return UserRequestDTO.class.equals(aClass);
     }
 
     @Override
-    public void validate(Object o, Errors errors) {
+    public void validate(@NonNull Object o, @NonNull Errors errors) {
 
         var userRequestDTO = (UserRequestDTO) o;
         Optional<User> optionalUser = userService.retrieveUserByEmail(userRequestDTO.getEmail());
@@ -33,6 +34,7 @@ public class UserRequestExistDTOValidator implements Validator {
         if (optionalUser.isEmpty()) {
             errors.rejectValue("email", "User with this email was not found");
         } else {
+
             var existUser = optionalUser.get();
 
             if (!userRequestDTO.getBalance().equals(existUser.getBalance())) {

@@ -23,7 +23,11 @@ public class RentalSessionRequestValidator implements Validator {
     private final SeasonTicketService seasonTicketService;
     private final PromoCodService promoCodService;
 
-    public RentalSessionRequestValidator(RentalSessionService rentalSessionService, UserService userService, ScooterService scooterService, SeasonTicketService seasonTicketService, PromoCodService promoCodService) {
+    public RentalSessionRequestValidator(RentalSessionService rentalSessionService,
+                                         UserService userService,
+                                         ScooterService scooterService,
+                                         SeasonTicketService seasonTicketService,
+                                         PromoCodService promoCodService) {
         this.rentalSessionService = rentalSessionService;
         this.userService = userService;
         this.scooterService = scooterService;
@@ -39,7 +43,7 @@ public class RentalSessionRequestValidator implements Validator {
     @Override
     public void validate(@NonNull Object o, @NonNull Errors errors) {
 
-        RentalSessionRequestDTO rentalSessionRequestDTO = (RentalSessionRequestDTO) o;
+        var rentalSessionRequestDTO = (RentalSessionRequestDTO) o;
 
         Optional<RentalSession> optionalRentalSession =
                 rentalSessionService.retrieveRentalSessionByUserIdAndScooterSerialNumberAndBeginDateAndBeginTime(
@@ -73,14 +77,15 @@ public class RentalSessionRequestValidator implements Validator {
                     optionalRentalSession,
                     errors);
         }
+
     }
 
-    private RentalSessionRequestDTO validateNewEntity(RentalSessionRequestDTO rentalSessionRequestDTO,
-                                                      Optional<User> optionalUser,
-                                                      Optional<Scooter> optionalScooter,
-                                                      Optional<SeasonTicket> optionalSeasonTicket,
-                                                      Optional<PromoCod> optionalPromoCod,
-                                                      Errors errors) {
+    private void validateNewEntity(RentalSessionRequestDTO rentalSessionRequestDTO,
+                                   Optional<User> optionalUser,
+                                   Optional<Scooter> optionalScooter,
+                                   Optional<SeasonTicket> optionalSeasonTicket,
+                                   Optional<PromoCod> optionalPromoCod,
+                                   Errors errors) {
 
         validateUser(optionalUser, errors);
         validateScooter(optionalScooter, errors);
@@ -88,7 +93,6 @@ public class RentalSessionRequestValidator implements Validator {
         validatePromoCod(rentalSessionRequestDTO, optionalPromoCod, errors);
         validateBeginAndEnd(rentalSessionRequestDTO.getBegin(), rentalSessionRequestDTO.getEnd(), errors);
 
-        return rentalSessionRequestDTO;
     }
 
     private void validateBeginAndEnd(LocalDateTime begin, LocalDateTime end, Errors errors) {
@@ -182,9 +186,9 @@ public class RentalSessionRequestValidator implements Validator {
 
     }
 
-    private RentalSessionRequestDTO validateExistEntity(RentalSessionRequestDTO rentalSessionRequestDTO,
-                                                        Optional<RentalSession> optionalExistRentalSession,
-                                                        Errors errors) {
+    private void validateExistEntity(RentalSessionRequestDTO rentalSessionRequestDTO,
+                                     Optional<RentalSession> optionalExistRentalSession,
+                                     Errors errors) {
 
         if (optionalExistRentalSession.isPresent()) {
             var existRentalSession = optionalExistRentalSession.get();
@@ -200,7 +204,6 @@ public class RentalSessionRequestValidator implements Validator {
 
         }
 
-        return rentalSessionRequestDTO;
     }
 
     private void validateMatchExistRentalSession(RentalSessionRequestDTO rentalSessionRequestDTO,
@@ -229,6 +232,7 @@ public class RentalSessionRequestValidator implements Validator {
     }
 
     private boolean isMatchPromoCodName(RentalSessionRequestDTO rentalSessionRequestDTO, RentalSession existRentalSession) {
+
         String dtoPromoCodName = rentalSessionRequestDTO.getPromoCodName();
         var existPromoCod = existRentalSession.getPromoCod();
 
@@ -242,6 +246,7 @@ public class RentalSessionRequestValidator implements Validator {
     }
 
     private boolean isMatchSeasonTicketId(RentalSessionRequestDTO rentalSessionRequestDTO, RentalSession existRentalSession) {
+
         Long dtoSeasonTicketId = rentalSessionRequestDTO.getSeasonTicketId();
         var existSeasonTicket = existRentalSession.getSeasonTicket();
 

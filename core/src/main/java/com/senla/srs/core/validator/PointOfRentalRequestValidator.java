@@ -24,7 +24,7 @@ public class PointOfRentalRequestValidator implements Validator {
     @Override
     public void validate(@NonNull Object o, @NonNull Errors errors) {
 
-        PointOfRentalRequestDTO pointOfRentalRequestDTO = (PointOfRentalRequestDTO) o;
+        var pointOfRentalRequestDTO = (PointOfRentalRequestDTO) o;
 
         if (cityDtoService.retrieveGisPointDtoById(pointOfRentalRequestDTO.getCityId()).isEmpty()) {
             errors.reject("cityId", "City with this ID does not exist");

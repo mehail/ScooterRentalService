@@ -32,7 +32,6 @@ public class UserControllerFacade extends AbstractFacade implements
     private final Validator userRequestExistDTOValidator;
     private final Validator userRequestDTOFromAdminValidator;
 
-
     public UserControllerFacade(UserFullResponseMapper userFullResponseMapper,
                                 UserRequestMapper userRequestMapper,
                                 UserService userService,

@@ -38,7 +38,6 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
     private final int duration;
     private final Validator seasonTicketRequestValidator;
 
-
     public SeasonTicketControllerFacade(SeasonTicketService seasonTicketService,
                                         ScooterTypeService scooterTypeService,
                                         SeasonTicketRequestMapper seasonTicketRequestMapper,
@@ -113,6 +112,7 @@ public class SeasonTicketControllerFacade extends AbstractFacade implements
         } else {
             return new ResponseEntity<>(FORBIDDEN_FOR_DELETE, HttpStatus.FORBIDDEN);
         }
+
     }
 
     private boolean isCorrectDeleteSeasonTicket(Long id, String token, Optional<SeasonTicket> optionalSeasonTicket)
