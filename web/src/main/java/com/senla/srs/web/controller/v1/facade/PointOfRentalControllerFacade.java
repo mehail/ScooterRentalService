@@ -11,12 +11,13 @@ import com.senla.srs.core.mapper.PointOfRentalResponseMapper;
 import com.senla.srs.core.security.JwtTokenData;
 import com.senla.srs.core.service.CityDtoService;
 import com.senla.srs.core.service.PointOfRentalService;
-import com.senla.srs.core.validatorOld.PointOfRentalRequestValidator;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 
 import java.util.Optional;
 
@@ -28,13 +29,13 @@ public class PointOfRentalControllerFacade extends AbstractFacade implements
     private final PointOfRentalService pointOfRentalService;
     private final PointOfRentalRequestMapper pointOfRentalRequestMapper;
     private final PointOfRentalResponseMapper pointOfRentalResponseMapper;
-    private final PointOfRentalRequestValidator pointOfRentalRequestValidator;
+    private final Validator pointOfRentalRequestValidator;
 
     public PointOfRentalControllerFacade(CityDtoService cityDtoService,
                                          PointOfRentalService pointOfRentalService,
                                          PointOfRentalRequestMapper pointOfRentalRequestMapper,
                                          PointOfRentalResponseMapper pointOfRentalResponseMapper,
-                                         PointOfRentalRequestValidator pointOfRentalRequestValidator,
+                                         @Qualifier("pointOfRentalRequestValidator") Validator pointOfRentalRequestValidator,
                                          JwtTokenData jwtTokenData) {
         super(jwtTokenData);
         this.cityDtoService = cityDtoService;
@@ -66,10 +67,9 @@ public class PointOfRentalControllerFacade extends AbstractFacade implements
         Optional<CityDTO> optionalCityDTO =
                 cityDtoService.retrieveGisPointDtoById(pointOfRentalRequestDTO.getCityId());
 
-        var validPointOfRentalRequestDTO =
-                pointOfRentalRequestValidator.validate(pointOfRentalRequestDTO, optionalCityDTO, bindingResult);
+        pointOfRentalRequestValidator.validate(pointOfRentalRequestDTO, bindingResult);
 
-        return save(validPointOfRentalRequestDTO, optionalCityDTO, bindingResult);
+        return save(pointOfRentalRequestDTO, optionalCityDTO, bindingResult);
     }
 
     @Override

@@ -6,14 +6,13 @@ import com.senla.srs.core.exception.NotFoundEntityException;
 import com.senla.srs.core.mapper.PromoCodMapper;
 import com.senla.srs.core.security.JwtTokenData;
 import com.senla.srs.core.service.PromoCodService;
-import com.senla.srs.core.validatorOld.PromoCodValidator;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-
-import java.util.Optional;
+import org.springframework.validation.Validator;
 
 @Controller
 public class PromoCodControllerFacade extends AbstractFacade implements
@@ -21,11 +20,11 @@ public class PromoCodControllerFacade extends AbstractFacade implements
 
     private final PromoCodService promoCodService;
     private final PromoCodMapper promoCodMapper;
-    private final PromoCodValidator promoCodValidator;
+    private final Validator promoCodValidator;
 
     public PromoCodControllerFacade(PromoCodService promoCodService,
                                     PromoCodMapper promoCodMapper,
-                                    PromoCodValidator promoCodValidator,
+                                    @Qualifier("promoCodValidator") Validator promoCodValidator,
                                     JwtTokenData jwtTokenData) {
         super(jwtTokenData);
         this.promoCodService = promoCodService;
@@ -47,11 +46,9 @@ public class PromoCodControllerFacade extends AbstractFacade implements
 
     @Override
     public ResponseEntity<?> createOrUpdate(PromoCodDTO promoCodDTO, BindingResult bindingResult, String token) {
-        Optional<PromoCod> optionalPromoCod = promoCodService.retrievePromoCodByName(promoCodDTO.getName());
+        promoCodValidator.validate(promoCodDTO, bindingResult);
 
-        var validatePromoCodDTO = promoCodValidator.validate(promoCodDTO, optionalPromoCod, bindingResult);
-
-        return save(validatePromoCodDTO, bindingResult);
+        return save(promoCodDTO, bindingResult);
     }
 
     @Override

@@ -3,7 +3,6 @@ package com.senla.srs.web.controller.v1.facade;
 import com.senla.srs.core.dto.scooter.ScooterCompactResponseDTO;
 import com.senla.srs.core.dto.scooter.ScooterDTO;
 import com.senla.srs.core.dto.scooter.ScooterRequestDTO;
-import com.senla.srs.core.entity.PointOfRental;
 import com.senla.srs.core.entity.RentalSession;
 import com.senla.srs.core.entity.Scooter;
 import com.senla.srs.core.entity.ScooterType;
@@ -12,16 +11,16 @@ import com.senla.srs.core.mapper.ScooterCompactResponseMapper;
 import com.senla.srs.core.mapper.ScooterFullResponseMapper;
 import com.senla.srs.core.mapper.ScooterRequestMapper;
 import com.senla.srs.core.security.JwtTokenData;
-import com.senla.srs.core.service.PointOfRentalService;
 import com.senla.srs.core.service.RentalSessionService;
 import com.senla.srs.core.service.ScooterService;
 import com.senla.srs.core.service.ScooterTypeService;
-import com.senla.srs.core.validatorOld.ScooterRequestValidator;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,26 +29,23 @@ import java.util.Optional;
 public class ScooterControllerFacade extends AbstractFacade implements
         EntityControllerFacade<ScooterDTO, ScooterRequestDTO, ScooterCompactResponseDTO, String> {
 
-    private final PointOfRentalService pointOfRentalService;
     private final RentalSessionService rentalSessionService;
     private final ScooterService scooterService;
     private final ScooterTypeService scooterTypeService;
     private final ScooterRequestMapper scooterRequestMapper;
     private final ScooterCompactResponseMapper scooterCompactResponseMapper;
     private final ScooterFullResponseMapper scooterFullResponseMapper;
-    private final ScooterRequestValidator scooterRequestValidator;
+    private final Validator scooterRequestValidator;
 
-    public ScooterControllerFacade(PointOfRentalService pointOfRentalService,
-                                   RentalSessionService rentalSessionService,
+    public ScooterControllerFacade(RentalSessionService rentalSessionService,
                                    ScooterService scooterService,
                                    ScooterTypeService scooterTypeService,
                                    ScooterRequestMapper scooterRequestMapper,
                                    ScooterCompactResponseMapper scooterCompactResponseMapper,
                                    ScooterFullResponseMapper scooterFullResponseMapper,
-                                   ScooterRequestValidator scooterRequestValidator,
+                                   @Qualifier("scooterRequestValidator") Validator scooterRequestValidator,
                                    JwtTokenData jwtTokenData) {
         super(jwtTokenData);
-        this.pointOfRentalService = pointOfRentalService;
         this.rentalSessionService = rentalSessionService;
         this.scooterService = scooterService;
         this.scooterTypeService = scooterTypeService;
@@ -81,15 +77,12 @@ public class ScooterControllerFacade extends AbstractFacade implements
                                             String token)
             throws NotFoundEntityException {
 
-        Optional<PointOfRental> optionalPointOfRental =
-                pointOfRentalService.retrievePointOfRentalById(scooterRequestDTO.getPointOfRentalId());
         Optional<ScooterType> optionalScooterType =
                 scooterTypeService.retrieveScooterTypeById(scooterRequestDTO.getTypeId());
 
-        var validScooterRequestDTO = scooterRequestValidator.validate(scooterRequestDTO,
-                optionalPointOfRental, optionalScooterType, bindingResult);
+        scooterRequestValidator.validate(scooterRequestDTO, bindingResult);
 
-        return save(validScooterRequestDTO, optionalScooterType, bindingResult);
+        return save(scooterRequestDTO, optionalScooterType, bindingResult);
     }
 
     @Override

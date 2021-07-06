@@ -9,13 +9,14 @@ import com.senla.srs.core.mapper.RentalSessionFullResponseMapper;
 import com.senla.srs.core.mapper.RentalSessionRequestMapper;
 import com.senla.srs.core.security.JwtTokenData;
 import com.senla.srs.core.service.*;
-import com.senla.srs.core.validatorOld.RentalSessionRequestValidator;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -32,7 +33,7 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
     private final RentalSessionService rentalSessionService;
     private final RentalSessionRequestMapper rentalSessionRequestMapper;
     private final RentalSessionFullResponseMapper rentalSessionFullResponseMapper;
-    private final RentalSessionRequestValidator rentalSessionRequestValidator;
+    private final Validator rentalSessionRequestValidator;
 
     public RentalSessionControllerFacade(UserService userService,
                                          ScooterService scooterService,
@@ -41,7 +42,7 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
                                          RentalSessionService rentalSessionService,
                                          RentalSessionRequestMapper rentalSessionRequestMapper,
                                          RentalSessionFullResponseMapper rentalSessionFullResponseMapper,
-                                         RentalSessionRequestValidator rentalSessionRequestValidator,
+                                         @Qualifier("rentalSessionRequestValidator") Validator rentalSessionRequestValidator,
                                          JwtTokenData jwtTokenData) {
         super(jwtTokenData);
         this.userService = userService;
@@ -86,13 +87,6 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
 
         if (isAdmin(token) || isThisUserById(token, rentalSessionRequestDTO.getUserId())) {
 
-            Optional<RentalSession> optionalRentalSession =
-                    rentalSessionService.retrieveRentalSessionByUserIdAndScooterSerialNumberAndBeginDateAndBeginTime(
-                            rentalSessionRequestDTO.getUserId(),
-                            rentalSessionRequestDTO.getScooterSerialNumber(),
-                            rentalSessionRequestDTO.getBegin().toLocalDate(),
-                            rentalSessionRequestDTO.getBegin().toLocalTime());
-
             Optional<User> optionalUser = userService.retrieveUserById(rentalSessionRequestDTO.getUserId());
 
             Optional<Scooter> optionalScooter =
@@ -106,15 +100,9 @@ public class RentalSessionControllerFacade extends AbstractFacade implements
                     ? promoCodService.retrievePromoCodByName(rentalSessionRequestDTO.getPromoCodName())
                     : Optional.empty();
 
-            RentalSessionRequestDTO validRentalSessionDTO = rentalSessionRequestValidator.validate(rentalSessionRequestDTO,
-                    optionalRentalSession,
-                    optionalUser,
-                    optionalScooter,
-                    optionalSeasonTicket,
-                    optionalPromoCod,
-                    bindingResult);
+            rentalSessionRequestValidator.validate(rentalSessionRequestDTO, bindingResult);
 
-            return save(validRentalSessionDTO, optionalUser, optionalScooter, optionalSeasonTicket, optionalPromoCod, bindingResult);
+            return save(rentalSessionRequestDTO, optionalUser, optionalScooter, optionalSeasonTicket, optionalPromoCod, bindingResult);
         } else {
             return new ResponseEntity<>("Change someone else's rental session is not available", HttpStatus.FORBIDDEN);
         }

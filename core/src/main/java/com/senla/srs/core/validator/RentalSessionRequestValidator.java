@@ -1,41 +1,78 @@
-package com.senla.srs.core.validatorOld.impl;
+package com.senla.srs.core.validator;
 
 import com.senla.srs.core.dto.rentalsession.RentalSessionRequestDTO;
 import com.senla.srs.core.entity.*;
-import com.senla.srs.core.validatorOld.RentalSessionRequestValidator;
+import com.senla.srs.core.service.*;
+import lombok.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-@Service
-public class RentalSessionRequestValidatorImpl implements RentalSessionRequestValidator {
+@Service("rentalSessionRequestValidator")
+public class RentalSessionRequestValidator implements Validator {
 
     private static final String SEASON_TICKET_ID = "seasonTicketId";
     private static final String PROMO_COD_NAME = "promoCodName";
+    private final RentalSessionService rentalSessionService;
+    private final UserService userService;
+    private final ScooterService scooterService;
+    private final SeasonTicketService seasonTicketService;
+    private final PromoCodService promoCodService;
+
+    public RentalSessionRequestValidator(RentalSessionService rentalSessionService, UserService userService, ScooterService scooterService, SeasonTicketService seasonTicketService, PromoCodService promoCodService) {
+        this.rentalSessionService = rentalSessionService;
+        this.userService = userService;
+        this.scooterService = scooterService;
+        this.seasonTicketService = seasonTicketService;
+        this.promoCodService = promoCodService;
+    }
 
     @Override
-    public RentalSessionRequestDTO validate(RentalSessionRequestDTO rentalSessionRequestDTO,
-                                            Optional<RentalSession> optionalRentalSession,
-                                            Optional<User> optionalUser,
-                                            Optional<Scooter> optionalScooter,
-                                            Optional<SeasonTicket> optionalSeasonTicket,
-                                            Optional<PromoCod> optionalPromoCod,
-                                            Errors errors) {
+    public boolean supports(@NonNull Class<?> aClass) {
+        return RentalSessionRequestDTO.class.equals(aClass);
+    }
 
-        return optionalRentalSession.isEmpty()
-                ? validateNewEntity(rentalSessionRequestDTO,
-                optionalUser,
-                optionalScooter,
-                optionalSeasonTicket,
-                optionalPromoCod,
-                errors)
+    @Override
+    public void validate(@NonNull Object o, @NonNull Errors errors) {
 
-                : validateExistEntity(rentalSessionRequestDTO,
-                optionalRentalSession,
-                errors);
+        RentalSessionRequestDTO rentalSessionRequestDTO = (RentalSessionRequestDTO) o;
+
+        Optional<RentalSession> optionalRentalSession =
+                rentalSessionService.retrieveRentalSessionByUserIdAndScooterSerialNumberAndBeginDateAndBeginTime(
+                        rentalSessionRequestDTO.getUserId(),
+                        rentalSessionRequestDTO.getScooterSerialNumber(),
+                        rentalSessionRequestDTO.getBegin().toLocalDate(),
+                        rentalSessionRequestDTO.getBegin().toLocalTime());
+
+        Optional<User> optionalUser = userService.retrieveUserById(rentalSessionRequestDTO.getUserId());
+
+        Optional<Scooter> optionalScooter =
+                scooterService.retrieveScooterBySerialNumber(rentalSessionRequestDTO.getScooterSerialNumber());
+
+        Optional<SeasonTicket> optionalSeasonTicket = rentalSessionRequestDTO.getSeasonTicketId() != null
+                ? seasonTicketService.retrieveSeasonTicketsById(rentalSessionRequestDTO.getSeasonTicketId())
+                : Optional.empty();
+
+        Optional<PromoCod> optionalPromoCod = rentalSessionRequestDTO.getPromoCodName() != null
+                ? promoCodService.retrievePromoCodByName(rentalSessionRequestDTO.getPromoCodName())
+                : Optional.empty();
+
+        if (optionalRentalSession.isEmpty()) {
+            validateNewEntity(rentalSessionRequestDTO,
+                    optionalUser,
+                    optionalScooter,
+                    optionalSeasonTicket,
+                    optionalPromoCod,
+                    errors);
+        } else {
+            validateExistEntity(rentalSessionRequestDTO,
+                    optionalRentalSession,
+                    errors);
+        }
     }
 
     private RentalSessionRequestDTO validateNewEntity(RentalSessionRequestDTO rentalSessionRequestDTO,
