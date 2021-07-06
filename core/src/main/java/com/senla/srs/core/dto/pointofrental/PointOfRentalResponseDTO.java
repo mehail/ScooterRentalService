@@ -20,7 +20,6 @@ public class PointOfRentalResponseDTO extends PointOfRentalDTO{
     @NonNull
     private CityDTO cityDTO;
     private List<ScooterCompactResponseDTO> scooters;
-    //ToDo Split into full and compact versions
     private List<GisPointDTO> rollingTrack;
 
 }

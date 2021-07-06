@@ -77,9 +77,6 @@ databaseChangeLog:
               - column:
                   name: city_id
                   type: BIGINT
-                  constraints:
-                    unique: true
-                    uniqueConstraintName: point_of_rentals_city_id_uq
 
   - changeSet:
       id: 2021.05.23-06
@@ -177,6 +174,17 @@ databaseChangeLog:
       author: Mihail Artugin
       changes:
         - addNotNullConstraint:
+            columnName: city_id
+            constraintName: point_of_rentals_city_id_nn
+            schemaName: public
+            tableName: point_of_rentals
+            validate: true
+
+  - changeSet:
+      id: 2021.05.23-11
+      author: Mihail Artugin
+      changes:
+        - addNotNullConstraint:
             columnDataType: BIGINT
             columnName: city_id
             constraints:
@@ -186,7 +194,7 @@ databaseChangeLog:
             validate: true
 
   - changeSet:
-      id: 2021.05.23-11
+      id: 2021.05.23-12
       author: Mihail Artugin
       changes:
         - addNotNullConstraint:
