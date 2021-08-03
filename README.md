@@ -131,15 +131,13 @@ ___
 * Run the [WinRunner.bat](WinRunner.bat) file for Windows
 
 
-* Run with Docker Compose the [LinDockerRunner.sh](LinDockerRunner.sh) file for Linux
-* Run with Docker Compose the [WinDockerRunner.sh](WinDockerRunner.bat) file for Linux
-
-
 * From the command line / terminal:
 ```
 mvn clean install spring-boot:run
 ```
 
+* Run with Docker Compose the [LinDockerRunner.sh](LinDockerRunner.sh) file for Linux
+* Run with Docker Compose the [WinDockerRunner.sh](WinDockerRunner.bat) file for Linux
 
 
 ## 5. Technical description
