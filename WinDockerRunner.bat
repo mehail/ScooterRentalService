@@ -1,12 +1,12 @@
-mvn clean install -Dmaven.test.skip=true
+CALL mvn clean install -Dmaven.test.skip=true
 
-rm -r ./docker/*.jar ./docker/*.war
-cp core/target/*.jar ./docker/
-cp web/target/*.war ./docker/
+DEL docker\*.jar
+DEL docker\*.war
 
-# shellcheck disable=SC2164
-cd docker
+COPY core\target\*.jar .\docker
+COPY web\target\*.war .\docker
 
-docker-compose up
+CD docker
+CALL docker-compose up
 
-read -n1 -r -p "Press any key to continue..."
+PAUSE
