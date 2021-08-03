@@ -37,7 +37,7 @@ Object-relational database management system
 Containerization system
 
 * Docker
-* Docker-compose
+* Docker Compose
 
 ___
 
@@ -88,7 +88,7 @@ ___
             <td><a href="https://maven.apache.org/download.cgi">maven.apache.org</a></td>
         </tr>
         <tr>
-            <td colspan="4" align="center"><i><sup>*</sup> With containerization system</i></td>
+            <td colspan="4" align="center"><i>With containerization system<sup>* (optional)</sup></i></td>
         </tr>
         <tr>
             <td>Java</td>
@@ -97,20 +97,20 @@ ___
             <td><a href="https://jdk.java.net/java-se-ri/11">jdk.java.net</a></td>
         </tr>
         <tr>
-            <td>PostgreSQL</td>
-            <td align="center">13</td>
-            <td><i>sudo apt install postgresql</i></td>
-            <td><a href="https://www.postgresql.org/download/windows/">postgresql.org</a></td>
+            <td>Maven</td>
+            <td align="center">3.6.3</td>
+            <td><i>sudo apt install maven</i></td>
+            <td><a href="https://maven.apache.org/download.cgi">maven.apache.org</a></td>
         </tr>
         <tr>
-            <td>Docker <sup>(optional)</sup></td>
+            <td>Docker</td>
             <td align="center">20.10 <sup>Linux</sup>
                 <br>3.5 <sup>Win</sup></td>
             <td><a href="https://docs.docker.com/docker-for-windows/install/">docker.com</a></td>
             <td><a href="https://docs.docker.com/engine/install/ubuntu/">docker.com</a></td>
         </tr>
         <tr>
-            <td>Docker Compose <sup>(optional)</sup></td>
+            <td>Docker Compose</td>
             <td align="center">1.29</td>
             <td colspan="2" align="center"><a href="https://docs.docker.com/compose/install/">docker.com</a></td>
         </tr>
