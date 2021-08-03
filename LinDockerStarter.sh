@@ -6,10 +6,7 @@ rm -r ./docker/*.jar ./docker/*.war
 cp core/target/*.jar ./docker/
 cp web/target/*.war ./docker/
 
-sudo docker rm srs
-sudo docker rm srs_db
-#sudo docker rmi scooter-rental-service
-
+# shellcheck disable=SC2164
 cd docker
 
 docker-compose up
