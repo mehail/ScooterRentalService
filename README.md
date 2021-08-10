@@ -28,16 +28,23 @@ RESTful application is written using technologies:
 * Spring Security
 * Spring Data JPA
 * Hibernate
-* Swagger
 
 Object-relational database management system
 
 * PostgreSQL
 
+Technical description
+
+* Swagger
+
 Containerization system
 
 * Docker
 * Docker Compose
+
+Broker messages
+
+* Kafka
 
 ___
 
@@ -88,31 +95,31 @@ ___
             <td><a href="https://maven.apache.org/download.cgi">maven.apache.org</a></td>
         </tr>
         <tr>
-            <td colspan="4" align="center"><i>With containerization system<sup>* (optional)</sup></i></td>
+            <td colspan="4" align="center"><i>With containerization system<sup> * (optional)</sup></i></td>
         </tr>
         <tr>
-            <td>Java</td>
-            <td align="center">11</td>
-            <td><i>sudo apt install openjdk-11-jdk</i></td>
-            <td><a href="https://jdk.java.net/java-se-ri/11">jdk.java.net</a></td>
-        </tr>
-        <tr>
-            <td>Maven</td>
-            <td align="center">3.6.3</td>
-            <td><i>sudo apt install maven</i></td>
-            <td><a href="https://maven.apache.org/download.cgi">maven.apache.org</a></td>
+            <td>PostgreSQL</td>
+            <td colspan="3" align="center"><i>No installation required, the database is raised from the Docker image</i></td>
         </tr>
         <tr>
             <td>Docker</td>
             <td align="center">20.10 <sup>Linux</sup>
                 <br>3.5 <sup>Win</sup></td>
-            <td><a href="https://docs.docker.com/docker-for-windows/install/">docker.com</a></td>
-            <td><a href="https://docs.docker.com/engine/install/ubuntu/">docker.com</a></td>
+            <td align="center"><a href="https://docs.docker.com/docker-for-windows/install/">docker.com</a></td>
+            <td align="center"><a href="https://docs.docker.com/engine/install/ubuntu/">docker.com</a></td>
         </tr>
         <tr>
             <td>Docker Compose</td>
             <td align="center">1.29</td>
             <td colspan="2" align="center"><a href="https://docs.docker.com/compose/install/">docker.com</a></td>
+        </tr>
+        <tr>
+            <td colspan="4" align="center"><i>With message broker<sup> * (optional)</sup></i></td>
+        </tr>
+        <tr>
+            <td>Kafka</td>
+            <td align="center">2.8.0</td>
+            <td colspan="2" align="center"><a href="https://kafka.apache.org/downloads">kafka.apache.org</a></td>
         </tr>
     </tbody>
 </table>
@@ -132,13 +139,13 @@ ___
 
 
 * From the command line / terminal:
+
 ```
 mvn clean install spring-boot:run
 ```
 
 * Run with Docker Compose the [LinDockerRunner.sh](LinDockerRunner.sh) file for Linux
 * Run with Docker Compose the [WinDockerRunner.sh](WinDockerRunner.bat) file for Linux
-
 
 ## 5. Technical description
 
@@ -149,5 +156,5 @@ ____
 
 # Contacts
 
-* **Author:** Mihail Artyugin
+* **Author:** Mihail Artugin
 * **E-mail:** mehailpost@gmail.com
