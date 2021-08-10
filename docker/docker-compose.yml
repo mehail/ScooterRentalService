@@ -12,8 +12,6 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/scooter
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=789789789
-    links:
-      - db
     ports:
       - "8080:8080"
 
